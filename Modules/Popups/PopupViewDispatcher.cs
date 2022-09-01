@@ -1,10 +1,10 @@
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Mediation;
-using Build1.PostMVC.UnityApp.Modules.Popups.Animation;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Mediation;
+using Build1.PostMVC.Unity.App.Modules.Popups.Animation;
 using UnityEngine;
-using Event = Build1.PostMVC.Core.Extensions.MVCS.Events.Event;
+using Event = Build1.PostMVC.Core.MVCS.Events.Event;
 
-namespace Build1.PostMVC.UnityApp.Modules.Popups
+namespace Build1.PostMVC.Unity.App.Modules.Popups
 {
     public abstract class PopupViewDispatcher : UnityViewDispatcher, IPopupView
     {

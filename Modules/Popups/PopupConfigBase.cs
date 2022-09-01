@@ -1,11 +1,11 @@
 using System;
-using Build1.PostMVC.Core.Extensions.MVCS.Mediation;
-using Build1.PostMVC.UnityApp.Mediation;
-using Build1.PostMVC.UnityApp.Modules.Assets;
-using Build1.PostMVC.UnityApp.Modules.Device;
-using Build1.PostMVC.UnityApp.Modules.UI;
+using Build1.PostMVC.Core.MVCS.Mediation;
+using Build1.PostMVC.Unity.App.Mediation;
+using Build1.PostMVC.Unity.App.Modules.Assets;
+using Build1.PostMVC.Unity.App.Modules.Device;
+using Build1.PostMVC.Unity.App.Modules.UI;
 
-namespace Build1.PostMVC.UnityApp.Modules.Popups
+namespace Build1.PostMVC.Unity.App.Modules.Popups
 {
     public abstract class PopupConfigBase : UIControlConfiguration
     {

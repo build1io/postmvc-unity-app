@@ -1,9 +1,9 @@
 using System;
 using System.IO;
-using Build1.PostMVC.UnityApp.Modules.Assets.Impl.Cache;
+using Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Assets.Impl.Agents
+namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
 {
     internal sealed class AssetsAgentWebGL : AssetsAgentBase
     {

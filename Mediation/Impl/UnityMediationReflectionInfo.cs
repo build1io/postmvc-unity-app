@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Build1.PostMVC.Core.Utils.Reflection;
-using Build1.PostMVC.UnityApp.Mediation.Api;
+using Build1.PostMVC.Unity.App.Mediation.Api;
 
-namespace Build1.PostMVC.UnityApp.Mediation.Impl
+namespace Build1.PostMVC.Unity.App.Mediation.Impl
 {
     internal sealed class UnityMediationReflectionInfo : IUnityMediationReflectionInfo
     {

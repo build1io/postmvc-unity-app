@@ -1,7 +1,7 @@
 using System;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
+using Build1.PostMVC.Core.MVCS.Injection;
 
-namespace Build1.PostMVC.UnityApp.Mediation
+namespace Build1.PostMVC.Unity.App.Mediation
 {
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class Awake : PostConstruct

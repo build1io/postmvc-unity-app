@@ -1,6 +1,6 @@
 using System;
 
-namespace Build1.PostMVC.UnityApp.Modules.Logging
+namespace Build1.PostMVC.Unity.App.Modules.Logging
 {
     public interface ILogWarn
     {

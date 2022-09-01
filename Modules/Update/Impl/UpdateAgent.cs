@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Build1.PostMVC.UnityApp.Modules.Logging;
+using Build1.PostMVC.Unity.App.Modules.Logging;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Update.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Update.Impl
 {
     public sealed class UpdateAgent : MonoBehaviour
     {

@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
-using Build1.PostMVC.Core.Extensions.MVCS.Events.Impl;
-using Build1.PostMVC.UnityApp.Mediation.Impl;
+using Build1.PostMVC.Core.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Events.Impl;
+using Build1.PostMVC.Unity.App.Mediation.Impl;
 using UnityEngine.Events;
-using Event = Build1.PostMVC.Core.Extensions.MVCS.Events.Event;
 
-namespace Build1.PostMVC.UnityApp.Mediation
+namespace Build1.PostMVC.Unity.App.Mediation
 {
     public abstract class UnityViewDispatcher : UnityView, IEventDispatcher
     {

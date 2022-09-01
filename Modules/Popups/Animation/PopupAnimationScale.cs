@@ -2,7 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Popups.Animation
+namespace Build1.PostMVC.Unity.App.Modules.Popups.Animation
 {
     [CreateAssetMenu(fileName = "PopupAnimationScale", menuName = "PostMVC/Popups/Animations/Scale", order = 1)]
     public sealed class PopupAnimationScale : PopupAnimation

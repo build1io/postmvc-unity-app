@@ -1,6 +1,6 @@
-using Build1.PostMVC.Core.Extensions.MVCS.Mediation;
+using Build1.PostMVC.Core.MVCS.Mediation;
 
-namespace Build1.PostMVC.UnityApp.Mediation
+namespace Build1.PostMVC.Unity.App.Mediation
 {
     public interface IUnityView : IView
     {

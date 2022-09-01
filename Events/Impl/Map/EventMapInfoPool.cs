@@ -1,7 +1,7 @@
-using Build1.PostMVC.Core.Extensions.MVCS.Events.Impl;
+using Build1.PostMVC.Core.MVCS.Events.Impl.Map;
 using Build1.PostMVC.Core.Utils.Pooling;
 
-namespace Build1.PostMVC.UnityApp.Events.Impl
+namespace Build1.PostMVC.Unity.App.Events.Impl.Map
 {
     internal partial class EventMapInfoPool : Pool<IEventMapInfo>
     {

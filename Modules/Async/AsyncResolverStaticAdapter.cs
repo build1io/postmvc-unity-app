@@ -1,4 +1,4 @@
-namespace Build1.PostMVC.UnityApp.Modules.Async
+namespace Build1.PostMVC.Unity.App.Modules.Async
 {
     public static class AsyncResolverStaticAdapter
     {

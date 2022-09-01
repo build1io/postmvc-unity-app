@@ -1,13 +1,13 @@
 using Build1.PostMVC.Core.Contexts;
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Modules.Agents;
-using Build1.PostMVC.UnityApp.Modules.Logging;
-using Build1.PostMVC.UnityApp.Utils.Path;
+using Build1.PostMVC.Core.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Agents;
+using Build1.PostMVC.Unity.App.Modules.Logging;
+using Build1.PostMVC.Unity.App.Utils.Path;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Build1.PostMVC.UnityApp.Modules.App.Impl
+namespace Build1.PostMVC.Unity.App.Modules.App.Impl
 {
     public sealed class AppController : IAppController
     {
@@ -60,7 +60,7 @@ namespace Build1.PostMVC.UnityApp.Modules.App.Impl
 
             // Stopping the root context.
             // It must stop all nested all contexts and dispose all dependencies.
-            Core.PostMVC.Stop();
+            Context.Stop();
 
             // Reloading the main scene.
             SceneManager.LoadScene(_mainSceneName);

@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Modules.Agents;
-using Build1.PostMVC.UnityApp.Modules.Assets.Impl.Agents;
-using Build1.PostMVC.UnityApp.Modules.Assets.Impl.Cache;
-using Build1.PostMVC.UnityApp.Modules.Logging;
+using Build1.PostMVC.Core.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Agents;
+using Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents;
+using Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache;
+using Build1.PostMVC.Unity.App.Modules.Logging;
 using UnityEngine;
 using UnityEngine.U2D;
 
-namespace Build1.PostMVC.UnityApp.Modules.Assets.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
 {
     internal sealed class AssetsController : IAssetsController
     {

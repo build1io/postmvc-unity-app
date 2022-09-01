@@ -1,13 +1,13 @@
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Events;
 
-namespace Build1.PostMVC.UnityApp.Modules.App
+namespace Build1.PostMVC.Unity.App.Modules.App
 {
     public abstract class AppEvent
     {
-        public static readonly Event<bool> Pause = new Event<bool>();
-        public static readonly Event<bool> Focus = new Event<bool>();
+        public static readonly Event<bool> Pause = new();
+        public static readonly Event<bool> Focus = new();
 
-        public static readonly Event Restarting = new Event();
-        public static readonly Event Quitting   = new Event();
+        public static readonly Event Restarting = new();
+        public static readonly Event Quitting   = new();
     }
 }

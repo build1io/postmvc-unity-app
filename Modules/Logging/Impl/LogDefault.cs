@@ -1,6 +1,6 @@
 using System;
 
-namespace Build1.PostMVC.UnityApp.Modules.Logging.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
 {
     internal sealed class LogDefault : LogBase
     {

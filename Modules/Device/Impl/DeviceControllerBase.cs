@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Modules.App;
-using Build1.PostMVC.UnityApp.Modules.Async;
-using Build1.PostMVC.UnityApp.Modules.Logging;
+using Build1.PostMVC.Core.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.App;
+using Build1.PostMVC.Unity.App.Modules.Async;
+using Build1.PostMVC.Unity.App.Modules.Logging;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Device.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
 {
     public abstract class DeviceControllerBase : IDeviceController
     {

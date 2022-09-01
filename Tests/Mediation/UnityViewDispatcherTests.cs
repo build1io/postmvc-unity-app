@@ -1,9 +1,9 @@
-using Build1.PostMVC.UnityApp.Mediation;
+using Build1.PostMVC.Unity.App.Mediation;
 using NUnit.Framework;
 using UnityEngine;
-using Event = Build1.PostMVC.Core.Extensions.MVCS.Events.Event;
+using Event = Build1.PostMVC.Core.MVCS.Events.Event;
 
-namespace Build1.PostMVC.UnityApp.Tests.Mediation
+namespace Build1.PostMVC.Unity.App.Tests.Mediation
 {
     public sealed class UnityViewDispatcherTests
     {

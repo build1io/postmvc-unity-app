@@ -3,7 +3,7 @@
 using System;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Android.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Android.Impl
 {
     internal sealed class AndroidAgent : MonoBehaviour
     {

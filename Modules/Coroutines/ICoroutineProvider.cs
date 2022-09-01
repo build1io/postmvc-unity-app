@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Coroutines
+namespace Build1.PostMVC.Unity.App.Modules.Coroutines
 {
     public interface ICoroutineProvider
     {

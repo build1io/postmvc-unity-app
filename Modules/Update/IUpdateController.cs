@@ -1,6 +1,6 @@
 using System;
 
-namespace Build1.PostMVC.UnityApp.Modules.Update
+namespace Build1.PostMVC.Unity.App.Modules.Update
 {
     public interface IUpdateController
     {

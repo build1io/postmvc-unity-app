@@ -1,38 +1,41 @@
 using System;
 using Build1.PostMVC.Core.Extensions;
-using Build1.PostMVC.Core.Extensions.MVCS;
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
-using Build1.PostMVC.UnityApp.Contexts;
-using Build1.PostMVC.UnityApp.Contexts.Impl;
-using Build1.PostMVC.UnityApp.Events.Impl;
-using Build1.PostMVC.UnityApp.Mediation.Api;
-using Build1.PostMVC.UnityApp.Mediation.Impl;
-using Build1.PostMVC.UnityApp.Modules.Agents;
-using Build1.PostMVC.UnityApp.Modules.Agents.Impl;
-using Build1.PostMVC.UnityApp.Modules.App;
-using Build1.PostMVC.UnityApp.Modules.App.Impl;
-using Build1.PostMVC.UnityApp.Modules.Assets;
-using Build1.PostMVC.UnityApp.Modules.Assets.Impl;
-using Build1.PostMVC.UnityApp.Modules.Async;
-using Build1.PostMVC.UnityApp.Modules.Async.Impl;
-using Build1.PostMVC.UnityApp.Modules.Coroutines;
-using Build1.PostMVC.UnityApp.Modules.Coroutines.Impl;
-using Build1.PostMVC.UnityApp.Modules.Device;
-using Build1.PostMVC.UnityApp.Modules.FullScreen;
-using Build1.PostMVC.UnityApp.Modules.InternetReachability;
-using Build1.PostMVC.UnityApp.Modules.Logging;
-using Build1.PostMVC.UnityApp.Modules.Popups;
-using Build1.PostMVC.UnityApp.Modules.Popups.Impl;
-using Build1.PostMVC.UnityApp.Modules.Screens;
-using Build1.PostMVC.UnityApp.Modules.Screens.Impl;
-using Build1.PostMVC.UnityApp.Modules.UI;
-using Build1.PostMVC.UnityApp.Modules.UI.Impl;
-using Build1.PostMVC.UnityApp.Modules.Update;
-using Build1.PostMVC.UnityApp.Modules.Update.Impl;
+using Build1.PostMVC.Core.MVCS;
+using Build1.PostMVC.Core.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Contexts;
+using Build1.PostMVC.Unity.App.Contexts.Impl;
+using Build1.PostMVC.Unity.App.Events.Impl;
+using Build1.PostMVC.Unity.App.Events.Impl.Bus;
+using Build1.PostMVC.Unity.App.Events.Impl.Map;
+using Build1.PostMVC.Unity.App.Mediation.Api;
+using Build1.PostMVC.Unity.App.Mediation.Impl;
+using Build1.PostMVC.Unity.App.Modules.Agents;
+using Build1.PostMVC.Unity.App.Modules.Agents.Impl;
+using Build1.PostMVC.Unity.App.Modules.App;
+using Build1.PostMVC.Unity.App.Modules.App.Impl;
+using Build1.PostMVC.Unity.App.Modules.Assets;
+using Build1.PostMVC.Unity.App.Modules.Assets.Impl;
+using Build1.PostMVC.Unity.App.Modules.Async;
+using Build1.PostMVC.Unity.App.Modules.Async.Impl;
+using Build1.PostMVC.Unity.App.Modules.Coroutines;
+using Build1.PostMVC.Unity.App.Modules.Coroutines.Impl;
+using Build1.PostMVC.Unity.App.Modules.Device;
+using Build1.PostMVC.Unity.App.Modules.FullScreen;
+using Build1.PostMVC.Unity.App.Modules.InternetReachability;
+using Build1.PostMVC.Unity.App.Modules.Logging;
+using Build1.PostMVC.Unity.App.Modules.Popups;
+using Build1.PostMVC.Unity.App.Modules.Popups.Impl;
+using Build1.PostMVC.Unity.App.Modules.Screens;
+using Build1.PostMVC.Unity.App.Modules.Screens.Impl;
+using Build1.PostMVC.Unity.App.Modules.UI;
+using Build1.PostMVC.Unity.App.Modules.UI.Impl;
+using Build1.PostMVC.Unity.App.Modules.Update;
+using Build1.PostMVC.Unity.App.Modules.Update.Impl;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Build1.PostMVC.UnityApp
+namespace Build1.PostMVC.Unity.App
 {
     public sealed class UnityAppExtension : Extension
     {
@@ -48,7 +51,14 @@ namespace Build1.PostMVC.UnityApp
         {
             var injectionBinder = GetDependentExtension<MVCSExtension>().InjectionBinder;
             injectionBinder.Bind<ILog, LogProvider, LogAttribute>();
+            
+            // Rebinding EventBus to a Unity specific one.
             injectionBinder.Rebind<IEventBus, EventBusUnity>();
+            
+            // Unbinding default EventMap and binding the Unity specific one.
+            injectionBinder.Unbind<IEventMap>();
+            injectionBinder.Bind<Build1.PostMVC.Unity.App.Events.IEventMap, EventMapProviderUnity, Inject>();
+            
             injectionBinder.Bind<IUnityViewEventProcessor, UnityViewEventProcessor>();
             injectionBinder.Bind<IAgentsController, AgentsController>();
             injectionBinder.Bind<IAppController, AppController>().ConstructOnStart();

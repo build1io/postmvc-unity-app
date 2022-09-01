@@ -1,6 +1,6 @@
 using System;
 
-namespace Build1.PostMVC.UnityApp.Modules.UI
+namespace Build1.PostMVC.Unity.App.Modules.UI
 {
     [Flags]
     public enum UIControlBehavior

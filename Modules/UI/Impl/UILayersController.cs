@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.UI.Impl
+namespace Build1.PostMVC.Unity.App.Modules.UI.Impl
 {
     public sealed class UILayersController : IUILayersController
     {

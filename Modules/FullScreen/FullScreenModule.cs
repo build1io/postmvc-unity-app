@@ -1,8 +1,8 @@
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
 using Build1.PostMVC.Core.Modules;
-using Build1.PostMVC.UnityApp.Modules.FullScreen.Impl;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.FullScreen.Impl;
 
-namespace Build1.PostMVC.UnityApp.Modules.FullScreen
+namespace Build1.PostMVC.Unity.App.Modules.FullScreen
 {
     public sealed class FullScreenModule : Module
     {

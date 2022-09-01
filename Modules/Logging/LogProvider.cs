@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Modules.Logging.Impl;
-using Build1.PostMVC.UnityApp.Utils.Path;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Logging.Impl;
+using Build1.PostMVC.Unity.App.Utils.Path;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Logging
+namespace Build1.PostMVC.Unity.App.Modules.Logging
 {
     public sealed class LogProvider : InjectionProvider<ILog, LogAttribute>
     {

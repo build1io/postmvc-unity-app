@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Build1.PostMVC.UnityApp.Modules.Assets.Impl.Cache
+namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
 {
     public sealed class AssetBundleCacheInfo
     {

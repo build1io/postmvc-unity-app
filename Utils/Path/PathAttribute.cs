@@ -1,6 +1,6 @@
 using System;
 
-namespace Build1.PostMVC.UnityApp.Utils.Path
+namespace Build1.PostMVC.Unity.App.Utils.Path
 {
     [Flags]
     public enum PathAttribute

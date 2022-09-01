@@ -1,4 +1,4 @@
-namespace Build1.PostMVC.UnityApp.Mediation.Api
+namespace Build1.PostMVC.Unity.App.Mediation.Api
 {
     internal interface IUnityViewEventProcessor
     {

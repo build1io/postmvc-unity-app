@@ -1,9 +1,9 @@
 using System;
-using Build1.PostMVC.Core.Extensions.MVCS.Mediation;
-using Build1.PostMVC.UnityApp.Modules.Assets;
-using Build1.PostMVC.UnityApp.Modules.Device;
+using Build1.PostMVC.Core.MVCS.Mediation;
+using Build1.PostMVC.Unity.App.Modules.Assets;
+using Build1.PostMVC.Unity.App.Modules.Device;
 
-namespace Build1.PostMVC.UnityApp.Modules.Popups
+namespace Build1.PostMVC.Unity.App.Modules.Popups
 {
     public sealed class PopupConfig : PopupConfigBase
     {

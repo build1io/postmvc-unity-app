@@ -2,7 +2,7 @@ using System;
 using Build1.PostMVC.Core.Contexts;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Contexts.Impl
+namespace Build1.PostMVC.Unity.App.Contexts.Impl
 {
     internal sealed class ContextViewUnity : MonoBehaviour, IContextView
     {

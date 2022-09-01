@@ -1,4 +1,4 @@
-namespace Build1.PostMVC.UnityApp.Modules.App
+namespace Build1.PostMVC.Unity.App.Modules.App
 {
     public interface IAppController
     {

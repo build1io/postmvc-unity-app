@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.UI
+namespace Build1.PostMVC.Unity.App.Modules.UI
 {
     public interface IUILayersController
     {

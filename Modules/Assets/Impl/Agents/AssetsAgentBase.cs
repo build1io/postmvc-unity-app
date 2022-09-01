@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.IO;
-using Build1.PostMVC.UnityApp.Modules.Assets.Impl.Cache;
+using Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.U2D;
 
-namespace Build1.PostMVC.UnityApp.Modules.Assets.Impl.Agents
+namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
 {
     internal abstract class AssetsAgentBase : MonoBehaviour
     {

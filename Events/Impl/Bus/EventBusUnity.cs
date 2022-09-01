@@ -1,10 +1,9 @@
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
-using Build1.PostMVC.Core.Extensions.MVCS.Events.Impl;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Modules.Update;
-using Event = Build1.PostMVC.Core.Extensions.MVCS.Events.Event;
+using Build1.PostMVC.Core.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Events.Impl.Bus;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Update;
 
-namespace Build1.PostMVC.UnityApp.Events.Impl
+namespace Build1.PostMVC.Unity.App.Events.Impl.Bus
 {
     public sealed class EventBusUnity : IEventBus
     {

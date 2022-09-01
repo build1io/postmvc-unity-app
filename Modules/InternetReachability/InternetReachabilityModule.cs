@@ -1,8 +1,8 @@
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
 using Build1.PostMVC.Core.Modules;
-using Build1.PostMVC.UnityApp.Modules.InternetReachability.Impl;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl;
 
-namespace Build1.PostMVC.UnityApp.Modules.InternetReachability
+namespace Build1.PostMVC.Unity.App.Modules.InternetReachability
 {
     internal sealed class InternetReachabilityModule : Module
     {

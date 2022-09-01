@@ -1,6 +1,6 @@
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Events;
 
-namespace Build1.PostMVC.UnityApp.Mediation.Impl
+namespace Build1.PostMVC.Unity.App.Mediation.Impl
 {
     public abstract class UnityEventBindingBase
     {

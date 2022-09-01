@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Build1.PostMVC.Core.Extensions.MVCS.Mediation;
-using Build1.PostMVC.UnityApp.Mediation;
-using Build1.PostMVC.UnityApp.Modules.Assets;
-using Build1.PostMVC.UnityApp.Modules.Device;
+using Build1.PostMVC.Core.MVCS.Mediation;
+using Build1.PostMVC.Unity.App.Mediation;
+using Build1.PostMVC.Unity.App.Modules.Assets;
+using Build1.PostMVC.Unity.App.Modules.Device;
 
-namespace Build1.PostMVC.UnityApp.Modules.UI
+namespace Build1.PostMVC.Unity.App.Modules.UI
 {
     public abstract class UIControlConfiguration : IDeviceDependentConfiguration, IEnumerable<UIControlBinding>
     {

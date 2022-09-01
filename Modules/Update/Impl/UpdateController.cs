@@ -1,8 +1,8 @@
 using System;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Modules.Agents;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Agents;
 
-namespace Build1.PostMVC.UnityApp.Modules.Update.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Update.Impl
 {
     internal sealed class UpdateController : IUpdateController
     {

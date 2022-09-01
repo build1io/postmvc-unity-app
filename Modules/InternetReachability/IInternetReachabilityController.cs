@@ -1,6 +1,6 @@
 using System;
 
-namespace Build1.PostMVC.UnityApp.Modules.InternetReachability
+namespace Build1.PostMVC.Unity.App.Modules.InternetReachability
 {
     public interface IInternetReachabilityController
     {

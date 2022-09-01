@@ -1,8 +1,8 @@
 using System;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
+using Build1.PostMVC.Core.MVCS.Injection;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.App.Impl
+namespace Build1.PostMVC.Unity.App.Modules.App.Impl
 {
     public sealed class AppAgent : MonoBehaviour
     {

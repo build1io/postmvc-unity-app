@@ -1,11 +1,16 @@
 using System;
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
-using Build1.PostMVC.UnityApp.Mediation;
+using Build1.PostMVC.Core.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Events.Impl.Map;
+using Build1.PostMVC.Unity.App.Mediation;
 
-namespace Build1.PostMVC.UnityApp.Events.Impl
+namespace Build1.PostMVC.Unity.App.Events.Impl.Map
 {
-    internal sealed class EventMap
+    internal sealed class EventMapUnity : EventMap, IEventMap
     {
+        public EventMapUnity(IEventDispatcher dispatcher, IEventBus bus, Core.MVCS.Events.Impl.Map.EventMapInfoPool infosPool) : base(dispatcher, bus, infosPool)
+        {
+        }
+        
         /*
          * Map.
          */
@@ -30,26 +35,26 @@ namespace Build1.PostMVC.UnityApp.Events.Impl
 
         public void Unmap(UnityViewDispatcher dispatcher, Event @event, Action listener)
         { 
-            // if (TryGetMapInfo(dispatcher, @event, listener, out var info))
-            //     RemoveMapInfo(info.Unbind());
+            if (TryGetMapInfo(dispatcher, @event, listener, out var info))
+                RemoveMapInfo(info.Unbind());
         }
 
         public void Unmap<T1>(UnityViewDispatcher dispatcher, Event<T1> @event, Action<T1> listener)
         {
-            // if (TryGetMapInfo(dispatcher, @event, listener, out var info))
-            //     RemoveMapInfo(info.Unbind());
+            if (TryGetMapInfo(dispatcher, @event, listener, out var info))
+                RemoveMapInfo(info.Unbind());
         }
 
         public void Unmap<T1, T2>(UnityViewDispatcher dispatcher, Event<T1, T2> @event, Action<T1, T2> listener)
         {
-            // if (TryGetMapInfo(dispatcher, @event, listener, out var info))
-            //     RemoveMapInfo(info.Unbind());
+            if (TryGetMapInfo(dispatcher, @event, listener, out var info))
+                RemoveMapInfo(info.Unbind());
         }
 
         public void Unmap<T1, T2, T3>(UnityViewDispatcher dispatcher, Event<T1, T2, T3> @event, Action<T1, T2, T3> listener)
         {
-            // if (TryGetMapInfo(dispatcher, @event, listener, out var info))
-            //     RemoveMapInfo(info.Unbind());
+            if (TryGetMapInfo(dispatcher, @event, listener, out var info))
+                RemoveMapInfo(info.Unbind());
         }
 
         /*
@@ -58,26 +63,22 @@ namespace Build1.PostMVC.UnityApp.Events.Impl
 
         public bool ContainsMapInfo(UnityViewDispatcher dispatcher, Event @event, Action listener)
         {
-            //return ContainsMapInfoImpl(dispatcher, @event, listener);
-            return false;
+            return ContainsMapInfoImpl(dispatcher, @event, listener);
         }
 
         public bool ContainsMapInfo<T1>(UnityViewDispatcher dispatcher, Event<T1> @event, Action<T1> listener)
         {
-            //return ContainsMapInfoImpl(dispatcher, @event, listener);
-            return false;
+            return ContainsMapInfoImpl(dispatcher, @event, listener);
         }
 
         public bool ContainsMapInfo<T1, T2>(UnityViewDispatcher dispatcher, Event<T1, T2> @event, Action<T1, T2> listener)
         {
-            //return ContainsMapInfoImpl(dispatcher, @event, listener);
-            return false;
+            return ContainsMapInfoImpl(dispatcher, @event, listener);
         }
 
         public bool ContainsMapInfo<T1, T2, T3>(UnityViewDispatcher dispatcher, Event<T1, T2, T3> @event, Action<T1, T2, T3> listener)
         {
-            // return ContainsMapInfoImpl(dispatcher, @event, listener);
-            return false;
+            return ContainsMapInfoImpl(dispatcher, @event, listener);
         }
         
         /*

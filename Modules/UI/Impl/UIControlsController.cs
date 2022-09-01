@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.Core.Extensions.MVCS.Mediation;
-using Build1.PostMVC.UnityApp.Modules.Assets;
-using Build1.PostMVC.UnityApp.Modules.Device;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Core.MVCS.Mediation;
+using Build1.PostMVC.Unity.App.Modules.Assets;
+using Build1.PostMVC.Unity.App.Modules.Device;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.UI.Impl
+namespace Build1.PostMVC.Unity.App.Modules.UI.Impl
 {
     public abstract class UIControlsController<T, C> where T : UIControl<C>
                                                      where C : UIControlConfiguration

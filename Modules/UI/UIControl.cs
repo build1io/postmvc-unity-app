@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Build1.PostMVC.UnityApp.Modules.UI
+namespace Build1.PostMVC.Unity.App.Modules.UI
 {
     public abstract class UIControl<T> : IEnumerable<T> where T : UIControlConfiguration
     {

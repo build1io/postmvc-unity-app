@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Modules.Logging;
-using Build1.PostMVC.UnityApp.Modules.UI;
-using Build1.PostMVC.UnityApp.Modules.UI.Impl;
+using Build1.PostMVC.Core.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Logging;
+using Build1.PostMVC.Unity.App.Modules.UI;
+using Build1.PostMVC.Unity.App.Modules.UI.Impl;
 
-namespace Build1.PostMVC.UnityApp.Modules.Screens.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Screens.Impl
 {
     public sealed class ScreensController : UIControlsController<Screen, ScreenConfig>, IScreensController
     {

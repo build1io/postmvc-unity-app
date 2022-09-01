@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Device.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
 {
     public sealed class DeviceControllerRuntime : DeviceControllerBase
     {

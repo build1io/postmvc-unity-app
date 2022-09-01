@@ -1,9 +1,9 @@
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Contexts;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Contexts;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Build1.PostMVC.UnityApp.Modules.Agents.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Agents.Impl
 {
     internal sealed class AgentsController : IAgentsController
     {

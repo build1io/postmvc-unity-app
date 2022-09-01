@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Modules.Agents;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Agents;
 
-namespace Build1.PostMVC.UnityApp.Modules.Async.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 {
     internal sealed class AsyncResolver : IAsyncResolver
     {

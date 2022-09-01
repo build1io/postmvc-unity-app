@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Contexts;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Contexts;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Build1.PostMVC.UnityApp.Modules.InternetReachability.Impl
+namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
 {
     public sealed class InternetReachabilityController : IInternetReachabilityController
     {

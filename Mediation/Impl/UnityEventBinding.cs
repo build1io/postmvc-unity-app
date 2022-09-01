@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Events;
 using UnityEngine.Events;
-using Event = Build1.PostMVC.Core.Extensions.MVCS.Events.Event;
+using Event = Build1.PostMVC.Core.MVCS.Events.Event;
 
-namespace Build1.PostMVC.UnityApp.Mediation.Impl
+namespace Build1.PostMVC.Unity.App.Mediation.Impl
 {
     internal sealed class UnityEventBinding : UnityEventBindingBase, IUnityEventBindingTo, IUnityEventBindingFrom
     {

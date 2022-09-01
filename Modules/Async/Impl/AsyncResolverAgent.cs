@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Modules.Logging;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Logging;
 using UnityEngine;
 using Random = System.Random;
 
-namespace Build1.PostMVC.UnityApp.Modules.Async.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 {
     public class AsyncResolverAgent : MonoBehaviour
     {
@@ -16,11 +16,11 @@ namespace Build1.PostMVC.UnityApp.Modules.Async.Impl
         private const int PendingCallsCapacity   = 8;
         private const int IntervalCallsCapacity  = 8;
 
-        private readonly List<Action> _pendingActions           = new List<Action>(ResolvingCallsCapacity);
-        private readonly List<Action> _pendingActionsExecutable = new List<Action>(ResolvingCallsCapacity);
+        private readonly List<Action> _pendingActions           = new(ResolvingCallsCapacity);
+        private readonly List<Action> _pendingActionsExecutable = new(ResolvingCallsCapacity);
 
-        private readonly List<int> _delayedCallIds  = new List<int>(PendingCallsCapacity);
-        private readonly List<int> _intervalCallIds = new List<int>(IntervalCallsCapacity);
+        private readonly List<int> _delayedCallIds  = new(PendingCallsCapacity);
+        private readonly List<int> _intervalCallIds = new(IntervalCallsCapacity);
 
         private readonly Random _random = new Random();
 

@@ -1,6 +1,6 @@
 using System;
 
-namespace Build1.PostMVC.UnityApp.Modules.Assets
+namespace Build1.PostMVC.Unity.App.Modules.Assets
 {
     public interface IAssetsController
     {

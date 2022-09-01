@@ -1,6 +1,6 @@
-using Build1.PostMVC.UnityApp.Modules.UI;
+using Build1.PostMVC.Unity.App.Modules.UI;
 
-namespace Build1.PostMVC.UnityApp.Modules.Screens
+namespace Build1.PostMVC.Unity.App.Modules.Screens
 {
     public sealed class Screen : ScreenBase
     {

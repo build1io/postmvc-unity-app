@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Utils.Path
+namespace Build1.PostMVC.Unity.App.Utils.Path
 {
     public static class PathUtil
     {

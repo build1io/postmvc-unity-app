@@ -1,11 +1,11 @@
 using Build1.PostMVC.Core.Contexts;
-using Build1.PostMVC.Core.Extensions.MVCS;
-using Build1.PostMVC.Core.Extensions.MVCS.Mediation;
-using Build1.PostMVC.UnityApp.Contexts.Impl;
-using Build1.PostMVC.UnityApp.Mediation.Api;
+using Build1.PostMVC.Core.MVCS;
+using Build1.PostMVC.Core.MVCS.Mediation;
+using Build1.PostMVC.Unity.App.Contexts.Impl;
+using Build1.PostMVC.Unity.App.Mediation.Api;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Mediation
+namespace Build1.PostMVC.Unity.App.Mediation
 {
     [DisallowMultipleComponent]
     public abstract class UnityView : MonoBehaviour, IUnityView

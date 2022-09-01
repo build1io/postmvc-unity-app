@@ -1,12 +1,12 @@
 #if UNITY_ANDROID || UNITY_EDITOR
 
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
 using Build1.PostMVC.Core.Modules;
-using Build1.PostMVC.UnityApp.Modules.Agents;
-using Build1.PostMVC.UnityApp.Modules.Android.Impl;
+using Build1.PostMVC.Core.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Agents;
+using Build1.PostMVC.Unity.App.Modules.Android.Impl;
 
-namespace Build1.PostMVC.UnityApp.Modules.Android
+namespace Build1.PostMVC.Unity.App.Modules.Android
 {
     public sealed class AndroidModule : Module
     {

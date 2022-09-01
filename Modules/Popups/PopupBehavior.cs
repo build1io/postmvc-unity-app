@@ -1,4 +1,4 @@
-namespace Build1.PostMVC.UnityApp.Modules.Popups
+namespace Build1.PostMVC.Unity.App.Modules.Popups
 {
     public enum PopupBehavior
     {

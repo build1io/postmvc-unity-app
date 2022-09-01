@@ -1,6 +1,6 @@
-using Build1.PostMVC.UnityApp.Modules.UI;
+using Build1.PostMVC.Unity.App.Modules.UI;
 
-namespace Build1.PostMVC.UnityApp.Modules.HUD
+namespace Build1.PostMVC.Unity.App.Modules.HUD
 {
     public sealed class HUDControl : UIControl<HUDControlConfig>
     {

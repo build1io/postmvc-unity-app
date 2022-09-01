@@ -1,8 +1,8 @@
 #if UNITY_ANDROID || UNITY_EDITOR
 
-using Build1.PostMVC.Core.Extensions.MVCS.Events;
+using Build1.PostMVC.Core.MVCS.Events;
 
-namespace Build1.PostMVC.UnityApp.Modules.Android
+namespace Build1.PostMVC.Unity.App.Modules.Android
 {
     public static class AndroidEvent
     {

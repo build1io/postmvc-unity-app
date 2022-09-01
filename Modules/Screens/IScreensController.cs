@@ -1,4 +1,4 @@
-namespace Build1.PostMVC.UnityApp.Modules.Screens
+namespace Build1.PostMVC.Unity.App.Modules.Screens
 {
     public interface IScreensController
     {

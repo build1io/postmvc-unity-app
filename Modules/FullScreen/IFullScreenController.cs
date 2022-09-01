@@ -1,4 +1,4 @@
-namespace Build1.PostMVC.UnityApp.Modules.FullScreen
+namespace Build1.PostMVC.Unity.App.Modules.FullScreen
 {
     public interface IFullScreenController
     {

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Modules.App;
-using Build1.PostMVC.UnityApp.Modules.Logging;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.App;
+using Build1.PostMVC.Unity.App.Modules.Logging;
 using Newtonsoft.Json;
 
-namespace Build1.PostMVC.UnityApp.Modules.Assets.Impl.Cache
+namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
 {
     public sealed class AssetBundlesCacheController
     {

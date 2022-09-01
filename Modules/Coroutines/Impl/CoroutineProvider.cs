@@ -1,9 +1,9 @@
 using System.Collections;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
-using Build1.PostMVC.UnityApp.Contexts;
+using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Contexts;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Coroutines.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Coroutines.Impl
 {
     internal sealed class CoroutineProvider : ICoroutineProvider
     {

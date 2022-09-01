@@ -1,6 +1,6 @@
 using Build1.PostMVC.Core.Contexts;
 
-namespace Build1.PostMVC.UnityApp.Contexts
+namespace Build1.PostMVC.Unity.App.Contexts
 {
     public interface IContextView
     {

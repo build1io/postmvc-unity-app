@@ -1,4 +1,4 @@
-namespace Build1.PostMVC.UnityApp.Modules.Device
+namespace Build1.PostMVC.Unity.App.Modules.Device
 {
     public interface IDeviceDependentConfiguration
     {

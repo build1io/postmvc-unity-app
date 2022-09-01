@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Build1.PostMVC.UnityApp.Modules.Logging.Impl
+namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
 {
     internal abstract class LogBase : ILog, ILogDebug, ILogWarn, ILogError
     {

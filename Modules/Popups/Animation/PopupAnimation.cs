@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Popups.Animation
+namespace Build1.PostMVC.Unity.App.Modules.Popups.Animation
 {
     public abstract class PopupAnimation : ScriptableObject
     {

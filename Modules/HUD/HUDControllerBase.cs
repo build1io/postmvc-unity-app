@@ -1,7 +1,7 @@
-using Build1.PostMVC.UnityApp.Modules.UI;
-using Build1.PostMVC.UnityApp.Modules.UI.Impl;
+using Build1.PostMVC.Unity.App.Modules.UI;
+using Build1.PostMVC.Unity.App.Modules.UI.Impl;
 
-namespace Build1.PostMVC.UnityApp.Modules.HUD
+namespace Build1.PostMVC.Unity.App.Modules.HUD
 {
     public abstract class HUDControllerBase : UIControlsController<HUDControl, HUDControlConfig>
     {

@@ -1,7 +1,7 @@
 using System;
-using Build1.PostMVC.Core.Extensions.MVCS.Injection;
+using Build1.PostMVC.Core.MVCS.Injection;
 
-namespace Build1.PostMVC.UnityApp.Modules.Logging
+namespace Build1.PostMVC.Unity.App.Modules.Logging
 {
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class LogAttribute : Inject

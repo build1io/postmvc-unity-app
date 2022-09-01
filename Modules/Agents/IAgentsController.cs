@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Build1.PostMVC.UnityApp.Modules.Agents
+namespace Build1.PostMVC.Unity.App.Modules.Agents
 {
     public interface IAgentsController
     {

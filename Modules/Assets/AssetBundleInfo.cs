@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Build1.PostMVC.UnityApp.Modules.Assets
+namespace Build1.PostMVC.Unity.App.Modules.Assets
 {
     public sealed class AssetBundleInfo
     {

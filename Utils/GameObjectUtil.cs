@@ -1,4 +1,4 @@
-namespace Build1.PostMVC.UnityApp.Utils
+namespace Build1.PostMVC.Unity.App.Utils
 {
     public static class GameObjectUtil
     {
