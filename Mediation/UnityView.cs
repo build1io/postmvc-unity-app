@@ -103,7 +103,7 @@ namespace Build1.PostMVC.Unity.App.Mediation
             Initialized = false;
         }
 
-        private void OnContextStopping()
+        private void OnContextStopping(IContext context)
         {
             // Once view finds it's context, it listens to Stop event.
             // If context is stopped, all initialized views are destroyed.

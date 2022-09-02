@@ -97,7 +97,7 @@ namespace Build1.PostMVC.Unity.App
             }
             else
             {
-                viewGameObject.name = Context.Name;
+                viewGameObject.name = string.IsNullOrWhiteSpace(Context.Name) ? $"[Context{Context.Id:D2}]" : Context.Name;
 
                 if (RootContext.HasExtension<MVCSExtension>())
                 {
