@@ -83,17 +83,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
          */
 
         protected bool   CheckLevel(LogLevel level)           { return _level > LogLevel.None && level >= _level; }
-        protected string FormatMessage(object message)        { return FormatMessage(_prefix, message); }
+        protected string FormatMessage(object message)        { return $"{_prefix}: {message}\n"; }
         protected string FormatException(Exception exception) { return FormatException(_prefix, exception); }
 
         /*
          * Static.
          */
-
-        protected static string FormatMessage(string prefix, object message)
-        {
-            return $"{prefix}: {message}\n";
-        }
 
         protected static string FormatException(string prefix, Exception exception)
         {

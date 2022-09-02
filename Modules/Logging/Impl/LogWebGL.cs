@@ -41,7 +41,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
                     return;
                 
                 _logLevelOverride = logLevel;
-                LogDebug(FormatMessage(nameof(LogWebGL), $"Global log level overridden to {_logLevelOverride}"));
+                
+                LogDebug($"{nameof(LogWebGL)}: Global log level overridden to {_logLevelOverride}\n");
             }
             catch (Exception exception)
             {
