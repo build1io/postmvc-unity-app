@@ -5,7 +5,6 @@ using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Unity.App.Contexts;
 using Build1.PostMVC.Unity.App.Contexts.Impl;
-using Build1.PostMVC.Unity.App.Events.Impl;
 using Build1.PostMVC.Unity.App.Events.Impl.Bus;
 using Build1.PostMVC.Unity.App.Events.Impl.Map;
 using Build1.PostMVC.Unity.App.Mediation.Api;
@@ -94,11 +93,11 @@ namespace Build1.PostMVC.Unity.App
 
             if (Context.IsRootContext)
             {
-                viewGameObject.name = RootGameObjectName;
+                viewGameObject.name = string.IsNullOrWhiteSpace(Context.Name) ? RootGameObjectName : Context.Name;
             }
             else
             {
-                viewGameObject.name = GetType().Name;
+                viewGameObject.name = Context.Name;
 
                 if (RootContext.HasExtension<MVCSExtension>())
                 {

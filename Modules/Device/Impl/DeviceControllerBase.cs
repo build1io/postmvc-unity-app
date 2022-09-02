@@ -13,9 +13,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
     {
         private const float OrientationCheckTimeout = 0.2F;
 
-        [Log(LogLevel.Warning)] public ILog           Log           { get; set; }
-        [Inject]                public IEventMap      EventMap      { get; set; }
-        [Inject]                public IAsyncResolver AsyncResolver { get; set; }
+        [Log(LogLevel.Warning)] public ILog             Log           { get; set; }
+        [Inject]                public IAsyncResolver   AsyncResolver { get; set; }
+        [Inject]                public IEventDispatcher Dispatcher    { get; set; }
 
         public DevicePlatform          DevicePlatform          { get; private set; }
         public DeviceType              DeviceType              { get; private set; }
@@ -56,7 +56,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
             Log.Debug((p, t) => $"Platform: {p} DeviceType: {t}", DevicePlatform, DeviceType);
             Log.Debug(() => "Diagonal: " + GetDiagonalInches() + " AspectRatio: " + GetAspectRatio());
 
-            EventMap.Map(AppEvent.Pause, OnAppPause);
+            Dispatcher.AddListener(AppEvent.Pause, OnAppPause);
 
             StartCheck();
         }
@@ -64,7 +64,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
         [PreDestroy]
         public void PreDestroy()
         {
-            EventMap.UnmapAll();
+            Dispatcher.RemoveListener(AppEvent.Pause, OnAppPause);
 
             StopCheck();
         }
@@ -165,7 +165,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
 
                 DeviceType = deviceType;
 
-                EventMap.Dispatch(DeviceEvent.DeviceTypeChanged, DeviceType);
+                Dispatcher.Dispatch(DeviceEvent.DeviceTypeChanged, DeviceType);
             }
 
             if (_deviceOrientation != Input.deviceOrientation)
@@ -175,7 +175,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
                 _deviceOrientation = Input.deviceOrientation;
                 DeviceOrientation = ToDeviceOrientation(Input.deviceOrientation);
 
-                EventMap.Dispatch(DeviceEvent.DeviceOrientationChanged, DeviceOrientation);
+                Dispatcher.Dispatch(DeviceEvent.DeviceOrientationChanged, DeviceOrientation);
             }
 
             if (_screenOrientation != Screen.orientation)
@@ -185,7 +185,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
                 _screenOrientation = Screen.orientation;
                 DeviceScreenOrientation = ToScreenOrientation(_screenOrientation);
 
-                EventMap.Dispatch(DeviceEvent.ScreenOrientationChanged, DeviceScreenOrientation);
+                Dispatcher.Dispatch(DeviceEvent.ScreenOrientationChanged, DeviceScreenOrientation);
             }
         }
 

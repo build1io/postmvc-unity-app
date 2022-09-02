@@ -1,13 +1,14 @@
 using System;
 using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Events.Impl.Map;
+using Build1.PostMVC.Core.Utils.Pooling;
 using Build1.PostMVC.Unity.App.Mediation;
 
 namespace Build1.PostMVC.Unity.App.Events.Impl.Map
 {
     internal sealed class EventMapUnity : EventMap, IEventMap
     {
-        public EventMapUnity(IEventDispatcher dispatcher, IEventBus bus, Core.MVCS.Events.Impl.Map.EventMapInfoPool infosPool) : base(dispatcher, bus, infosPool)
+        public EventMapUnity(IEventDispatcher dispatcher, IEventBus bus, Pool<IEventMapInfo> infosPool) : base(dispatcher, bus, infosPool)
         {
         }
         
@@ -87,38 +88,34 @@ namespace Build1.PostMVC.Unity.App.Events.Impl.Map
         
         private EventMapInfoUnityViewDispatcher AddMapInfo(UnityViewDispatcher dispatcher, Event @event, Action listener, bool isOnceScenario)
         {
-            // var info = _infosPool.TakeUnityViewDispatcher();
-            // info.Setup(dispatcher, @event, listener, RemoveMapInfo, isOnceScenario);
-            // _infos.Add(info);
-            // return info;
-            return null;
+            var info = _infosPool.Take<EventMapInfoUnityViewDispatcher>();
+            info.Setup(dispatcher, @event, listener, RemoveMapInfo, isOnceScenario);
+            _infos.Add(info);
+            return info;
         }
 
         private EventMapInfoUnityViewDispatcher<T1> AddMapInfo<T1>(UnityViewDispatcher dispatcher, Event<T1> @event, Action<T1> listener, bool isOnceScenario)
         {
-            // var info = _infosPool.TakeUnityViewDispatcher<T1>();
-            // info.Setup(dispatcher, @event, listener, RemoveMapInfo, isOnceScenario);
-            // _infos.Add(info);
-            // return info;
-            return null;
+            var info = _infosPool.Take<EventMapInfoUnityViewDispatcher<T1>>();
+            info.Setup(dispatcher, @event, listener, RemoveMapInfo, isOnceScenario);
+            _infos.Add(info);
+            return info;
         }
 
         private EventMapInfoUnityViewDispatcher<T1, T2> AddMapInfo<T1, T2>(UnityViewDispatcher dispatcher, Event<T1, T2> @event, Action<T1, T2> listener, bool isOnceScenario)
         {
-            // var info = _infosPool.TakeUnityViewDispatcher<T1, T2>();
-            // info.Setup(dispatcher, @event, listener, RemoveMapInfo, isOnceScenario);
-            // _infos.Add(info);
-            // return info;
-            return null;
+            var info = _infosPool.Take<EventMapInfoUnityViewDispatcher<T1, T2>>();
+            info.Setup(dispatcher, @event, listener, RemoveMapInfo, isOnceScenario);
+            _infos.Add(info);
+            return info;
         }
 
         private EventMapInfoUnityViewDispatcher<T1, T2, T3> AddMapInfo<T1, T2, T3>(UnityViewDispatcher dispatcher, Event<T1, T2, T3> @event, Action<T1, T2, T3> listener, bool isOnceScenario)
         {
-            // var info = _infosPool.TakeUnityViewDispatcher<T1, T2, T3>();
-            // info.Setup(dispatcher, @event, listener, RemoveMapInfo, isOnceScenario);
-            // _infos.Add(info);
-            // return info;
-            return null;
+            var info = _infosPool.Take<EventMapInfoUnityViewDispatcher<T1, T2, T3>>();
+            info.Setup(dispatcher, @event, listener, RemoveMapInfo, isOnceScenario);
+            _infos.Add(info);
+            return info;
         }
     }
 }
