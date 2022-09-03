@@ -8,6 +8,6 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
         Strict = 1,
         
         // No exceptions will be thrown.
-        Soft = 2,
+        Soft = 2
     }
 }
