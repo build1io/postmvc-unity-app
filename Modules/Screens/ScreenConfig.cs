@@ -9,6 +9,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Screens
 {
     public sealed class ScreenConfig : UIControlConfiguration
     {
+        public ScreenConfig(string asset, int layerId) : base(asset, layerId) { }
+        public ScreenConfig(string asset, int layerId, Enum assetBundleId) : base(asset, layerId, assetBundleId) { }
+        
         public ScreenConfig(AssetBundleInfo bundleInfo, string prefabName, int appLayerId) : base(bundleInfo, prefabName, appLayerId) { }
         public ScreenConfig(Enum bundleId, string prefabName, int appLayerId) : base(bundleId, prefabName, appLayerId) { }
 
