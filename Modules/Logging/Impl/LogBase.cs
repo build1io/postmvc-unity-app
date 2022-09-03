@@ -8,10 +8,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         private string   _prefix;
         private LogLevel _level;
 
-        protected LogBase(string prefix, LogLevel mode)
+        protected readonly ILogController _logController;
+        
+        protected LogBase(string prefix, LogLevel mode, ILogController logController)
         {
             _prefix = prefix;
             _level = mode;
+            _logController = logController;
         }
 
         /*

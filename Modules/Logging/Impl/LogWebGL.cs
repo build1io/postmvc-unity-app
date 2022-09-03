@@ -21,7 +21,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         [DllImport("__Internal")]
         private static extern string GetUrlParameters();
 
-        private static bool Print => _logLevelOverride != LogLevel.None || LogProvider.Print;
+        private static bool Print => _logLevelOverride != LogLevel.None || Logging.Print;
         
         private static readonly NameValueCollection _urlParams;
         private static readonly LogLevel            _logLevelOverride;
@@ -50,7 +50,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             }
         }
 
-        public LogWebGL(string prefix, LogLevel level) : base(prefix, ValidateLogLevel(level))
+        public LogWebGL(string prefix, LogLevel level, ILogController logController) : base(prefix, ValidateLogLevel(level), logController)
         {
         }
 
@@ -73,8 +73,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogDebug(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Debug(Exception exception)
@@ -87,8 +87,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogDebug(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Debug(Func<string> callback)
@@ -101,8 +101,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogDebug(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Debug<T1>(Func<T1, string> callback, T1 param01)
@@ -115,8 +115,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogDebug(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Debug<T1, T2>(Func<T1, T2, string> callback, T1 param01, T2 param02)
@@ -129,8 +129,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogDebug(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Debug<T1, T2, T3>(Func<T1, T2, T3, string> callback, T1 param01, T2 param02, T3 param03)
@@ -143,8 +143,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogDebug(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Debug(Action<ILogDebug> callback)
@@ -185,8 +185,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogWarning(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Warn(Exception exception)
@@ -199,8 +199,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogWarning(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Warn(Func<string> callback)
@@ -213,8 +213,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogWarning(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Warn<T1>(Func<T1, string> callback, T1 param01)
@@ -227,8 +227,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogWarning(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Warn<T1, T2>(Func<T1, T2, string> callback, T1 param01, T2 param02)
@@ -241,8 +241,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogWarning(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Warn<T1, T2, T3>(Func<T1, T2, T3, string> callback, T1 param01, T2 param02, T3 param03)
@@ -255,8 +255,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogWarning(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, false);
+            if (Logging.Record)
+                _logController.RecordMessage(message, false);
         }
 
         public override void Warn(Action<ILogWarn> callback)
@@ -297,8 +297,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogError(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, true);
+            if (Logging.Record)
+                _logController.RecordMessage(message, true);
         }
 
         public override void Error(Exception exception)
@@ -311,8 +311,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogError(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, true);
+            if (Logging.Record)
+                _logController.RecordMessage(message, true);
         }
 
         public override void Error(Func<string> callback)
@@ -325,8 +325,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogError(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, true);
+            if (Logging.Record)
+                _logController.RecordMessage(message, true);
         }
 
         public override void Error<T1>(Func<T1, string> callback, T1 param01)
@@ -339,8 +339,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogError(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, true);
+            if (Logging.Record)
+                _logController.RecordMessage(message, true);
         }
 
         public override void Error<T1, T2>(Func<T1, T2, string> callback, T1 param01, T2 param02)
@@ -353,8 +353,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogError(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, true);
+            if (Logging.Record)
+                _logController.RecordMessage(message, true);
         }
 
         public override void Error<T1, T2, T3>(Func<T1, T2, T3, string> callback, T1 param01, T2 param02, T3 param03)
@@ -367,8 +367,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (Print)
                 LogError(message);
             
-            if (LogProvider.Record)
-                LogProvider.RecordMessage(message, true);
+            if (Logging.Record)
+                _logController.RecordMessage(message, true);
         }
 
         public override void Error(Action<ILogError> callback)

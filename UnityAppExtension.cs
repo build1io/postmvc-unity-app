@@ -48,9 +48,14 @@ namespace Build1.PostMVC.Unity.App
 
         public override void Initialize()
         {
-            var injectionBinder = GetDependentExtension<MVCSExtension>().InjectionBinder;
-            injectionBinder.Bind<ILog, LogProvider, LogAttribute>();
+            // TODO: manage multiple contexts and core modules sharing
+            if (!Context.IsRootContext)
+                return;
             
+            Context.AddModule<LogModule>();
+            
+            var injectionBinder = GetDependentExtension<MVCSExtension>().InjectionBinder;
+
             // Rebinding EventBus to a Unity specific one.
             injectionBinder.Rebind<IEventBus, EventBusUnity>();
             
@@ -58,6 +63,7 @@ namespace Build1.PostMVC.Unity.App
             injectionBinder.Unbind<IEventMap>();
             injectionBinder.Bind<Build1.PostMVC.Unity.App.Events.IEventMap, EventMapProviderUnity, Inject>();
             
+            // General tools.
             injectionBinder.Bind<IUnityViewEventProcessor, UnityViewEventProcessor>();
             injectionBinder.Bind<IAgentsController, AgentsController>();
             injectionBinder.Bind<IAppController, AppController>().ConstructOnStart();
