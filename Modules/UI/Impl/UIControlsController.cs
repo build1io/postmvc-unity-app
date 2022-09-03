@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Core.MVCS.Mediation;
 using Build1.PostMVC.Unity.App.Modules.Assets;
@@ -118,9 +119,22 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Impl
 
         protected GameObject Instantiate(T control, C configuration, Component parent, bool active)
         {
-            var prefab = configuration.bundleInfo != null
-                             ? AssetsController.GetAsset<GameObject>(configuration.bundleInfo, configuration.prefabName)
-                             : AssetsController.GetAsset<GameObject>(configuration.bundleId, configuration.prefabName);
+            GameObject prefab;
+            if (configuration.bundleInfo != null)
+            {
+                prefab = AssetsController.GetAsset<GameObject>(configuration.bundleInfo, configuration.prefabName);
+            }
+            else if (configuration.bundleId != null)
+            {
+                prefab = AssetsController.GetAsset<GameObject>(configuration.bundleId, configuration.prefabName);
+            }
+            else
+            {
+                if (configuration.prefabName.Contains("."))
+                    prefab = Resources.Load<GameObject>(Path.GetFileNameWithoutExtension(configuration.prefabName));
+                else
+                    prefab = Resources.Load<GameObject>(configuration.prefabName);
+            }
 
             prefab.SetActive(active);
 

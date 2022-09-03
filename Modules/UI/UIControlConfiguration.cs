@@ -19,6 +19,29 @@ namespace Build1.PostMVC.Unity.App.Modules.UI
         public readonly int                    appLayerId;
         public readonly List<UIControlBinding> bindings;
 
+        protected UIControlConfiguration(string asset, int layerId)
+        {
+            DevicePlatform = DevicePlatform.Any;
+            DeviceType = DeviceType.Any;
+            
+            prefabName = asset;
+            appLayerId = layerId;
+
+            bindings = new List<UIControlBinding>();
+        }
+        
+        protected UIControlConfiguration(string asset, int layerId, Enum assetBundleId)
+        {
+            DevicePlatform = DevicePlatform.Any;
+            DeviceType = DeviceType.Any;
+            
+            prefabName = asset;
+            appLayerId = layerId;
+            bundleId = assetBundleId;
+
+            bindings = new List<UIControlBinding>();
+        }
+
         protected UIControlConfiguration(AssetBundleInfo bundleInfo, string prefabName, int appLayerId) : this(DevicePlatform.Any, DeviceType.Any, bundleInfo, prefabName, appLayerId) { }
         protected UIControlConfiguration(Enum bundleId, string prefabName, int appLayerId) : this(DevicePlatform.Any, DeviceType.Any, bundleId, prefabName, appLayerId) { }
 
