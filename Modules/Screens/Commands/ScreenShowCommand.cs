@@ -14,4 +14,16 @@ namespace Build1.PostMVC.Unity.App.Modules.Screens.Commands
                 ScreensController.Show(screen);
         }
     }
+    
+    [Poolable]
+    public sealed class ScreenShowCommand<T> : Command<Screen<T>, T>
+    {
+        [Inject] public IScreensController ScreensController { get; set; }
+        
+        public override void Execute(Screen<T> screen, T data)
+        {
+            if (!ScreensController.CheckScreenIsActive(screen))
+                ScreensController.Show(screen, data);
+        }
+    }
 }

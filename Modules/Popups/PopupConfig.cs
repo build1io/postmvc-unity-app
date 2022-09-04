@@ -2,32 +2,49 @@ using System;
 using Build1.PostMVC.Core.MVCS.Mediation;
 using Build1.PostMVC.Unity.App.Modules.Assets;
 using Build1.PostMVC.Unity.App.Modules.Device;
+using Build1.PostMVC.Unity.App.Modules.UI;
 
 namespace Build1.PostMVC.Unity.App.Modules.Popups
 {
-    public sealed class PopupConfig : PopupConfigBase
+    public sealed class PopupConfig : UIControlConfiguration
     {
-        public PopupConfig(AssetBundleInfo bundleInfo, string prefabName, int appLayerId) : base(bundleInfo, prefabName, appLayerId) { }
-        public PopupConfig(Enum bundleId, string prefabName, int appLayerId) : base(bundleId, prefabName, appLayerId) { }
+        public PopupConfig(string asset, int layerId) : base(asset, layerId) { }
+        public PopupConfig(string asset, int layerId, Enum assetBundleId) : base(asset, layerId, assetBundleId) { }
+        public PopupConfig(string asset, int layerId, AssetBundleInfo assetBundleInfo) : base(asset, layerId, assetBundleInfo) { }
 
-        public PopupConfig(DevicePlatform platform, AssetBundleInfo bundleInfo, string prefabName, int appLayerId) : base(platform, bundleInfo, prefabName, appLayerId) { }
-        public PopupConfig(DevicePlatform platform, Enum bundleId, string prefabName, int appLayerId) : base(platform, bundleId, prefabName, appLayerId) { }
+        /*
+         * Platform.
+         */
 
-        public PopupConfig(DeviceType deviceType, AssetBundleInfo bundleInfo, string prefabName, int appLayerId) : base(deviceType, bundleInfo, prefabName, appLayerId) { }
-        public PopupConfig(DeviceType deviceType, Enum bundleId, string prefabName, int appLayerId) : base(deviceType, bundleId, prefabName, appLayerId) { }
+        public PopupConfig SetPlatform(DevicePlatform platform)
+        {
+            DevicePlatform = platform;
+            return this;
+        }
 
-        public PopupConfig(DevicePlatform platform, DeviceType deviceType, AssetBundleInfo bundleInfo, string prefabName, int appLayerId) : base(platform, deviceType, bundleInfo, prefabName, appLayerId) { }
-        public PopupConfig(DevicePlatform platform, DeviceType deviceType, Enum bundleId, string prefabName, int appLayerId) : base(platform, deviceType, bundleId, prefabName, appLayerId) { }
+        /*
+         * Device.
+         */
 
-        public new PopupConfigBase AddBinding<V, M>() where V : IPopupView
-                                                      where M : Mediator
+        public PopupConfig SetDeviceType(DeviceType type)
+        {
+            DeviceType = type;
+            return this;
+        }
+
+        /*
+         * Bindings.
+         */
+        
+        public new PopupConfig AddBinding<V, M>() where V : IPopupView
+                                                  where M : Mediator
         {
             base.AddBinding<V, M>();
             return this;
         }
 
-        public new PopupConfigBase AddBinding<V, I, M>() where V : IPopupView, I
-                                                         where M : Mediator
+        public new PopupConfig AddBinding<V, I, M>() where V : IPopupView, I
+                                                     where M : Mediator
         {
             base.AddBinding<V, I, M>();
             return this;

@@ -3,7 +3,7 @@ using System;
 namespace Build1.PostMVC.Unity.App.Modules.UI
 {
     [Flags]
-    public enum UIControlBehavior
+    public enum UIBehavior
     {
         /// Control will not be pre instantiated. 
         /// Control will not be destroyed on deactivation.

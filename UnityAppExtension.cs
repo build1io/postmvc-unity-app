@@ -23,6 +23,7 @@ using Build1.PostMVC.Unity.App.Modules.Device;
 using Build1.PostMVC.Unity.App.Modules.FullScreen;
 using Build1.PostMVC.Unity.App.Modules.InternetReachability;
 using Build1.PostMVC.Unity.App.Modules.Logging;
+using Build1.PostMVC.Unity.App.Modules.Logging.Impl;
 using Build1.PostMVC.Unity.App.Modules.Popups;
 using Build1.PostMVC.Unity.App.Modules.Popups.Impl;
 using Build1.PostMVC.Unity.App.Modules.Screens;
@@ -52,10 +53,12 @@ namespace Build1.PostMVC.Unity.App
             if (!Context.IsRootContext)
                 return;
             
-            Context.AddModule<LogModule>();
-            
             var injectionBinder = GetDependentExtension<MVCSExtension>().InjectionBinder;
-
+            
+            // Logging.
+            injectionBinder.Bind<ILogController, LogController>().ConstructOnStart();
+            injectionBinder.Bind<ILog, LogProvider, LogAttribute>();
+            
             // Rebinding EventBus to a Unity specific one.
             injectionBinder.Rebind<IEventBus, EventBusUnity>();
             

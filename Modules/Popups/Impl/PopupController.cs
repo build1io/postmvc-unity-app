@@ -9,7 +9,7 @@ using Build1.PostMVC.Unity.App.Modules.UI.Impl;
 
 namespace Build1.PostMVC.Unity.App.Modules.Popups.Impl
 {
-    public sealed class PopupController : UIControlsController<PopupBase, PopupConfigBase>, IPopupController
+    public sealed class PopupController : UIControlsController<PopupBase, PopupConfig>, IPopupController
     {
         [Log(LogLevel.Warning)] public ILog             Log             { get; set; }
         [Inject]                public IEventDispatcher Dispatcher      { get; set; }

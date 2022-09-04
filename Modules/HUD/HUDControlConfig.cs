@@ -9,29 +9,33 @@ namespace Build1.PostMVC.Unity.App.Modules.HUD
 {
     public sealed class HUDControlConfig : UIControlConfiguration
     {
-        public HUDControlConfig(AssetBundleInfo bundleInfo, 
-                                string prefabName, 
-                                int appLayerId) : base(bundleInfo, prefabName, appLayerId) { }
-        
-        public HUDControlConfig(Enum bundleId, 
-                                string prefabName, 
-                                int appLayerId) : base(bundleId, prefabName, appLayerId) { }
-        
-        public HUDControlConfig(DevicePlatform platform, 
-                                Enum bundleId, 
-                                string prefabName, 
-                                int appLayerId) : base(platform, bundleId, prefabName, appLayerId) { }
-        
-        public HUDControlConfig(DeviceType deviceType, 
-                                Enum bundleId, 
-                                string prefabName, 
-                                int appLayerId) : base(deviceType, bundleId, prefabName, appLayerId) { }
-        
-        public HUDControlConfig(DevicePlatform platform, 
-                                DeviceType deviceType, 
-                                Enum bundleId, 
-                                string prefabName, 
-                                int appLayerId) : base(platform, deviceType, bundleId, prefabName, appLayerId) { }
+        public HUDControlConfig(string asset, int layerId) : base(asset, layerId) { }
+        public HUDControlConfig(string asset, int layerId, Enum assetBundleId) : base(asset, layerId, assetBundleId) { }
+        public HUDControlConfig(string asset, int layerId, AssetBundleInfo assetBundleInfo) : base(asset, layerId, assetBundleInfo) { }
+
+        /*
+         * Platform.
+         */
+
+        public HUDControlConfig SetPlatform(DevicePlatform platform)
+        {
+            DevicePlatform = platform;
+            return this;
+        }
+
+        /*
+         * Device.
+         */
+
+        public HUDControlConfig SetDeviceType(DeviceType type)
+        {
+            DeviceType = type;
+            return this;
+        }
+
+        /*
+         * Bindings.
+         */
 
         public new HUDControlConfig AddBinding<V, M>() where V : IUnityView
                                                        where M : Mediator

@@ -7,19 +7,22 @@ using Build1.PostMVC.Unity.App.Modules.UI.Impl;
 
 namespace Build1.PostMVC.Unity.App.Modules.Screens.Impl
 {
-    public sealed class ScreensController : UIControlsController<Screen, ScreenConfig>, IScreensController
+    public sealed class ScreensController : UIControlsController<ScreenBase, ScreenConfig>, IScreensController
     {
-        [Log(LogLevel.Warning)] public ILog             Log        { get; set; }
-        [Inject]                public IEventDispatcher Dispatcher { get; set; }
+        [Log(LogLevel.Warning)] public ILog             Log             { get; set; }
+        [Inject]                public IEventDispatcher Dispatcher      { get; set; }
+        [Inject]                public IInjectionBinder InjectionBinder { get; set; }
 
-        public Screen CurrentScreen   { get; private set; }
-        public bool   HasShownScreens => _openScreens.Count > 0;
+        public ScreenBase CurrentScreen   { get; private set; }
+        public bool       HasShownScreens => _openScreens.Count > 0;
 
-        private readonly List<Screen> _openScreens;
+        private readonly List<ScreenBase>        _openScreens;
+        private readonly Dictionary<int, object> _openScreensData;
 
         public ScreensController()
         {
-            _openScreens = new List<Screen>(4);
+            _openScreens = new List<ScreenBase>(4);
+            _openScreensData = new Dictionary<int, object>(4);
         }
 
         /*
@@ -28,10 +31,25 @@ namespace Build1.PostMVC.Unity.App.Modules.Screens.Impl
 
         public void Show(Screen screen)
         {
-            Show(screen, ScreenBehavior.Replace);
+            ShowImpl(screen, null, ScreenBehavior.Replace);
         }
 
         public void Show(Screen screen, ScreenBehavior behavior)
+        {
+            ShowImpl(screen, null, behavior);
+        }
+
+        public void Show<T>(Screen<T> screen, T data)
+        {
+            ShowImpl(screen, data, ScreenBehavior.Replace);
+        }
+
+        public void Show<T>(Screen screen, T data, ScreenBehavior behavior)
+        {
+            ShowImpl(screen, data, behavior);
+        }
+
+        private void ShowImpl(ScreenBase screen, object data, ScreenBehavior behavior)
         {
             Log.Debug((s, b) => $"Show. {s} {b}", screen, behavior);
 
@@ -48,24 +66,34 @@ namespace Build1.PostMVC.Unity.App.Modules.Screens.Impl
                 CurrentScreen = null;
             }
 
+            IInjectionBinding dataBinding = null;
+
+            if (screen.dataType != null)
+                dataBinding = InjectionBinder.Bind(screen.dataType).ToValue(data).ToBinding();
+            
             var instance = GetInstance(screen, UIControlOptions.Instantiate | UIControlOptions.Activate, out var isNewInstance);
             if (instance == null)
             {
                 Log.Error(s => $"Failed to instantiate screen: {s}", screen);
                 return;
             }
+            
+            if (dataBinding != null)
+                InjectionBinder.Unbind(dataBinding);
 
             if (!_openScreens.Contains(screen))
             {
                 if (behavior == ScreenBehavior.OpenOnTop)
                 {
                     _openScreens.Insert(0, screen);
+                    _openScreensData[0] = data;
 
                     // No need to move object in hierarchy as it'll be added on top of everything on the layer.
                 }
                 else
                 {
                     _openScreens.Add(screen);
+                    _openScreensData[_openScreens.IndexOf(screen)] = data;
                 }
             }
 
@@ -81,12 +109,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Screens.Impl
             if (behavior == ScreenBehavior.OpenOnTop && previousScreen != null)
                 Dispatcher.Dispatch(ScreenEvent.Hidden, previousScreen);
         }
-
+        
         /*
          * Hide.
          */
 
-        public void Hide(Screen screen)
+        public void Hide(ScreenBase screen)
         {
             Log.Debug(s => $"Hide. {s}", screen);
 
@@ -95,20 +123,24 @@ namespace Build1.PostMVC.Unity.App.Modules.Screens.Impl
             if (CurrentScreen == screen)
                 CurrentScreen = null;
 
-            if (_openScreens.Count > 0)
-                Show(_openScreens[0]);
+            if (_openScreens.Count == 0)
+                return;
+
+            _openScreensData.TryGetValue(0, out var data);
+            
+            ShowImpl(_openScreens[0], data, ScreenBehavior.Replace);
         }
-        
+
         /*
          * Check.
          */
 
-        public bool CheckScreenIsActive(Screen screen)
+        public bool CheckScreenIsActive(ScreenBase screen)
         {
             return _openScreens.Contains(screen);
         }
 
-        public bool CheckScreenIsCurrent(Screen screen)
+        public bool CheckScreenIsCurrent(ScreenBase screen)
         {
             return CurrentScreen == screen;
         }
@@ -117,7 +149,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Screens.Impl
          * Private.
          */
 
-        private void HideScreenImpl(Screen screen)
+        private void HideScreenImpl(ScreenBase screen)
         {
             Log.Debug(s => $"HideScreenImpl. {s}", screen);
 

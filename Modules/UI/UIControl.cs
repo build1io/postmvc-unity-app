@@ -5,16 +5,16 @@ namespace Build1.PostMVC.Unity.App.Modules.UI
 {
     public abstract class UIControl<T> : IEnumerable<T> where T : UIControlConfiguration
     {
-        public readonly string            name;
-        public readonly UIControlBehavior behavior;
+        public readonly string     name;
+        public readonly UIBehavior behavior;
 
-        public bool IsSingleInstance        => (behavior & UIControlBehavior.SingleInstance) == UIControlBehavior.SingleInstance;
-        public bool ToPreInstantiate        => (behavior & UIControlBehavior.PreInstantiate) == UIControlBehavior.PreInstantiate;
-        public bool ToDestroyOnDeactivation => (behavior & UIControlBehavior.DestroyOnDeactivation) == UIControlBehavior.DestroyOnDeactivation;
+        public bool IsSingleInstance        => (behavior & UIBehavior.SingleInstance) == UIBehavior.SingleInstance;
+        public bool ToPreInstantiate        => (behavior & UIBehavior.PreInstantiate) == UIBehavior.PreInstantiate;
+        public bool ToDestroyOnDeactivation => (behavior & UIBehavior.DestroyOnDeactivation) == UIBehavior.DestroyOnDeactivation;
 
         private readonly IList<T> _configurations;
 
-        protected UIControl(string name, UIControlBehavior behavior)
+        protected UIControl(string name, UIBehavior behavior)
         {
             this.name = name;
             this.behavior = behavior;
