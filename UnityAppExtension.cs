@@ -24,12 +24,7 @@ using Build1.PostMVC.Unity.App.Modules.FullScreen;
 using Build1.PostMVC.Unity.App.Modules.InternetReachability;
 using Build1.PostMVC.Unity.App.Modules.Logging;
 using Build1.PostMVC.Unity.App.Modules.Logging.Impl;
-using Build1.PostMVC.Unity.App.Modules.Popups;
-using Build1.PostMVC.Unity.App.Modules.Popups.Impl;
-using Build1.PostMVC.Unity.App.Modules.Screens;
-using Build1.PostMVC.Unity.App.Modules.Screens.Impl;
 using Build1.PostMVC.Unity.App.Modules.UI;
-using Build1.PostMVC.Unity.App.Modules.UI.Impl;
 using Build1.PostMVC.Unity.App.Modules.Update;
 using Build1.PostMVC.Unity.App.Modules.Update.Impl;
 using UnityEngine;
@@ -55,10 +50,6 @@ namespace Build1.PostMVC.Unity.App
             
             var injectionBinder = GetDependentExtension<MVCSExtension>().InjectionBinder;
             
-            // Logging.
-            injectionBinder.Bind<ILogController, LogController>().ConstructOnStart();
-            injectionBinder.Bind<ILog, LogProvider, LogAttribute>();
-            
             // Rebinding EventBus to a Unity specific one.
             injectionBinder.Rebind<IEventBus, EventBusUnity>();
             
@@ -75,18 +66,15 @@ namespace Build1.PostMVC.Unity.App
             injectionBinder.Bind<ICoroutineProvider, CoroutineProvider>();
             injectionBinder.Bind<IUpdateController, UpdateController>();
 
-            // UI            
-            injectionBinder.Bind<IPopupController, PopupController>().AsSingleton();
-            injectionBinder.Bind<IScreensController, ScreensController>().AsSingleton();
-            injectionBinder.Bind<IUILayersController, UILayersController>().AsSingleton();
-            
             #if UNITY_ANDROID || UNITY_EDITOR
-                Context.AddModule<Modules.Android.AndroidModule>();
+                AddModule<Modules.Android.AndroidModule>();
             #endif
             
-            Context.AddModule<DeviceModule>();
-            Context.AddModule<FullScreenModule>();
-            Context.AddModule<InternetReachabilityModule>();
+            AddModule<DeviceModule>();
+            AddModule<FullScreenModule>();
+            AddModule<InternetReachabilityModule>();
+            AddModule<LogModule>();
+            AddModule<UIModule>();
         }
 
         public override void Setup()
