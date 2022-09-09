@@ -70,11 +70,6 @@ namespace Build1.PostMVC.Unity.App.Mediation
             return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event);
         }
 
-        protected UnityEventBinding BindUnityEvent(UnityEvent unityEvent, Action action)
-        {
-            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action);
-        }
-
         protected UnityEventBinding BindUnityEvent<T1>(UnityEvent unityEvent, Event<T1> @event, T1 param01)
         {
             return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event, param01);
@@ -93,6 +88,11 @@ namespace Build1.PostMVC.Unity.App.Mediation
         /*
          * UnityEventBinding00 Actions.
          */
+        
+        protected UnityEventBinding BindUnityEvent(UnityEvent unityEvent, Action action)
+        {
+            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action);
+        }
 
         protected UnityEventBinding BindUnityEvent<T1>(UnityEvent unityEvent, Action<T1> action, T1 param01)
         {
@@ -117,15 +117,16 @@ namespace Build1.PostMVC.Unity.App.Mediation
         {
             return AddBinding<UnityEventBinding01<T1>>(unityEvent).Configure(unityEvent, _dispatcher);
         }
-
-        /*
-         * UnityEventBinding01 Events.
-         */
-
-        /*
-         * UnityEventBinding01 Actions.
-         */
-
+        
+        protected UnityEventBinding BindUnityEvent<T1>(UnityEvent<T1> unityEvent, Event<T1> @event)
+        {
+            return AddBinding<UnityEventBinding01<T1>>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event);
+        }
+        
+        protected UnityEventBinding BindUnityEvent<T1>(UnityEvent<T1> unityEvent, Action<T1> action)
+        {
+            return AddBinding<UnityEventBinding01<T1>>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action);
+        }
 
         /*
          * Binding to UnityEvent with 2 params.
@@ -135,6 +136,16 @@ namespace Build1.PostMVC.Unity.App.Mediation
         {
             return AddBinding<UnityEventBinding02<T1, T2>>(unityEvent).Configure(unityEvent, _dispatcher);
         }
+        
+        protected UnityEventBinding BindUnityEvent<T1, T2>(UnityEvent<T1, T2> unityEvent, Event<T1, T2> @event)
+        {
+            return AddBinding<UnityEventBinding02<T1, T2>>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event);
+        }
+        
+        protected UnityEventBinding BindUnityEvent<T1, T2>(UnityEvent<T1, T2> unityEvent, Action<T1, T2> action)
+        {
+            return AddBinding<UnityEventBinding02<T1, T2>>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action);
+        }
 
         /*
          * Binding to UnityEvent with 3 params.
@@ -143,6 +154,16 @@ namespace Build1.PostMVC.Unity.App.Mediation
         protected UnityEventBinding03<T1, T2, T3> BindUnityEvent<T1, T2, T3>(UnityEvent<T1, T2, T3> unityEvent)
         {
             return AddBinding<UnityEventBinding03<T1, T2, T3>>(unityEvent).Configure(unityEvent, _dispatcher);
+        }
+        
+        protected UnityEventBinding BindUnityEvent<T1, T2, T3>(UnityEvent<T1, T2, T3> unityEvent, Event<T1, T2, T3> @event)
+        {
+            return AddBinding<UnityEventBinding03<T1, T2, T3>>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event);
+        }
+        
+        protected UnityEventBinding BindUnityEvent<T1, T2, T3>(UnityEvent<T1, T2, T3> unityEvent, Action<T1, T2, T3> action)
+        {
+            return AddBinding<UnityEventBinding03<T1, T2, T3>>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action);
         }
 
         /*
