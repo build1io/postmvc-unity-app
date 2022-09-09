@@ -198,7 +198,7 @@ namespace Build1.PostMVC.Unity.App.Mediation
          */
 
         private void DispatchEvent(T1 param01) { _dispatcher.Dispatch(_event, param01); }
-        private void CallAction(T1 param01)    { _action.Invoke(param01); }
+        private void CallAction(T1 param01)    { _action?.Invoke(param01); }
     }
 
     public sealed class UnityEventBinding02<T1, T2> : UnityEventBinding
@@ -255,7 +255,7 @@ namespace Build1.PostMVC.Unity.App.Mediation
          */
 
         private void DispatchEvent(T1 param01, T2 param02) { _dispatcher.Dispatch(_event, param01, param02); }
-        private void CallAction(T1 param01, T2 param02)    { _action.Invoke(param01, param02); }
+        private void CallAction(T1 param01, T2 param02)    { _action?.Invoke(param01, param02); }
     }
 
     public sealed class UnityEventBinding03<T1, T2, T3> : UnityEventBinding
@@ -312,6 +312,6 @@ namespace Build1.PostMVC.Unity.App.Mediation
          */
 
         private void DispatchEvent(T1 param01, T2 param02, T3 param03) { _dispatcher.Dispatch(_event, param01, param02, param03); }
-        private void CallAction(T1 param01, T2 param02, T3 param03)    { _action.Invoke(param01, param02, param03); }
+        private void CallAction(T1 param01, T2 param02, T3 param03)    { _action?.Invoke(param01, param02, param03); }
     }
 }
