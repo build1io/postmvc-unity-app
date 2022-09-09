@@ -90,10 +90,10 @@ namespace Build1.PostMVC.Unity.App.Tests.Mediation
 
             Assert.AreEqual(count, 2);
             
-            _view.UnbindUnityEventFromEvent();
+            _view.UnbindUnityEvent();
             _view.DispatchUnityEvent();
             
-            Assert.AreEqual(count, 3);
+            Assert.AreEqual(count, 2);
         }
         
         [Test]
@@ -110,10 +110,10 @@ namespace Build1.PostMVC.Unity.App.Tests.Mediation
 
             Assert.AreEqual(count, 2);
             
-            _view.UnbindUnityEventFromAction();
+            _view.UnbindUnityEvent();
             _view.DispatchUnityEvent();
             
-            Assert.AreEqual(count, 3);
+            Assert.AreEqual(count, 2);
         }
 
         /*
@@ -128,11 +128,20 @@ namespace Build1.PostMVC.Unity.App.Tests.Mediation
 
             private readonly UnityEvent TestUnityEvent = new UnityEvent();
 
-            public void BindUnityEventToEvent() { BindUnityEvent(TestUnityEvent).ToEvent(OnTestEvent); }
-            public void UnbindUnityEventFromEvent() { UnbindUnityEvent(TestUnityEvent).FromEvent(OnTestEvent); }
-            
-            public void BindUnityEventToAction() { BindUnityEvent(TestUnityEvent).ToAction(OnTestAction); }
-            public void UnbindUnityEventFromAction() { UnbindUnityEvent(TestUnityEvent).FromAction(OnTestAction); }
+            public void BindUnityEventToEvent()
+            {
+                BindUnityEvent(TestUnityEvent).ToEvent(OnTestEvent);
+            }
+
+            public void BindUnityEventToAction()
+            {
+                BindUnityEvent(TestUnityEvent).ToAction(OnTestAction);
+            }
+
+            public void UnbindUnityEvent()
+            {
+                UnbindUnityEvent(TestUnityEvent);
+            }
 
             public void UnbindUnityEvents()
             {

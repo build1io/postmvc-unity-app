@@ -1,10 +1,9 @@
 using System;
 using Build1.PostMVC.Core.Utils.Reflection;
-using Build1.PostMVC.Unity.App.Mediation.Api;
 
 namespace Build1.PostMVC.Unity.App.Mediation.Impl
 {
-    internal sealed class UnityViewEventProcessor : IUnityViewEventProcessor
+    internal sealed class UnityViewEventProcessor
     {
         private readonly IReflector<UnityMediationReflectionInfo> _reflector;
         

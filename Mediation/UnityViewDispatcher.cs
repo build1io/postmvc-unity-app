@@ -2,20 +2,22 @@ using System;
 using System.Collections.Generic;
 using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Events.Impl;
-using Build1.PostMVC.Unity.App.Mediation.Impl;
+using Build1.PostMVC.Core.Utils.Pooling;
 using UnityEngine.Events;
 
 namespace Build1.PostMVC.Unity.App.Mediation
 {
     public abstract class UnityViewDispatcher : UnityView, IEventDispatcher
     {
-        private readonly EventDispatcher                                   _dispatcher;
-        private readonly Dictionary<UnityEventBase, UnityEventBindingBase> _bindings;
+        private readonly EventDispatcher                    _dispatcher;
+        private readonly Dictionary<UnityEventBase, object> _bindings;
+
+        private static readonly Pool<UnityEventBinding> _bindingsPool = new();
 
         protected UnityViewDispatcher()
         {
             _dispatcher = new EventDispatcher();
-            _bindings = new Dictionary<UnityEventBase, UnityEventBindingBase>();
+            _bindings = new Dictionary<UnityEventBase, object>();
         }
 
         /*
@@ -51,63 +53,188 @@ namespace Build1.PostMVC.Unity.App.Mediation
         public void Dispatch<T1, T2, T3>(Event<T1, T2, T3> @event, T1 param01, T2 param02, T3 param03) { _dispatcher.Dispatch(@event, param01, param02, param03); }
 
         /*
-         * Event Dispatcher Extension.
+         * UnityEventBinding00.
          */
 
-        protected IUnityEventBindingTo BindUnityEvent(UnityEvent unityEvent)
+        protected UnityEventBinding00 BindUnityEvent(UnityEvent unityEvent)
         {
-            if (_bindings.TryGetValue(unityEvent, out var binding))
-                return (IUnityEventBindingTo)binding;
-            binding = new UnityEventBinding(unityEvent, _dispatcher);
-            _bindings.Add(unityEvent, binding);
-            return (IUnityEventBindingTo)binding;
+            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher);
         }
 
-        protected IUnityEventBindingTo<T1> BindUnityEvent<T1>(UnityEvent<T1> unityEvent)
+        /*
+         * UnityEventBinding00 Events.
+         */
+
+        protected UnityEventBinding BindUnityEvent(UnityEvent unityEvent, Event @event)
         {
-            if (_bindings.TryGetValue(unityEvent, out var binding))
-                return (IUnityEventBindingTo<T1>)binding;
-            binding = new UnityEventBinding<T1>(unityEvent, _dispatcher);
-            _bindings.Add(unityEvent, binding);
-            return (IUnityEventBindingTo<T1>)binding;
+            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event);
         }
 
-        protected IUnityEventBindingTo<T1, T2> BindUnityEvent<T1, T2>(UnityEvent<T1, T2> unityEvent)
+        protected UnityEventBinding BindUnityEvent(UnityEvent unityEvent, Action action)
         {
-            if (_bindings.TryGetValue(unityEvent, out var binding))
-                return (IUnityEventBindingTo<T1, T2>)binding;
-            binding = new UnityEventBinding<T1, T2>(unityEvent, _dispatcher);
-            _bindings.Add(unityEvent, binding);
-            return (IUnityEventBindingTo<T1, T2>)binding;
+            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action);
         }
 
-        protected IUnityEventBindingTo<T1, T2, T3> BindUnityEvent<T1, T2, T3>(UnityEvent<T1, T2, T3> unityEvent)
+        protected UnityEventBinding BindUnityEvent<T1>(UnityEvent unityEvent, Event<T1> @event, T1 param01)
         {
-            if (_bindings.TryGetValue(unityEvent, out var binding))
-                return (IUnityEventBindingTo<T1, T2, T3>)binding;
-            binding = new UnityEventBinding<T1, T2, T3>(unityEvent, _dispatcher);
-            _bindings.Add(unityEvent, binding);
-            return (IUnityEventBindingTo<T1, T2, T3>)binding;
+            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event, param01);
         }
 
-        protected IUnityEventBindingFrom             UnbindUnityEvent(UnityEvent unityEvent)                         { return (IUnityEventBindingFrom)_bindings[unityEvent]; }
-        protected IUnityEventBindingFrom<T1>         UnbindUnityEvent<T1>(UnityEvent<T1> unityEvent)                 { return (IUnityEventBindingFrom<T1>)_bindings[unityEvent]; }
-        protected IUnityEventBindingFrom<T1, T2>     UnbindUnityEvent<T1, T2>(UnityEvent<T1, T2> unityEvent)         { return (IUnityEventBindingFrom<T1, T2>)_bindings[unityEvent]; }
-        protected IUnityEventBindingFrom<T1, T2, T3> UnbindUnityEvent<T1, T2, T3>(UnityEvent<T1, T2, T3> unityEvent) { return (IUnityEventBindingFrom<T1, T2, T3>)_bindings[unityEvent]; }
-
-        protected void UnbindUnityEventCompletely(UnityEventBase unityEvent)
+        protected UnityEventBinding BindUnityEvent<T1, T2>(UnityEvent unityEvent, Event<T1, T2> @event, T1 param01, T2 param02)
         {
-            if (!_bindings.TryGetValue(unityEvent, out var binding))
+            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event, param01, param02);
+        }
+
+        protected UnityEventBinding BindUnityEvent<T1, T2, T3>(UnityEvent unityEvent, Event<T1, T2, T3> @event, T1 param01, T2 param02, T3 param03)
+        {
+            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event, param01, param02, param03);
+        }
+
+        /*
+         * UnityEventBinding00 Actions.
+         */
+
+        protected UnityEventBinding BindUnityEvent<T1>(UnityEvent unityEvent, Action<T1> action, T1 param01)
+        {
+            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action, param01);
+        }
+
+        protected UnityEventBinding BindUnityEvent<T1, T2>(UnityEvent unityEvent, Action<T1, T2> action, T1 param01, T2 param02)
+        {
+            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action, param01, param02);
+        }
+
+        protected UnityEventBinding BindUnityEvent<T1, T2, T3>(UnityEvent unityEvent, Action<T1, T2, T3> action, T1 param01, T2 param02, T3 param03)
+        {
+            return AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action, param01, param02, param03);
+        }
+
+        /*
+         * UnityEventBinding01.
+         */
+
+        protected UnityEventBinding01<T1> BindUnityEvent<T1>(UnityEvent<T1> unityEvent)
+        {
+            return AddBinding<UnityEventBinding01<T1>>(unityEvent).Configure(unityEvent, _dispatcher);
+        }
+
+        /*
+         * UnityEventBinding01 Events.
+         */
+
+        /*
+         * UnityEventBinding01 Actions.
+         */
+
+
+        /*
+         * Binding to UnityEvent with 2 params.
+         */
+
+        protected UnityEventBinding02<T1, T2> BindUnityEvent<T1, T2>(UnityEvent<T1, T2> unityEvent)
+        {
+            return AddBinding<UnityEventBinding02<T1, T2>>(unityEvent).Configure(unityEvent, _dispatcher);
+        }
+
+        /*
+         * Binding to UnityEvent with 3 params.
+         */
+
+        protected UnityEventBinding03<T1, T2, T3> BindUnityEvent<T1, T2, T3>(UnityEvent<T1, T2, T3> unityEvent)
+        {
+            return AddBinding<UnityEventBinding03<T1, T2, T3>>(unityEvent).Configure(unityEvent, _dispatcher);
+        }
+
+        /*
+         * Unbinding.
+         */
+
+        protected void UnbindUnityEvent(UnityEventBase unityEvent)
+        {
+            if (!_bindings.TryGetValue(unityEvent, out var bindingOrBindings))
                 return;
-            binding.Destroy();
+
+            UnbindBindingOrBindings(bindingOrBindings);
+
             _bindings.Remove(unityEvent);
+        }
+
+        protected void UnbindUnityEvent(UnityEventBinding binding)
+        {
+            if (!_bindings.TryGetValue(binding.unityEvent, out var bindingOrBindings))
+                return;
+
+            if (bindingOrBindings == binding)
+            {
+                binding.Unbind();
+
+                _bindings.Remove(binding.unityEvent);
+                _bindingsPool.Return(binding);
+            }
+            else
+            {
+                var bindings = (List<UnityEventBinding>)bindingOrBindings;
+                if (bindings.Remove(binding))
+                {
+                    if (bindings.Count == 0)
+                        _bindings.Remove(binding.unityEvent);
+
+                    binding.Unbind();
+                    _bindingsPool.Return(binding);
+                }
+            }
         }
 
         protected void UnbindAllUnityEvents()
         {
-            foreach (var bridge in _bindings.Values)
-                bridge.Destroy();
+            foreach (var bindingOrBindings in _bindings.Values)
+                UnbindBindingOrBindings(bindingOrBindings);
             _bindings.Clear();
+        }
+
+        /*
+         * Private.
+         */
+
+        private T AddBinding<T>(UnityEventBase unityEvent) where T : UnityEventBinding, new()
+        {
+            var binding = _bindingsPool.Take<T>();
+
+            if (_bindings.TryGetValue(unityEvent, out var bindings))
+            {
+                if (bindings is UnityEventBinding existingBinding)
+                {
+                    _bindings[unityEvent] = new List<UnityEventBinding> { existingBinding, binding };
+                }
+                else
+                {
+                    ((List<UnityEventBinding>)bindings).Add(binding);
+                }
+            }
+            else
+            {
+                _bindings[unityEvent] = binding;
+            }
+
+            return binding;
+        }
+
+        private void UnbindBindingOrBindings(object bindingOrBindings)
+        {
+            if (bindingOrBindings is UnityEventBinding binding)
+            {
+                binding.Unbind();
+                _bindingsPool.Return(binding);
+            }
+            else
+            {
+                var bindings = (List<UnityEventBinding>)bindingOrBindings;
+                foreach (var item in bindings)
+                {
+                    item.Unbind();
+                    _bindingsPool.Return(item);
+                }
+            }
         }
     }
 }

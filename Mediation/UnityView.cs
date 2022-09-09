@@ -2,7 +2,7 @@ using Build1.PostMVC.Core.Contexts;
 using Build1.PostMVC.Core.MVCS;
 using Build1.PostMVC.Core.MVCS.Mediation;
 using Build1.PostMVC.Unity.App.Contexts.Impl;
-using Build1.PostMVC.Unity.App.Mediation.Api;
+using Build1.PostMVC.Unity.App.Mediation.Impl;
 using UnityEngine;
 
 namespace Build1.PostMVC.Unity.App.Mediation
@@ -15,9 +15,9 @@ namespace Build1.PostMVC.Unity.App.Mediation
         public bool Initialized { get; private set; }
         public bool Enabled     => gameObject.activeInHierarchy;
 
-        private IContext                 _context;
-        private IMediationBinder         _mediationBinder;
-        private IUnityViewEventProcessor _viewEventProcessor;
+        private IContext                _context;
+        private IMediationBinder        _mediationBinder;
+        private UnityViewEventProcessor _viewEventProcessor;
 
         /*
          * Mono Behavior.
@@ -53,7 +53,7 @@ namespace Build1.PostMVC.Unity.App.Mediation
         {
             DisposeContextIntegration();
         }
-        
+
         /*
          * Public.
          */
@@ -75,8 +75,8 @@ namespace Build1.PostMVC.Unity.App.Mediation
             _context.OnStopping += OnContextStopping;
 
             var mvcs = _context.GetExtension<MVCSExtension>();
-            _viewEventProcessor = mvcs.InjectionBinder.GetInstance<IUnityViewEventProcessor>();
-            
+            _viewEventProcessor = mvcs.InjectionBinder.GetInstance<UnityViewEventProcessor>();
+
             _mediationBinder = mvcs.MediationBinder;
             _mediationBinder.OnViewAdd(this);
 
@@ -109,7 +109,7 @@ namespace Build1.PostMVC.Unity.App.Mediation
             // If context is stopped, all initialized views are destroyed.
             Destroy(gameObject);
         }
-        
+
         /*
          * Mediator.
          */
@@ -126,7 +126,7 @@ namespace Build1.PostMVC.Unity.App.Mediation
         private static bool TryFindContext(out IContext context)
         {
             GameObject contextGameObject = null;
-            
+
             try
             {
                 contextGameObject = GameObject.Find(UnityAppExtension.RootGameObjectName);

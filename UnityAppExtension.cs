@@ -7,7 +7,6 @@ using Build1.PostMVC.Unity.App.Contexts;
 using Build1.PostMVC.Unity.App.Contexts.Impl;
 using Build1.PostMVC.Unity.App.Events.Impl.Bus;
 using Build1.PostMVC.Unity.App.Events.Impl.Map;
-using Build1.PostMVC.Unity.App.Mediation.Api;
 using Build1.PostMVC.Unity.App.Mediation.Impl;
 using Build1.PostMVC.Unity.App.Modules.Agents;
 using Build1.PostMVC.Unity.App.Modules.Agents.Impl;
@@ -23,7 +22,6 @@ using Build1.PostMVC.Unity.App.Modules.Device;
 using Build1.PostMVC.Unity.App.Modules.FullScreen;
 using Build1.PostMVC.Unity.App.Modules.InternetReachability;
 using Build1.PostMVC.Unity.App.Modules.Logging;
-using Build1.PostMVC.Unity.App.Modules.Logging.Impl;
 using Build1.PostMVC.Unity.App.Modules.UI;
 using Build1.PostMVC.Unity.App.Modules.Update;
 using Build1.PostMVC.Unity.App.Modules.Update.Impl;
@@ -58,7 +56,7 @@ namespace Build1.PostMVC.Unity.App
             injectionBinder.Bind<Build1.PostMVC.Unity.App.Events.IEventMap, EventMapProviderUnity, Inject>();
             
             // General tools.
-            injectionBinder.Bind<IUnityViewEventProcessor, UnityViewEventProcessor>();
+            injectionBinder.Bind<UnityViewEventProcessor>();
             injectionBinder.Bind<IAgentsController, AgentsController>();
             injectionBinder.Bind<IAppController, AppController>().ConstructOnStart();
             injectionBinder.Bind<IAssetsController, AssetsController>();
