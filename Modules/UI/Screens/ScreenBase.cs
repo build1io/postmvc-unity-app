@@ -4,7 +4,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Screens
 {
     public abstract class ScreenBase : UIControl<ScreenConfig>
     {
-        internal readonly Type dataType;
+        public readonly Type dataType;
         
         protected ScreenBase(string name, UIBehavior behavior) : base(name, behavior)
         {

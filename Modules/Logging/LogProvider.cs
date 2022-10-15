@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Logging.Impl;
 
 namespace Build1.PostMVC.Unity.App.Modules.Logging
 {
@@ -33,7 +35,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
             }
             else
             {
-                log = Logging.GetLogImpl(owner.GetType(), attribute.logLevel, LogController);
+                log = GetLogImpl(owner.GetType(), attribute.logLevel, LogController);
                 _usedInstances.Add(log);
             }
 
@@ -44,6 +46,55 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
         {
             if (_usedInstances.Remove(instance))
                 _availableInstances.Push(instance);
+        }
+        
+        /*
+         * Static.
+         */
+        
+        public static ILog GetLog<T>(LogLevel level)
+        {
+            var log = GetLogImpl(typeof(T), level, Core.PostMVC.GetInstance<ILogController>());
+
+            if (typeof(UnityEngine.MonoBehaviour).IsAssignableFrom(typeof(T)))
+            {
+                log.Warn("You're getting a logger during MonoBehavior instantiation. " +
+                         "This may end up in script instantiation exception on a device. " +
+                         "Consider inheriting of component from UnityView and injecting a logger.");
+            }
+
+            return log;
+        }
+
+        public static ILog GetLog(object owner, LogLevel level)
+        {
+            return GetLogImpl(owner.GetType(), level, Core.PostMVC.GetInstance<ILogController>());
+        }
+
+        internal static ILog GetLogImpl(Type ownerType, LogLevel level, ILogController logController)
+        {
+            if (Logging.Print || Logging.Record)
+            {
+                if (Logging.ForceLevel != LogLevel.None) // Using force level if it was set.
+                    level = Logging.ForceLevel;
+                else if (level > LogLevel.None && level < Logging.MinLevel) // Filtering logs by min log level (could be set different for production environment).
+                    level = Logging.MinLevel;
+
+                if (level != LogLevel.None)
+                {
+                    #if UNITY_WEBGL && !UNITY_EDITOR
+                
+                    return new LogWebGL(ownerType.Name, level, logController);
+
+                    #else
+
+                    return new LogDefault(ownerType.Name, level, logController);
+
+                    #endif
+                }    
+            }
+            
+            return new LogVoid();
         }
     }
 }
