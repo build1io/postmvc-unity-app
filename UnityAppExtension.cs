@@ -52,8 +52,8 @@ namespace Build1.PostMVC.Unity.App
             injectionBinder.Rebind<IEventBus, EventBusUnity>();
             
             // Unbinding default EventMap and binding the Unity specific one.
-            injectionBinder.Unbind<IEventMap>();
-            injectionBinder.Bind<Build1.PostMVC.Unity.App.Events.IEventMap, EventMapProviderUnity, Inject>();
+            injectionBinder.Unbind<IEventMapCore>();
+            injectionBinder.Bind<Events.IEventMap, EventMapProviderUnity, Inject>();
             
             // General tools.
             injectionBinder.Bind<UnityViewEventProcessor>();
