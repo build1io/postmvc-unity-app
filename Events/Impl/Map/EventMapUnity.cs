@@ -6,7 +6,7 @@ using Build1.PostMVC.Unity.App.Mediation;
 
 namespace Build1.PostMVC.Unity.App.Events.Impl.Map
 {
-    internal sealed class EventMapUnity : EventMap, IEventMap
+    internal sealed class EventMapUnity : EventMapCore, IEventMap
     {
         public EventMapUnity(IEventDispatcher dispatcher, IEventBus bus, Pool<IEventMapInfo> infosPool) : base(dispatcher, bus, infosPool)
         {

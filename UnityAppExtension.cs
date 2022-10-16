@@ -5,6 +5,7 @@ using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Unity.App.Contexts;
 using Build1.PostMVC.Unity.App.Contexts.Impl;
+using Build1.PostMVC.Unity.App.Events;
 using Build1.PostMVC.Unity.App.Events.Impl.Bus;
 using Build1.PostMVC.Unity.App.Events.Impl.Map;
 using Build1.PostMVC.Unity.App.Mediation.Impl;
@@ -53,7 +54,7 @@ namespace Build1.PostMVC.Unity.App
             
             // Unbinding default EventMap and binding the Unity specific one.
             injectionBinder.Unbind<IEventMapCore>();
-            injectionBinder.Bind<Events.IEventMap, EventMapProviderUnity, Inject>();
+            injectionBinder.Bind<IEventMap, EventMapProviderUnity, Inject>();
             
             // General tools.
             injectionBinder.Bind<UnityViewEventProcessor>();

@@ -4,7 +4,7 @@ using Build1.PostMVC.Core.MVCS.Injection;
 
 namespace Build1.PostMVC.Unity.App.Events.Impl.Map
 {
-    public sealed class EventMapProviderUnity : EventMapProviderBase<IEventMap>
+    internal sealed class EventMapProviderUnity : EventMapProviderCore<IEventMap>
     {
         [Inject] public IEventDispatcher Dispatcher { get; set; }
         [Inject] public IEventBus        EventBus   { get; set; }
