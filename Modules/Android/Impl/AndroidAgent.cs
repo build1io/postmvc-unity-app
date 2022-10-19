@@ -1,7 +1,6 @@
 #if UNITY_ANDROID || UNITY_EDITOR
 
 using System;
-using Build1.PostMVC.UnityApp.Modules.Android.Impl;
 using UnityEngine;
 
 namespace Build1.PostMVC.Unity.App.Modules.Android.Impl
