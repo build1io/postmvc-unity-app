@@ -11,11 +11,11 @@ namespace Build1.PostMVC.Unity.App.Modules.Android.Impl
 
         #if ENABLE_INPUT_SYSTEM
         
-        private InputActions _actions;
+        private Build1.PostMVC.UnityApp.Modules.Android.Impl.InputActions _actions;
         
         private void Awake()
         {
-            _actions = new InputActions();
+            _actions = new Build1.PostMVC.UnityApp.Modules.Android.Impl.InputActions();
             _actions.Enable();
         }
 
