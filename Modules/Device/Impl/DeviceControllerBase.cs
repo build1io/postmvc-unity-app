@@ -210,11 +210,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
 
         private DeviceType GetMobileDeviceType()
         {
-            var diagonal = GetDiagonalInches();
-            var aspect = GetAspectRatio();
-            if (aspect >= 1.77)
-                return diagonal >= 7F ? DeviceType.Tablet : DeviceType.Phone;
-            return diagonal >= 5F ? DeviceType.Tablet : DeviceType.Phone;
+            if (GetDiagonalInches() >= 7F && GetAspectRatio() <= 1.77)
+                return DeviceType.Tablet;
+            return DeviceType.Phone;
         }
 
         private float GetAspectRatio()
