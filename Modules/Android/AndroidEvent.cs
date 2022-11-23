@@ -4,6 +4,6 @@ namespace Build1.PostMVC.Unity.App.Modules.Android
 {
     public static class AndroidEvent
     {
-        public static readonly Event Back = new();
+        public static readonly Event Back = new(typeof(AndroidEvent), nameof(Back));
     }
 }

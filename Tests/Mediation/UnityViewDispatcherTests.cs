@@ -91,7 +91,7 @@ namespace Build1.PostMVC.Unity.App.Tests.Mediation
 
         private sealed class UnityViewDispatcherTest : UnityViewDispatcher
         {
-            public readonly Event OnTestEvent = new Event();
+            public readonly Event OnTestEvent = new(typeof(UnityViewDispatcherTest), nameof(OnTestEvent));
 
             public void DispatchEvent()
             {

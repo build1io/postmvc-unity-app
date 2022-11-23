@@ -8,8 +8,8 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
 {
     public abstract class PopupViewDispatcher : UnityViewDispatcher, IPopupView
     {
-        public static readonly Event OnShown  = new();
-        public static readonly Event OnHidden = new();
+        public static readonly Event OnShown  = new(typeof(PopupViewDispatcher), nameof(OnShown));
+        public static readonly Event OnHidden = new(typeof(PopupViewDispatcher), nameof(OnHidden));
 
         [Header("Parts Base"), SerializeField] private GameObject     overlay;
         [SerializeField]                       private RectTransform  content;
@@ -73,7 +73,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
             {
                 if (IsAnimating)
                     return;
-                
+
                 if (raycastBlocker)
                     raycastBlocker.SetActive(true);
 
@@ -102,7 +102,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
                 raycastBlocker.SetActive(false);
 
             IsAnimating = false;
-            
+
             OnShownHandler();
 
             Dispatch(OnShown);
@@ -111,9 +111,9 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
         private void OnHiddenImpl()
         {
             IsAnimating = false;
-            
+
             OnHiddenHandler();
-            
+
             Dispatch(OnHidden);
 
             PopupController.Close(Popup, true);
