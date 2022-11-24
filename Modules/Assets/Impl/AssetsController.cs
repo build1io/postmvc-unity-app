@@ -189,11 +189,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             }
 
             if (info.IsLoaded)
-            {
-                Log.Debug(n => $"Bundle already loaded: {n}", info.ToString());
-                onComplete?.Invoke(info);
-                return;
-            }
+                throw new AssetsException(AssetsExceptionType.BundleAlreadyLoaded, info.BundleId);
 
             _agent.LoadAsync(info,
                              (bundleInfo) =>

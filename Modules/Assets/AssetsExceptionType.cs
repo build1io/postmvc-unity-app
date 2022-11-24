@@ -12,14 +12,15 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
         BundleLoadingHttpError       = 22,
         BundleLoadingProcessingError = 23,
         BundleLoadingStorageError    = 24,
-        BundleNotLoaded              = 25,
-        BundleLoadingAborted         = 26,
+        BundleAlreadyLoaded          = 25,
+        BundleNotLoaded              = 26,
+        BundleLoadingAborted         = 27,
 
         AssetNotFound = 30,
 
         AtlasNotFound        = 40,
         AtlasBundleNotLoaded = 41,
-        
+
         BundleInfoUpdateError = 50
     }
 }
