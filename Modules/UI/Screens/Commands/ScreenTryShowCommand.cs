@@ -4,24 +4,26 @@ using Build1.PostMVC.Core.MVCS.Injection;
 namespace Build1.PostMVC.Unity.App.Modules.UI.Screens.Commands
 {
     [Poolable]
-    public sealed class ScreenShowCommand : Command<Screen>
+    public sealed class ScreenTryShowCommand : Command<Screen>
     {
         [Inject] public IScreensController ScreensController { get; set; }
-
+        
         public override void Execute(Screen screen)
         {
-            ScreensController.Show(screen);
+            if (!ScreensController.CheckScreenIsActive(screen))
+                ScreensController.Show(screen);
         }
     }
-
+    
     [Poolable]
-    public sealed class ScreenShowCommand<T> : Command<Screen<T>, T>
+    public sealed class ScreenTryShowCommand<T> : Command<Screen<T>, T>
     {
         [Inject] public IScreensController ScreensController { get; set; }
-
+        
         public override void Execute(Screen<T> screen, T data)
         {
-            ScreensController.Show(screen, data);
+            if (!ScreensController.CheckScreenIsActive(screen))
+                ScreensController.Show(screen, data);
         }
     }
 }
