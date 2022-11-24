@@ -35,7 +35,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
             }
             else
             {
-                log = GetLogImpl(owner.GetType(), attribute.logLevel, LogController);
+                log = GetLogImpl(owner.GetType().Name, attribute.logLevel, LogController);
                 _usedInstances.Add(log);
             }
 
@@ -54,7 +54,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
         
         public static ILog GetLog<T>(LogLevel level)
         {
-            var log = GetLogImpl(typeof(T), level, Core.PostMVC.GetInstance<ILogController>());
+            var log = GetLogImpl(typeof(T).Name, level, Core.PostMVC.GetInstance<ILogController>());
 
             if (typeof(UnityEngine.MonoBehaviour).IsAssignableFrom(typeof(T)))
             {
@@ -66,12 +66,22 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
             return log;
         }
 
+        public static ILog GetLog(LogLevel level)
+        {
+            return GetLogImpl(null, level, Core.PostMVC.GetInstance<ILogController>());
+        }
+        
+        public static ILog GetLog(string prefix, LogLevel level)
+        {
+            return GetLogImpl(prefix, level, Core.PostMVC.GetInstance<ILogController>());
+        }
+        
         public static ILog GetLog(object owner, LogLevel level)
         {
-            return GetLogImpl(owner.GetType(), level, Core.PostMVC.GetInstance<ILogController>());
+            return GetLogImpl(owner.GetType().Name, level, Core.PostMVC.GetInstance<ILogController>());
         }
 
-        internal static ILog GetLogImpl(Type ownerType, LogLevel level, ILogController logController)
+        internal static ILog GetLogImpl(string prefix, LogLevel level, ILogController logController)
         {
             if (Logging.Print || Logging.Record)
             {
@@ -84,11 +94,11 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
                 {
                     #if UNITY_WEBGL && !UNITY_EDITOR
                 
-                    return new LogWebGL(ownerType.Name, level, logController);
+                    return new LogWebGL(prefix, level, logController);
 
                     #else
 
-                    return new LogDefault(ownerType.Name, level, logController);
+                    return new LogDefault(prefix, level, logController);
 
                     #endif
                 }    

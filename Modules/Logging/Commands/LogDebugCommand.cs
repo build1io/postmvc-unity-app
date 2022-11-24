@@ -3,11 +3,13 @@ using Build1.PostMVC.Core.MVCS.Commands;
 namespace Build1.PostMVC.Unity.App.Modules.Logging.Commands
 {
     [Poolable]
-    public sealed class LogDebugCommand : Command<ILog, string>
+    public sealed class LogDebugCommand : Command<string>
     {
-        public override void Execute(ILog log, string message)
+        private static readonly ILog _log = LogProvider.GetLog(LogLevel.Debug);
+        
+        public override void Execute(string message)
         {
-            log.Debug(message);
+            _log.Debug(message);
         }
     }
 }

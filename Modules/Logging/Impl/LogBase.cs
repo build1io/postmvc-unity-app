@@ -9,7 +9,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         private LogLevel _level;
 
         protected readonly ILogController _logController;
-        
+
         protected LogBase(string prefix, LogLevel mode, ILogController logController)
         {
             _prefix = prefix;
@@ -86,7 +86,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
          */
 
         protected bool   CheckLevel(LogLevel level)           { return _level > LogLevel.None && level >= _level; }
-        protected string FormatMessage(object message)        { return $"{_prefix}: {message}\n"; }
+        protected string FormatMessage(object message)        { return _prefix != null ? $"{_prefix}: {message}\n" : message.ToString(); }
         protected string FormatException(Exception exception) { return FormatException(_prefix, exception); }
 
         /*
@@ -96,9 +96,15 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         protected static string FormatException(string prefix, Exception exception)
         {
             if (exception.InnerException == null)
-                return $"{prefix}: {exception.GetType().Name}: {exception.Message}\n";
+            {
+                return prefix != null
+                           ? $"{prefix}: {exception.GetType().Name}: {exception.Message}\n"
+                           : $"{exception.GetType().Name}: {exception.Message}\n";
+            }
 
-            var builder = new StringBuilder($"{prefix}: {FormatExceptionNoInner(exception)}");
+            var builder = prefix != null 
+                              ? new StringBuilder($"{prefix}: {FormatExceptionNoInner(exception)}")
+                              : new StringBuilder(FormatExceptionNoInner(exception));
 
             var innerException = exception.InnerException;
             while (innerException != null)
