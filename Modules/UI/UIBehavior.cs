@@ -5,11 +5,6 @@ namespace Build1.PostMVC.Unity.App.Modules.UI
     [Flags]
     public enum UIBehavior
     {
-        /// Control will not be pre instantiated. 
-        /// Control will not be destroyed on deactivation.
-        /// Multiple instances of the control will be created with every invocation.
-        Default = 1 << 0,
-        
         /// Control will be pre instantiated on initialization.
         /// UIControlsController.Initialize method must be called. 
         PreInstantiate = 1 << 1,
