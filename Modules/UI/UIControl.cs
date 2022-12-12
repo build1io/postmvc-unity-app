@@ -14,12 +14,16 @@ namespace Build1.PostMVC.Unity.App.Modules.UI
 
         private readonly IList<T> _configurations;
 
-        protected UIControl(string name, UIBehavior behavior)
+        protected UIControl(string name)
         {
             this.name = name;
-            this.behavior = behavior;
 
             _configurations = new List<T>();
+        }
+        
+        protected UIControl(string name, UIBehavior behavior) : this(name)
+        {
+            this.behavior = behavior;
         }
 
         public void Add(T configuration)
