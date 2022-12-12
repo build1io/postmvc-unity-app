@@ -13,6 +13,13 @@ namespace Build1.PostMVC.Unity.App.Modules.App.Impl
         [PostConstruct]
         public void PostConstruct()
         {
+            #if UNITY_EDITOR
+            
+            // TODO: possible double firing if run in background is set to true.
+            UnityEditor.EditorApplication.pauseStateChanged += OnEditorPause;
+            
+            #endif
+            
             Application.focusChanged += OnFocusChanged;
             Application.quitting += OnQuitting;
         }
@@ -20,10 +27,16 @@ namespace Build1.PostMVC.Unity.App.Modules.App.Impl
         [PreDestroy]
         public void PreDestroy()
         {
+            #if UNITY_EDITOR
+            
+            UnityEditor.EditorApplication.pauseStateChanged -= OnEditorPause;
+            
+            #endif
+            
             Application.focusChanged -= OnFocusChanged;
             Application.quitting -= OnQuitting;
         }
-        
+
         /*
          * Mono Behavior.
          */
@@ -42,5 +55,14 @@ namespace Build1.PostMVC.Unity.App.Modules.App.Impl
         {
             Quitting?.Invoke();
         }
+        
+        #if UNITY_EDITOR
+        
+        private void OnEditorPause(UnityEditor.PauseState state)
+        {
+            Pause?.Invoke(state == UnityEditor.PauseState.Paused);
+        }
+        
+        #endif
     }
 }
