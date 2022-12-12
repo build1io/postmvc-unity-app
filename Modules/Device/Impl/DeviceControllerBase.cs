@@ -42,6 +42,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
         public bool IsWeb    => DevicePlatform == DevicePlatform.WebGL;
 
         private int                           _intervalId;
+        private DeviceScreenOrientation       _orientations;
         private UnityEngine.DeviceOrientation _deviceOrientation;
         private ScreenOrientation             _screenOrientation;
 
@@ -89,9 +90,14 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
 
         public void SetAvailableOrientations(DeviceScreenOrientation orientations)
         {
-            Log.Debug(o => $"SetAvailableOrientations: {o}", orientations);
+            if (_orientations == orientations)
+                return;
 
-            switch (orientations)
+            _orientations = orientations;
+            
+            Log.Debug(o => $"Setting available orientations: {o}", _orientations);
+
+            switch (_orientations)
             {
                 case DeviceScreenOrientation.Portrait:
                     Screen.orientation = ScreenOrientation.Portrait;
@@ -107,10 +113,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
                     return;
             }
 
-            var autorotateToPortrait = (orientations & DeviceScreenOrientation.Portrait) == DeviceScreenOrientation.Portrait;
-            var autorotateToPortraitUpsideDown = (orientations & DeviceScreenOrientation.PortraitUpsideDown) == DeviceScreenOrientation.PortraitUpsideDown;
-            var autorotateToLandscapeLeft = (orientations & DeviceScreenOrientation.LandscapeLeft) == DeviceScreenOrientation.LandscapeLeft;
-            var autorotateToLandscapeRight = (orientations & DeviceScreenOrientation.LandscapeRight) == DeviceScreenOrientation.LandscapeRight;
+            var autorotateToPortrait = (_orientations & DeviceScreenOrientation.Portrait) == DeviceScreenOrientation.Portrait;
+            var autorotateToPortraitUpsideDown = (_orientations & DeviceScreenOrientation.PortraitUpsideDown) == DeviceScreenOrientation.PortraitUpsideDown;
+            var autorotateToLandscapeLeft = (_orientations & DeviceScreenOrientation.LandscapeLeft) == DeviceScreenOrientation.LandscapeLeft;
+            var autorotateToLandscapeRight = (_orientations & DeviceScreenOrientation.LandscapeRight) == DeviceScreenOrientation.LandscapeRight;
             
             if (Screen.orientation != ScreenOrientation.AutoRotation)
             {
