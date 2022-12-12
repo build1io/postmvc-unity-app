@@ -12,9 +12,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Device
         public void PostConstruct()
         {
             #if UNITY_EDITOR
-                InjectionBinder.Bind<IDeviceController>().To<DeviceControllerEditor>().AsSingleton().ConstructOnStart();
+                InjectionBinder.Bind<IDeviceController, DeviceControllerEditor>().ConstructOnStart();
             #else
-                InjectionBinder.Bind<IDeviceController>().To<DeviceControllerRuntime>().AsSingleton().ConstructOnStart();
+                InjectionBinder.Bind<IDeviceController, DeviceControllerRuntime>().ConstructOnStart();
             #endif
         }
     }

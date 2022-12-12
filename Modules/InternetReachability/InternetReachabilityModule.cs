@@ -11,7 +11,7 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability
         [PostConstruct]
         public void PostConstruct()
         {
-            InjectionBinder.Bind<IInternetReachabilityController>().To<InternetReachabilityController>().AsSingleton();
+            InjectionBinder.Bind<IInternetReachabilityController, InternetReachabilityController>();
         }
     }
 }
