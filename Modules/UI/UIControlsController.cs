@@ -1,11 +1,12 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Core.MVCS.Mediation;
 using Build1.PostMVC.Unity.App.Modules.Assets;
 using Build1.PostMVC.Unity.App.Modules.Device;
 using Build1.PostMVC.Unity.App.Modules.UI.Layers;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Build1.PostMVC.Unity.App.Modules.UI
 {
@@ -132,9 +133,15 @@ namespace Build1.PostMVC.Unity.App.Modules.UI
             else
             {
                 if (configuration.prefabName.Contains("."))
-                    prefab = Resources.Load<GameObject>(Path.GetFileNameWithoutExtension(configuration.prefabName));
+                {
+                    var index = configuration.prefabName.LastIndexOf(".", StringComparison.Ordinal);
+                    var path = configuration.prefabName[..index];
+                    prefab = Resources.Load<GameObject>(path);
+                }
                 else
+                {
                     prefab = Resources.Load<GameObject>(configuration.prefabName);
+                }
             }
 
             prefab.SetActive(active);
