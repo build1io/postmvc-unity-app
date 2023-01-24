@@ -15,7 +15,8 @@ namespace Build1.PostMVC.Unity.App.Modules.App.Impl
         {
             #if UNITY_EDITOR
             
-            // TODO: possible double firing if run in background is set to true.
+            // Some docs say double firing is possible if run in background is set to true.
+            // We manage it in the controller using a flag.
             UnityEditor.EditorApplication.pauseStateChanged += OnEditorPause;
             
             #endif
