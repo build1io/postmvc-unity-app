@@ -1,7 +1,3 @@
-#if UNITY_ANDROID || UNITY_EDITOR
-
-using UnityEngine;
-
 namespace Build1.PostMVC.Unity.App.Modules.Android
 {
     public static class AndroidUtils
@@ -10,16 +6,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Android
         
         public static int GetCurrentAndroidAPIVersion()
         {
+            #if UNITY_ANDROID
+            
             if (_apiVersion != 0) 
                 return _apiVersion;
             
-            var clazz = AndroidJNI.FindClass("android/os/Build$VERSION");
-            var fieldID = AndroidJNI.GetStaticFieldID(clazz, "SDK_INT", "I");
-            _apiVersion = AndroidJNI.GetStaticIntField(clazz, fieldID);
+            var clazz = UnityEngine.AndroidJNI.FindClass("android/os/Build$VERSION");
+            var fieldID = UnityEngine.AndroidJNI.GetStaticFieldID(clazz, "SDK_INT", "I");
+            _apiVersion = UnityEngine.AndroidJNI.GetStaticIntField(clazz, fieldID);
+            
+            #endif
             
             return _apiVersion;
         }
     }
 }
-
-#endif
