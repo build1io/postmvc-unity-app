@@ -13,6 +13,17 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Screens.Commands
             ScreensController.Show(screen);
         }
     }
+    
+    [Poolable]
+    public sealed class ScreenShowOnTopCommand : Command<Screen>
+    {
+        [Inject] public IScreensController ScreensController { get; set; }
+
+        public override void Execute(Screen screen)
+        {
+            ScreensController.Show(screen, ScreenBehavior.OpenOnTop);
+        }
+    }
 
     [Poolable]
     public sealed class ScreenShowCommand<T> : Command<Screen<T>, T>
