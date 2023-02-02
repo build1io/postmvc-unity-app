@@ -25,10 +25,11 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
                                                            AssetBundleInfoSetting.CreateMissingInfo;
 
         public event Func<string, AssetBundleInfo> OnBundleInfoRequest;
+        public event Func<Enum, string>            OnBundleStringIdentifier;
 
         private bool BundleInfoRequestingEnabled => (BundleInfoSettings & AssetBundleInfoSetting.RequestMissingInfo) == AssetBundleInfoSetting.RequestMissingInfo;
         private bool BundleInfoCachingEnabled    => (BundleInfoSettings & AssetBundleInfoSetting.CacheInfo) == AssetBundleInfoSetting.CacheInfo;
-        
+
         private readonly Dictionary<Enum, string>            _ids;
         private readonly Dictionary<string, AssetBundleInfo> _bundles;
         private readonly Dictionary<string, AssetBundleInfo> _bundlesInfoCache;
@@ -177,7 +178,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
                     Log.Warn(i => $"Bundle with the same id already added. Replacing added info and updating it. BundleId: {i}", info.BundleId);
 
                     info.Update(infoAdded);
-                    
+
                     _bundles[info.BundleId] = info;
                 }
             }
@@ -295,10 +296,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
 
         public void UnloadAllBundles(bool unloadObjects, params Enum[] except)
         {
-            var exceptStringIdentifiers = new List<string>(except.Length); 
+            var exceptStringIdentifiers = new List<string>(except.Length);
             foreach (var item in except)
                 exceptStringIdentifiers.Add(GetBundleStringId(item));
-            
+
             for (var i = _bundlesLoaded.Count - 1; i >= 0; i--)
             {
                 var bundle = _bundlesLoaded[i];
@@ -510,7 +511,11 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             if (_ids.TryGetValue(identifier, out var id))
                 return id;
 
-            id = AssetBundleInfo.EnumToStringIdentifier(identifier);
+            if (OnBundleStringIdentifier != null)
+                id = OnBundleStringIdentifier.Invoke(identifier);
+
+            id ??= AssetBundleInfo.EnumToStringIdentifier(identifier);
+            
             _ids.Add(identifier, id);
 
             return id;

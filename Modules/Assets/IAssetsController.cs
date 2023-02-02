@@ -5,6 +5,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
     public interface IAssetsController
     {
         event Func<string, AssetBundleInfo> OnBundleInfoRequest;
+        event Func<Enum, string>            OnBundleStringIdentifier;
 
         /*
          * Check.
@@ -71,7 +72,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
 
         bool TryGetBundle(Enum identifier, out AssetBundleInfo info);
         bool TryGetBundle(string identifier, out AssetBundleInfo info);
-        
+
         /*
          * Cache.
          */
