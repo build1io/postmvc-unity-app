@@ -13,13 +13,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Services.Commands
         {
             if (UnityServicesAdapter.Initialized)
             {
-                Log.Debug("Unity services already initialized");
+                Log.Error("Unity services already initialized");
                 return;
             }
             
             Retain();
             
-            Log.Debug("Initializing...");
+            Log.Debug(() => $"Initializing... {DateTime.Now}");
 
             UnityServicesAdapter.OnInitialized += OnInitialized;
             UnityServicesAdapter.OnError += OnError;
@@ -28,7 +28,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Services.Commands
 
         private void OnInitialized()
         {
-            Log.Debug("Initialized");
+            Log.Debug(() => $"Initialized. {DateTime.Now}");
             
             UnityServicesAdapter.OnInitialized -= OnInitialized;
             UnityServicesAdapter.OnError -= OnError;

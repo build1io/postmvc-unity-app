@@ -5,16 +5,24 @@ using Unity.Services.Core;
 
 namespace Build1.PostMVC.Unity.App.Modules.Services.Impl
 {
-    public sealed class UnityServicesAdapter
+    internal sealed class UnityServicesAdapter
     {
-        public static bool Initialized { get; private set; }
+        public static bool Initialized => UnityServices.State == ServicesInitializationState.Initialized;
 
         public static event Action            OnInitialized;
         public static event Action<Exception> OnError;
 
         public static void Initialize()
         {
-            UnityServices.InitializeAsync().Resolve(OnInitializedHandler);
+            try
+            {
+                if (UnityServices.State == ServicesInitializationState.Uninitialized)
+                    UnityServices.InitializeAsync().Resolve(OnInitializedHandler);
+            }
+            catch (Exception exception)
+            {
+                OnError?.Invoke(exception);
+            }
         }
 
         private static void OnInitializedHandler(Task task)
@@ -30,8 +38,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Services.Impl
                 OnError?.Invoke(task.Exception);
                 return;
             }
-
-            Initialized = true;
+            
             OnInitialized?.Invoke();
         }
     }
