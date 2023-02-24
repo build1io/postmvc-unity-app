@@ -85,7 +85,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
          * Protected.
          */
 
-        protected bool   CheckLevel(LogLevel level)           { return _level > LogLevel.None && level >= _level; }
+        protected bool   CheckLevel(LogLevel level)           { return (_level > LogLevel.None && level >= _level) || Logging.ForceAll; }
         protected string FormatMessage(object message)        { return _prefix != null ? $"{_prefix}: {message}\n" : message.ToString(); }
         protected string FormatException(Exception exception) { return FormatException(_prefix, exception); }
 

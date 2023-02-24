@@ -13,7 +13,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
     internal sealed class LogController : ILogController
     {
         [Inject] public IEventDispatcher Dispatcher { get; set; }
-        
+
         private readonly StringBuilder _records = new();
         private          int           _recordsCount;
         private readonly DateTime      _recordsDate = DateTime.UtcNow;
@@ -33,9 +33,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         /*
          * Public.
          */
-        
-        public void RecordMessage(string message, bool forceFlush)
+
+        public void RecordMessage(string message, LogLevel level, bool forceFlush)
         {
+            if (level < Logging.RecordLevel)
+                return;
+
             lock (_records)
             {
                 _records.AppendLine(message);
@@ -45,7 +48,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
                     FlushLog();
             }
         }
-        
+
         public string GetLog()
         {
             return _recordsCount > 0 ? _records.ToString() : string.Empty;
@@ -171,18 +174,29 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             for (var i = Logging.RecordsHistory; i < files.Length; i++)
                 files.ElementAt(i).Delete();
         }
-        
+
         /*
          * Event Handlers.
          */
-        
+
         private void OnLogReceived(string logString, string stackTrace, LogType type)
         {
-            if (!Logging.Record)
+            if (!Logging.Record || Logging.RecordLevel == LogLevel.None)
                 return;
 
-            var isError = type is LogType.Error or LogType.Exception;
-            RecordMessage(isError ? $"{logString}\n{stackTrace}\n" : logString, isError);
+            var level = type switch
+            {
+                LogType.Error     => LogLevel.Error,
+                LogType.Assert    => LogLevel.Error,
+                LogType.Warning   => LogLevel.Warning,
+                LogType.Log       => LogLevel.Debug,
+                LogType.Exception => LogLevel.Error,
+                _                 => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
+
+            var isError = level == LogLevel.Error;
+            var message = isError ? $"{logString}\n{stackTrace}\n" : logString;
+            RecordMessage(message, level, isError);
         }
     }
 }

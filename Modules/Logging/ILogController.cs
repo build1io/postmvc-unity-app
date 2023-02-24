@@ -4,7 +4,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
 {
     public interface ILogController
     {
-        void RecordMessage(string message, bool forceFlush);
+        void RecordMessage(string message, LogLevel level, bool forceFlush);
 
         string GetLog();
         void   FlushLog();

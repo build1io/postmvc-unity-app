@@ -17,12 +17,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            message = FormatMessage(message);
-            
-            if (Logging.Print)
-                UnityEngine.Debug.Log(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.Log(FormatMessage(message));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(message), LogLevel.Debug, false);
         }
 
         public override void Debug(Exception exception)
@@ -30,12 +28,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            var message = FormatException(exception);
-            
-            if (Logging.Print)
-                UnityEngine.Debug.Log(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.Log(FormatException(exception));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatException(exception), LogLevel.Debug, false);
         }
 
         public override void Debug(Func<string> callback)
@@ -43,12 +39,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            var message = FormatMessage(callback.Invoke());
-            
-            if (Logging.Print)
-                UnityEngine.Debug.Log(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.Log(FormatMessage(callback.Invoke()));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke()), LogLevel.Debug, false);
         }
 
         public override void Debug<T1>(Func<T1, string> callback, T1 param01)
@@ -56,12 +50,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01));
-            
-            if (Logging.Print)
-                UnityEngine.Debug.Log(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.Log(FormatMessage(callback.Invoke(param01)));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke(param01)), LogLevel.Debug, false);
         }
 
         public override void Debug<T1, T2>(Func<T1, T2, string> callback, T1 param01, T2 param02)
@@ -69,12 +61,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02));
-            
-            if (Logging.Print)
-                UnityEngine.Debug.Log(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.Log(FormatMessage(callback.Invoke(param01, param02)));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02)), LogLevel.Debug, false);
         }
 
         public override void Debug<T1, T2, T3>(Func<T1, T2, T3, string> callback, T1 param01, T2 param02, T3 param03)
@@ -82,12 +72,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02, param03));
-            
-            if (Logging.Print)
-                UnityEngine.Debug.Log(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.Log(FormatMessage(callback.Invoke(param01, param02, param03)));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02, param03)), LogLevel.Debug, false);
         }
 
         public override void Debug(Action<ILogDebug> callback)
@@ -123,12 +111,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            message = FormatMessage(message);
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogWarning(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogWarning(FormatMessage(message));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(message), LogLevel.Warning, false);
         }
 
         public override void Warn(Exception exception)
@@ -136,12 +122,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            var message = FormatException(exception);
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogWarning(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogWarning(FormatException(exception));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatException(exception), LogLevel.Warning, false);
         }
 
         public override void Warn(Func<string> callback)
@@ -149,12 +133,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            var message = FormatMessage(callback.Invoke());
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogWarning(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogWarning(FormatMessage(callback.Invoke()));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke()), LogLevel.Warning, false);
         }
 
         public override void Warn<T1>(Func<T1, string> callback, T1 param01)
@@ -162,12 +144,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01));
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogWarning(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogWarning(FormatMessage(callback.Invoke(param01)));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke(param01)), LogLevel.Warning, false);
         }
 
         public override void Warn<T1, T2>(Func<T1, T2, string> callback, T1 param01, T2 param02)
@@ -175,12 +155,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02));
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogWarning(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogWarning(FormatMessage(callback.Invoke(param01, param02)));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02)), LogLevel.Warning, false);
         }
 
         public override void Warn<T1, T2, T3>(Func<T1, T2, T3, string> callback, T1 param01, T2 param02, T3 param03)
@@ -188,12 +166,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02, param03));
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogWarning(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogWarning(FormatMessage(callback.Invoke(param01, param02, param03)));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02, param03)), LogLevel.Warning, false);
         }
 
         public override void Warn(Action<ILogWarn> callback)
@@ -229,12 +205,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            message = FormatMessage(message);
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogError(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogError(FormatMessage(message));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(message), LogLevel.Error, true);
         }
 
         public override void Error(Exception exception)
@@ -242,12 +216,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            var message = FormatException(exception);
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogError(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogError(FormatException(exception));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatException(exception), LogLevel.Error, true);
         }
 
         public override void Error(Func<string> callback)
@@ -255,12 +227,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            var message = FormatMessage(callback.Invoke());
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogError(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogError(FormatMessage(callback.Invoke()));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke()), LogLevel.Error, true);
         }
 
         public override void Error<T1>(Func<T1, string> callback, T1 param01)
@@ -268,12 +238,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01));
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogError(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogError(FormatMessage(callback.Invoke(param01)));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke(param01)), LogLevel.Error, true);
         }
 
         public override void Error<T1, T2>(Func<T1, T2, string> callback, T1 param01, T2 param02)
@@ -281,12 +249,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02));
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogError(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogError(FormatMessage(callback.Invoke(param01, param02)));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02)), LogLevel.Error, true);
         }
 
         public override void Error<T1, T2, T3>(Func<T1, T2, T3, string> callback, T1 param01, T2 param02, T3 param03)
@@ -294,12 +260,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02, param03));
-            
-            if (Logging.Print)
-                UnityEngine.Debug.LogError(message);
-            else if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+                UnityEngine.Debug.LogError(FormatMessage(callback.Invoke(param01, param02, param03)));
+            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+                _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02, param03)), LogLevel.Error, true);
         }
 
         public override void Error(Action<ILogError> callback)

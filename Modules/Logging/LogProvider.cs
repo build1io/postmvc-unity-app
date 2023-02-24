@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Unity.App.Modules.Logging.Impl;
@@ -30,7 +29,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
             {
                 log = _availableInstances.Pop();
                 log.SetPrefix(owner.GetType().Name);
-                log.SetLevel(Logging.ForceLevel != LogLevel.None ? Logging.ForceLevel : attribute.logLevel);
+                log.SetLevel(attribute.logLevel);
                 _usedInstances.Add(log);
             }
             else
@@ -83,28 +82,17 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
 
         internal static ILog GetLogImpl(string prefix, LogLevel level, ILogController logController)
         {
-            if (Logging.Print || Logging.Record)
-            {
-                if (Logging.ForceLevel != LogLevel.None) // Using force level if it was set.
-                    level = Logging.ForceLevel;
-                else if (level > LogLevel.None && level < Logging.MinLevel) // Filtering logs by min log level (could be set different for production environment).
-                    level = Logging.MinLevel;
+            #if UNITY_WEBGL && !UNITY_EDITOR
+        
+            LogWebGL requires major update.
+            return new LogWebGL(prefix, level, logController);
 
-                if (level != LogLevel.None)
-                {
-                    #if UNITY_WEBGL && !UNITY_EDITOR
-                
-                    return new LogWebGL(prefix, level, logController);
+            #else
 
-                    #else
+            return new LogDefault(prefix, level, logController);
 
-                    return new LogDefault(prefix, level, logController);
+            #endif
 
-                    #endif
-                }    
-            }
-            
-            return new LogVoid();
         }
     }
 }
