@@ -385,7 +385,17 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             if (!info.IsLoaded)
                 throw new AssetsException(AssetsExceptionType.BundleNotLoaded, info.BundleId);
 
-            asset = (T)info.Bundle.LoadAsset(assetName, typeof(T));
+            try
+            {
+                asset = info.Bundle.LoadAsset<T>(assetName);
+            }
+            catch (Exception exception)
+            {
+                Log.Error($"Asset loading error: {exception}");
+                
+                asset = null;
+            }
+            
             return asset != null;
         }
 
