@@ -3,8 +3,7 @@
     "rootNamespace": "",
     "references": [
         "PostMVC",
-        "Unity.InputSystem",
-        "Unity.Services.Core"
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
