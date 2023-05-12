@@ -14,6 +14,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async
         void Resolve(Action action, bool unique = true);
         void Resolve<T1>(Action<T1> action, T1 value, bool unique = true);
         void Resolve<T1, T2>(Action<T1, T2> action, T1 value01, T2 value02, bool unique = true);
+        void Resolve<T1, T2, T3>(Action<T1, T2, T3> action, T1 value01, T2 value02, T3 value03, bool unique = true);
 
         /*
          * Resolve Tasks.
