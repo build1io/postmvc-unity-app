@@ -17,9 +17,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
+            
+            if (print)
                 UnityEngine.Debug.Log(FormatMessage(message));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(message), LogLevel.Debug, false);
         }
 
@@ -27,10 +30,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         {
             if (!CheckLevel(LogLevel.Debug))
                 return;
+            
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            if (print)
                 UnityEngine.Debug.Log(FormatException(exception));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatException(exception), LogLevel.Debug, false);
         }
 
@@ -39,9 +45,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
+            
+            if (print)
                 UnityEngine.Debug.Log(FormatMessage(callback.Invoke()));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke()), LogLevel.Debug, false);
         }
 
@@ -50,9 +59,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
+            
+            if (print)
                 UnityEngine.Debug.Log(FormatMessage(callback.Invoke(param01)));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke(param01)), LogLevel.Debug, false);
         }
 
@@ -60,10 +72,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         {
             if (!CheckLevel(LogLevel.Debug))
                 return;
+            
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            if (print)
                 UnityEngine.Debug.Log(FormatMessage(callback.Invoke(param01, param02)));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02)), LogLevel.Debug, false);
         }
 
@@ -71,10 +86,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         {
             if (!CheckLevel(LogLevel.Debug))
                 return;
+            
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            if (print)
                 UnityEngine.Debug.Log(FormatMessage(callback.Invoke(param01, param02, param03)));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02, param03)), LogLevel.Debug, false);
         }
 
@@ -111,9 +129,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
+            
+            if (print)
                 UnityEngine.Debug.LogWarning(FormatMessage(message));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(message), LogLevel.Warning, false);
         }
 
@@ -122,9 +143,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
+            
+            if (print)
                 UnityEngine.Debug.LogWarning(FormatException(exception));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatException(exception), LogLevel.Warning, false);
         }
 
@@ -132,10 +156,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         {
             if (!CheckLevel(LogLevel.Warning))
                 return;
+            
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            if (print)
                 UnityEngine.Debug.LogWarning(FormatMessage(callback.Invoke()));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke()), LogLevel.Warning, false);
         }
 
@@ -144,9 +171,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
+            
+            if (print)
                 UnityEngine.Debug.LogWarning(FormatMessage(callback.Invoke(param01)));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke(param01)), LogLevel.Warning, false);
         }
 
@@ -155,9 +185,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
+            
+            if (print)
                 UnityEngine.Debug.LogWarning(FormatMessage(callback.Invoke(param01, param02)));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02)), LogLevel.Warning, false);
         }
 
@@ -204,10 +237,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         {
             if (!CheckLevel(LogLevel.Error))
                 return;
+            
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            if (print)
                 UnityEngine.Debug.LogError(FormatMessage(message));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(message), LogLevel.Error, true);
         }
 
@@ -215,10 +251,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         {
             if (!CheckLevel(LogLevel.Error))
                 return;
+            
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            if (print)
                 UnityEngine.Debug.LogError(FormatException(exception));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatException(exception), LogLevel.Error, true);
         }
 
@@ -227,9 +266,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
+            
+            if (print)
                 UnityEngine.Debug.LogError(FormatMessage(callback.Invoke()));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke()), LogLevel.Error, true);
         }
 
@@ -237,10 +279,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         {
             if (!CheckLevel(LogLevel.Error))
                 return;
+            
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            if (print)
                 UnityEngine.Debug.LogError(FormatMessage(callback.Invoke(param01)));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke(param01)), LogLevel.Error, true);
         }
 
@@ -248,10 +293,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
         {
             if (!CheckLevel(LogLevel.Error))
                 return;
+            
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            if (print)
                 UnityEngine.Debug.LogError(FormatMessage(callback.Invoke(param01, param02)));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02)), LogLevel.Error, true);
         }
 
@@ -260,9 +308,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            if (Logging.Print && Logging.PrintLevel > LogLevel.None)
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
+            
+            if (print)
                 UnityEngine.Debug.LogError(FormatMessage(callback.Invoke(param01, param02, param03)));
-            else if (Logging.Record && Logging.RecordLevel > LogLevel.None)
+            else if (record)
                 _logController.RecordMessage(FormatMessage(callback.Invoke(param01, param02, param03)), LogLevel.Error, true);
         }
 

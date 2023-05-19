@@ -4,7 +4,7 @@ using Build1.PostMVC.Unity.App.Modules.Logging.Impl;
 
 namespace Build1.PostMVC.Unity.App.Modules.Logging
 {
-    public sealed class LogModule : Module
+    internal sealed class LogModule : Module
     {
         [Inject] public IInjectionBinder InjectionBinder { get; set; }
         
@@ -12,7 +12,16 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
         public void PostConstruct()
         {
             InjectionBinder.Bind<ILogController, LogController>().ConstructOnStart();
-            InjectionBinder.Bind<ILog, LogProvider, LogAttribute>();
+            
+            #if UNITY_WEBGL && !UNITY_EDITOR
+            
+            InjectionBinder.Bind<ILog, LogProviderWebGL, LogAttribute>();
+
+            #else
+
+            InjectionBinder.Bind<ILog, LogProviderDefault, LogAttribute>();
+
+            #endif
         }
     }
 }

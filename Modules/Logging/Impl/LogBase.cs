@@ -86,14 +86,14 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
          */
 
         protected bool   CheckLevel(LogLevel level)           { return (_level > LogLevel.None && level >= _level) || Logging.ForceAll; }
-        protected string FormatMessage(object message)        { return _prefix != null ? $"{_prefix}: {message}\n" : message.ToString(); }
+        protected string FormatMessage(string message)        { return _prefix != null ? $"{_prefix}: {message}\n" : message.ToString(); }
         protected string FormatException(Exception exception) { return FormatException(_prefix, exception); }
 
         /*
          * Static.
          */
 
-        protected static string FormatException(string prefix, Exception exception)
+        public static string FormatException(string prefix, Exception exception)
         {
             if (exception.InnerException == null)
             {

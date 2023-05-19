@@ -1,59 +1,31 @@
-using System.Collections.Generic;
-using Build1.PostMVC.Core.MVCS.Injection;
-using Build1.PostMVC.Unity.App.Modules.Logging.Impl;
-
 namespace Build1.PostMVC.Unity.App.Modules.Logging
 {
-    public sealed class LogProvider : InjectionProvider<ILog, LogAttribute>
+    public static class LogProvider
     {
-        [Inject] public ILogController LogController { get; set; }
-        
-        private readonly Stack<ILog> _availableInstances;
-        private readonly List<ILog>  _usedInstances;
-
-        public LogProvider()
+        private static ILogProvider Provider
         {
-            _availableInstances = new Stack<ILog>();
-            _usedInstances = new List<ILog>();
-        }
-
-        /*
-         * Provider.
-         */
-
-        public override ILog TakeInstance(object owner, LogAttribute attribute)
-        {
-            ILog log;
-
-            if (_availableInstances.Count > 0)
+            get
             {
-                log = _availableInstances.Pop();
-                log.SetPrefix(owner.GetType().Name);
-                log.SetLevel(attribute.logLevel);
-                _usedInstances.Add(log);
+                _logProvider ??= Core.PostMVC.GetInstance<ILogProvider>();
+                return _logProvider;
             }
-            else
-            {
-                log = GetLogImpl(owner.GetType().Name, attribute.logLevel, LogController);
-                _usedInstances.Add(log);
-            }
-
-            return log;
         }
 
-        public override void ReturnInstance(ILog instance)
+        private static ILogController Controller
         {
-            if (_usedInstances.Remove(instance))
-                _availableInstances.Push(instance);
+            get
+            {
+                _logController ??= Core.PostMVC.GetInstance<ILogController>();
+                return _logController;
+            }
         }
-        
-        /*
-         * Static.
-         */
-        
+
+        private static ILogProvider   _logProvider;
+        private static ILogController _logController;
+
         public static ILog GetLog<T>(LogLevel level)
         {
-            var log = GetLogImpl(typeof(T).Name, level, Core.PostMVC.GetInstance<ILogController>());
+            var log = Provider.CreateLogInstance(typeof(T).Name, level, Controller);
 
             if (typeof(UnityEngine.MonoBehaviour).IsAssignableFrom(typeof(T)))
             {
@@ -67,32 +39,17 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
 
         public static ILog GetLog(LogLevel level)
         {
-            return GetLogImpl(null, level, Core.PostMVC.GetInstance<ILogController>());
+            return Provider.CreateLogInstance(null, level, Controller);
         }
-        
+
         public static ILog GetLog(string prefix, LogLevel level)
         {
-            return GetLogImpl(prefix, level, Core.PostMVC.GetInstance<ILogController>());
+            return Provider.CreateLogInstance(prefix, level, Controller);
         }
-        
+
         public static ILog GetLog(object owner, LogLevel level)
         {
-            return GetLogImpl(owner.GetType().Name, level, Core.PostMVC.GetInstance<ILogController>());
-        }
-
-        internal static ILog GetLogImpl(string prefix, LogLevel level, ILogController logController)
-        {
-            #if UNITY_WEBGL && !UNITY_EDITOR
-        
-            LogWebGL requires major update.
-            return new LogWebGL(prefix, level, logController);
-
-            #else
-
-            return new LogDefault(prefix, level, logController);
-
-            #endif
-
+            return Provider.CreateLogInstance(owner.GetType().Name, level, Controller);
         }
     }
 }

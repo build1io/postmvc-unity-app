@@ -1,14 +1,14 @@
 mergeInto(LibraryManager.library, {
     LogDebug: function(message) {
-        console.log(Pointer_stringify(message));
+        console.log(UTF8ToString(message));
     },
   
     LogWarning: function(message) {
-        console.warn(Pointer_stringify(message));
+        console.warn(UTF8ToString(message));
     },
 
     LogError: function(message) {
-        console.error(Pointer_stringify(message));
+        console.error(UTF8ToString(message));
     },
     
     GetUrlParameters: function() {

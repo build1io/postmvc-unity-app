@@ -1,9 +1,7 @@
 #if UNITY_WEBGL
 
 using System;
-using System.Collections.Specialized;
 using System.Runtime.InteropServices;
-using System.Web;
 
 namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
 {
@@ -11,52 +9,15 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
     {
         [DllImport("__Internal")]
         private static extern void LogDebug(string message);
-
+        
         [DllImport("__Internal")]
         private static extern void LogWarning(string message);
-
+        
         [DllImport("__Internal")]
         private static extern void LogError(string message);
 
-        [DllImport("__Internal")]
-        private static extern string GetUrlParameters();
-
-        private static bool Print => _logLevelOverride != LogLevel.None || Logging.Print;
-        
-        private static readonly NameValueCollection _urlParams;
-        private static readonly LogLevel            _logLevelOverride;
-
-        static LogWebGL()
+        public LogWebGL(string prefix, LogLevel level, ILogController logController) : base(prefix, level, logController)
         {
-            _urlParams = HttpUtility.ParseQueryString(GetUrlParameters().ToLower());
-
-            try
-            {
-                var logLevelString = _urlParams["loglevel"];
-                if (string.IsNullOrWhiteSpace(logLevelString))
-                    return;
-                
-                var logLevel = (LogLevel)Enum.Parse(typeof(LogLevel), logLevelString, true);
-                if (!Enum.IsDefined(typeof(LogLevel), logLevel))
-                    return;
-                
-                _logLevelOverride = logLevel;
-                
-                LogDebug($"{nameof(LogWebGL)}: Global log level overridden to {_logLevelOverride}\n");
-            }
-            catch (Exception exception)
-            {
-                LogError(FormatException(nameof(LogWebGL), exception));
-            }
-        }
-
-        public LogWebGL(string prefix, LogLevel level, ILogController logController) : base(prefix, ValidateLogLevel(level), logController)
-        {
-        }
-
-        private static LogLevel ValidateLogLevel(LogLevel logLevel)
-        {
-            return _logLevelOverride != LogLevel.None ? _logLevelOverride : logLevel;
         }
 
         /*
@@ -68,13 +29,17 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            message = FormatMessage(message); 
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
+
+            if (print || record)
+                message = FormatMessage(message);
             
-            if (Print)
+            if (print)
                 LogDebug(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Debug, false);
         }
 
         public override void Debug(Exception exception)
@@ -82,13 +47,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            var message = FormatException(exception); 
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatException(exception);
             
-            if (Print)
+            if (print)
                 LogDebug(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Debug, false);
         }
 
         public override void Debug(Func<string> callback)
@@ -96,13 +66,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            var message = FormatMessage(callback.Invoke());
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke());
             
-            if (Print)
+            if (print)
                 LogDebug(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Debug, false);
         }
 
         public override void Debug<T1>(Func<T1, string> callback, T1 param01)
@@ -110,13 +85,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01)); 
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke(param01));
             
-            if (Print)
+            if (print)
                 LogDebug(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Debug, false);
         }
 
         public override void Debug<T1, T2>(Func<T1, T2, string> callback, T1 param01, T2 param02)
@@ -124,13 +104,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02));
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke(param01, param02));
             
-            if (Print)
+            if (print)
                 LogDebug(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Debug, false);
         }
 
         public override void Debug<T1, T2, T3>(Func<T1, T2, T3, string> callback, T1 param01, T2 param02, T3 param03)
@@ -138,13 +123,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Debug))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02, param03));
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Debug;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Debug;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke(param01, param02, param03));
             
-            if (Print)
+            if (print)
                 LogDebug(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Debug, false);
         }
 
         public override void Debug(Action<ILogDebug> callback)
@@ -180,13 +170,17 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            message = FormatMessage(message);
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
+
+            if (print || record)
+                message = FormatMessage(message);
             
-            if (Print)
+            if (print)
                 LogWarning(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Warning, false);
         }
 
         public override void Warn(Exception exception)
@@ -194,13 +188,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            var message = FormatException(exception);
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatException(exception);
             
-            if (Print)
+            if (print)
                 LogWarning(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Warning, false);
         }
 
         public override void Warn(Func<string> callback)
@@ -208,13 +207,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            var message = FormatMessage(callback.Invoke());
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke());
             
-            if (Print)
+            if (print)
                 LogWarning(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Warning, false);
         }
 
         public override void Warn<T1>(Func<T1, string> callback, T1 param01)
@@ -222,13 +226,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01));
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke(param01));
             
-            if (Print)
+            if (print)
                 LogWarning(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Warning, false);
         }
 
         public override void Warn<T1, T2>(Func<T1, T2, string> callback, T1 param01, T2 param02)
@@ -236,13 +245,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02));
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke(param01, param02));
             
-            if (Print)
+            if (print)
                 LogWarning(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Warning, false);
         }
 
         public override void Warn<T1, T2, T3>(Func<T1, T2, T3, string> callback, T1 param01, T2 param02, T3 param03)
@@ -250,13 +264,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Warning))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02, param03));
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Warning;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Warning;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke(param01, param02, param03));
             
-            if (Print)
+            if (print)
                 LogWarning(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, false);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Warning, false);
         }
 
         public override void Warn(Action<ILogWarn> callback)
@@ -292,13 +311,17 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            message = FormatMessage(message);
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
+
+            if (print || record)
+                message = FormatMessage(message);
             
-            if (Print)
+            if (print)
                 LogError(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Error, false);
         }
 
         public override void Error(Exception exception)
@@ -306,13 +329,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            var message = FormatException(exception);
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
+            string message = string.Empty;
             
-            if (Print)
+            if (print || record)
+                message = FormatException(exception);
+            
+            if (print)
                 LogError(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Error, false);
         }
 
         public override void Error(Func<string> callback)
@@ -320,13 +348,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            var message = FormatMessage(callback.Invoke());
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke());
             
-            if (Print)
+            if (print)
                 LogError(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Error, false);
         }
 
         public override void Error<T1>(Func<T1, string> callback, T1 param01)
@@ -334,13 +367,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01));
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke(param01));
             
-            if (Print)
+            if (print)
                 LogError(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Error, false);
         }
 
         public override void Error<T1, T2>(Func<T1, T2, string> callback, T1 param01, T2 param02)
@@ -348,13 +386,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02));
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke(param01, param02));
             
-            if (Print)
+            if (print)
                 LogError(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Error, false);
         }
 
         public override void Error<T1, T2, T3>(Func<T1, T2, T3, string> callback, T1 param01, T2 param02, T3 param03)
@@ -362,13 +405,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!CheckLevel(LogLevel.Error))
                 return;
 
-            var message = FormatMessage(callback.Invoke(param01, param02, param03));
+            var print = Logging.Print && Logging.PrintLevel is > LogLevel.None and <= LogLevel.Error;
+            var record = Logging.Record && Logging.RecordLevel is > LogLevel.None and <= LogLevel.Error;
+            var message = string.Empty;
+
+            if (print || record)
+                message = FormatMessage(callback.Invoke(param01, param02, param03));
             
-            if (Print)
+            if (print)
                 LogError(message);
             
-            if (Logging.Record)
-                _logController.RecordMessage(message, true);
+            if (record)
+                _logController.RecordMessage(message, LogLevel.Error, false);
         }
 
         public override void Error(Action<ILogError> callback)
