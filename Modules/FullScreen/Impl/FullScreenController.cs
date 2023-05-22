@@ -10,7 +10,7 @@ namespace Build1.PostMVC.Unity.App.Modules.FullScreen.Impl
         [Log(LogLevel.Warning)] public ILog             Log        { get; set; }
         [Inject]                public IEventDispatcher Dispatcher { get; set; }
 
-        public bool IsInFullScreen { get; private set; }
+        public bool IsInFullScreen => Screen.fullScreen;
 
         public void ToggleFullScreen()
         {
@@ -20,10 +20,7 @@ namespace Build1.PostMVC.Unity.App.Modules.FullScreen.Impl
                 return;
             }
 
-            // Fullscreen will be out of sync if a player exits fullscreen by himself.
-
             Screen.fullScreen = !Screen.fullScreen;
-            IsInFullScreen = Screen.fullScreen;
 
             Dispatcher.Dispatch(FullScreenEvent.Changed, IsInFullScreen);
         }
