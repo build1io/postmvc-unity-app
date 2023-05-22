@@ -20,9 +20,10 @@ namespace Build1.PostMVC.Unity.App.Modules.FullScreen.Impl
                 return;
             }
 
-            Screen.fullScreen = !Screen.fullScreen;
-
-            Dispatcher.Dispatch(FullScreenEvent.Changed, IsInFullScreen);
+            var fullScreen = !Screen.fullScreen;
+            Screen.fullScreen = fullScreen;
+            
+            Dispatcher.Dispatch(FullScreenEvent.Changed, fullScreen);
         }
     }
 }
