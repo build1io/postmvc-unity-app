@@ -144,6 +144,9 @@ namespace Build1.PostMVC.Unity.App.Modules.UI
                 }
             }
 
+            if (!prefab)
+                throw new Exception($"Control prefab not found: {configuration.prefabName}");
+            
             prefab.SetActive(active);
 
             var instance = Object.Instantiate(prefab, parent.transform);
