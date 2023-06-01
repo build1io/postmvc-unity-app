@@ -1,13 +1,16 @@
 mergeInto(LibraryManager.library, {
-    LogDebug: function(message) {
-        console.log(UTF8ToString(message));
+    LogDebug: function(m) {
+        var f = typeof UTF8ToString === 'function' ? UTF8ToString : Pointer_stringify;
+        console.log(f(m));
     },
   
-    LogWarning: function(message) {
-        console.warn(UTF8ToString(message));
+    LogWarning: function(m) {
+        var f = typeof UTF8ToString === 'function' ? UTF8ToString : Pointer_stringify;
+        console.warn(f(m));
     },
 
-    LogError: function(message) {
-        console.error(UTF8ToString(message));
+    LogError: function(m) {
+        var f = typeof UTF8ToString === 'function' ? UTF8ToString : Pointer_stringify;
+        console.error(f(m));
     }
 });
