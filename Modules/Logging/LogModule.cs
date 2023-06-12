@@ -16,10 +16,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
             #if UNITY_WEBGL && !UNITY_EDITOR
             
             InjectionBinder.Bind<ILog, LogProviderWebGL, LogAttribute>();
+            InjectionBinder.Bind<ILogProvider, LogProviderWebGL>();
 
             #else
 
             InjectionBinder.Bind<ILog, LogProviderDefault, LogAttribute>();
+            InjectionBinder.Bind<ILogProvider, LogProviderDefault>();
 
             #endif
         }
