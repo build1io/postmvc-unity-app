@@ -108,7 +108,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI
 
             if (control.ToDestroyOnDeactivation)
             {
-                Object.DestroyImmediate(view.gameObject);
+                Object.Destroy(view.gameObject);
                 destroyed = true;
             }
             else
