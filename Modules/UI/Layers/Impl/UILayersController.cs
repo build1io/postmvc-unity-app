@@ -24,6 +24,11 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Layers.Impl
             _layers.Add(layerId, view);
         }
 
+        public void ResetLayers()
+        {
+            _layers.Clear();
+        }
+
         public GameObject GetLayerView(int layerId)
         {
             if (!_layers.TryGetValue(layerId, out var view))
