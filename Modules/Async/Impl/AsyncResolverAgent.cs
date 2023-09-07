@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Unity.App.Modules.Logging;
 using UnityEngine;
-using Random = System.Random;
 
 namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 {
@@ -12,9 +11,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
     {
         [Log(LogLevel.Warning)] public ILog Log { get; set; }
 
-        private const int ResolvingCallsCapacity = 8;
-        private const int PendingCallsCapacity   = 8;
-        private const int IntervalCallsCapacity  = 8;
+        private const int ResolvingCallsCapacity = 16;
+        private const int PendingCallsCapacity   = 16;
+        private const int IntervalCallsCapacity  = 16;
 
         private readonly List<Action> _pendingActions           = new(ResolvingCallsCapacity);
         private readonly List<Action> _pendingActionsExecutable = new(ResolvingCallsCapacity);
@@ -22,7 +21,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
         private readonly List<int> _delayedCallIds  = new(PendingCallsCapacity);
         private readonly List<int> _intervalCallIds = new(IntervalCallsCapacity);
 
-        private readonly Random _random = new Random();
+        private int _id;
 
         [PreDestroy]
         public void PreDestroy()
@@ -64,9 +63,15 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
             {
                 if (unique && _pendingActions.IndexOf(action) != -1)
                     return;
+                
                 _pendingActions.Add(action);
+                
+                #if UNITY_EDITOR
+                
                 if (_pendingActions.Count > ResolvingCallsCapacity)
                     Log.Warn(c => $"Estimated capacity of {c} for pending actions exceeded. Increase the capacity to save memory.", ResolvingCallsCapacity);
+                
+                #endif
             }
         }
 
@@ -91,7 +96,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 
         public int DelayedCall(Action callback, float seconds)
         {
-            var callId = GenerateCallId();
+            var callId = _id++;
             _delayedCallIds.Add(callId);
             StartCoroutine(DelayedCallImpl(callId, seconds, callback));
             return callId;
@@ -99,7 +104,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 
         public int DelayedCall<T>(Action<T> callback, T param, float seconds)
         {
-            var callId = GenerateCallId();
+            var callId = _id++;
             _delayedCallIds.Add(callId);
             StartCoroutine(DelayedCallImpl(callId, seconds, callback, param));
             return callId;
@@ -107,7 +112,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 
         public int IntervalCall(Action callback, float seconds)
         {
-            var callId = GenerateCallId();
+            var callId = _id++;
             _intervalCallIds.Add(callId);
             StartCoroutine(IntervalCallImpl(callId, seconds, callback));
             return callId;
@@ -115,7 +120,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 
         public int IntervalCall<T>(Action<T> callback, T param, float seconds)
         {
-            var callId = GenerateCallId();
+            var callId = _id++;
             _intervalCallIds.Add(callId);
             StartCoroutine(IntervalCallImpl(callId, seconds, callback, param));
             return callId;
@@ -171,21 +176,6 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
                 callback.Invoke(param);
                 
             } while (_intervalCallIds.Contains(callId));
-        }
-        
-        /*
-         * Helpers.
-         */
-
-        private int GenerateCallId()
-        {
-            int callId;
-            do
-            {
-                callId = _random.Next(1, int.MaxValue);
-            } while (_delayedCallIds.Contains(callId) || _intervalCallIds.Contains(callId));
-
-            return callId;
         }
     }
 }
