@@ -96,7 +96,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 
         public int DelayedCall(Action callback, float seconds)
         {
-            var callId = _id++;
+            var callId = ++_id;
             _delayedCallIds.Add(callId);
             StartCoroutine(DelayedCallImpl(callId, seconds, callback));
             return callId;
@@ -104,7 +104,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 
         public int DelayedCall<T>(Action<T> callback, T param, float seconds)
         {
-            var callId = _id++;
+            var callId = ++_id;
             _delayedCallIds.Add(callId);
             StartCoroutine(DelayedCallImpl(callId, seconds, callback, param));
             return callId;
@@ -112,7 +112,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 
         public int IntervalCall(Action callback, float seconds)
         {
-            var callId = _id++;
+            var callId = ++_id;
             _intervalCallIds.Add(callId);
             StartCoroutine(IntervalCallImpl(callId, seconds, callback));
             return callId;
@@ -120,7 +120,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 
         public int IntervalCall<T>(Action<T> callback, T param, float seconds)
         {
-            var callId = _id++;
+            var callId = ++_id;
             _intervalCallIds.Add(callId);
             StartCoroutine(IntervalCallImpl(callId, seconds, callback, param));
             return callId;
