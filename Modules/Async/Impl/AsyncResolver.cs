@@ -73,7 +73,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
 
         public bool CancelCall(ref int callId)
         {
-            var removed = _agent.CancelCall(callId);
+            var removed = _agent && _agent.CancelCall(callId);
             if (removed)
                 callId = DefaultCallId;
             return removed;
