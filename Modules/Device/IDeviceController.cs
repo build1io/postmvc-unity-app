@@ -4,6 +4,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Device
 {
     public interface IDeviceController
     {
+        DeviceScreenOrientation AvailableOrientations   { get; }
         DevicePlatform          DevicePlatform          { get; }
         DeviceType              DeviceType              { get; }
         DeviceOrientation       DeviceOrientation       { get; }

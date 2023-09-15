@@ -17,6 +17,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
         [Inject]                public IAsyncResolver   AsyncResolver { get; set; }
         [Inject]                public IEventDispatcher Dispatcher    { get; set; }
 
+        public DeviceScreenOrientation AvailableOrientations   { get; private set; }
         public DevicePlatform          DevicePlatform          { get; private set; }
         public DeviceType              DeviceType              { get; private set; }
         public DeviceOrientation       DeviceOrientation       { get; private set; }
@@ -42,7 +43,6 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
         public bool IsWeb    => DevicePlatform == DevicePlatform.WebGL;
 
         private int                           _intervalId;
-        private DeviceScreenOrientation       _orientations;
         private UnityEngine.DeviceOrientation _deviceOrientation;
         private ScreenOrientation             _screenOrientation;
 
@@ -90,14 +90,14 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
 
         public void SetAvailableOrientations(DeviceScreenOrientation orientations)
         {
-            if (_orientations == orientations)
+            if (AvailableOrientations == orientations)
                 return;
 
-            _orientations = orientations;
-            
-            Log.Debug(o => $"Setting available orientations: {o}", _orientations);
+            AvailableOrientations = orientations;
 
-            switch (_orientations)
+            Log.Debug(o => $"Setting available orientations: {o}", orientations);
+
+            switch (orientations)
             {
                 case DeviceScreenOrientation.Portrait:
                     Screen.orientation = ScreenOrientation.Portrait;
@@ -113,11 +113,11 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
                     return;
             }
 
-            var autorotateToPortrait = (_orientations & DeviceScreenOrientation.Portrait) == DeviceScreenOrientation.Portrait;
-            var autorotateToPortraitUpsideDown = (_orientations & DeviceScreenOrientation.PortraitUpsideDown) == DeviceScreenOrientation.PortraitUpsideDown;
-            var autorotateToLandscapeLeft = (_orientations & DeviceScreenOrientation.LandscapeLeft) == DeviceScreenOrientation.LandscapeLeft;
-            var autorotateToLandscapeRight = (_orientations & DeviceScreenOrientation.LandscapeRight) == DeviceScreenOrientation.LandscapeRight;
-            
+            var autorotateToPortrait = (orientations & DeviceScreenOrientation.Portrait) == DeviceScreenOrientation.Portrait;
+            var autorotateToPortraitUpsideDown = (orientations & DeviceScreenOrientation.PortraitUpsideDown) == DeviceScreenOrientation.PortraitUpsideDown;
+            var autorotateToLandscapeLeft = (orientations & DeviceScreenOrientation.LandscapeLeft) == DeviceScreenOrientation.LandscapeLeft;
+            var autorotateToLandscapeRight = (orientations & DeviceScreenOrientation.LandscapeRight) == DeviceScreenOrientation.LandscapeRight;
+
             if (Screen.orientation != ScreenOrientation.AutoRotation)
             {
                 if (autorotateToPortrait)
@@ -129,7 +129,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Device.Impl
                 else if (autorotateToPortraitUpsideDown)
                     Screen.orientation = ScreenOrientation.PortraitUpsideDown;
             }
-            
+
             Screen.autorotateToPortrait = autorotateToPortrait;
             Screen.autorotateToPortraitUpsideDown = autorotateToPortraitUpsideDown;
             Screen.autorotateToLandscapeLeft = autorotateToLandscapeLeft;
