@@ -155,7 +155,7 @@ namespace Build1.PostMVC.Unity.App.Mediation
         public UnityEventBinding ToEvent<P1>(Event<P1> @event, P1 param01)
         {
             _listener = _ => { _dispatcher.Dispatch(@event, param01); };
-            _unityEvent.AddListener(DispatchEvent);
+            _unityEvent.AddListener(_listener);
             return this;
         }
 
