@@ -130,12 +130,12 @@ namespace Build1.PostMVC.Unity.App.Tests.Mediation
 
             public void BindUnityEventToEvent()
             {
-                BindUnityEvent(TestUnityEvent).ToEvent(OnTestEvent);
+                BindUnityEvent(TestUnityEvent, OnTestEvent);
             }
 
             public void BindUnityEventToAction()
             {
-                BindUnityEvent(TestUnityEvent).ToAction(OnTestAction);
+                BindUnityEvent(TestUnityEvent, OnTestAction);
             }
 
             public void UnbindUnityEvent()
