@@ -12,7 +12,7 @@ namespace Build1.PostMVC.Unity.App.Mediation
         private readonly EventDispatcher                    _dispatcher;
         private readonly Dictionary<UnityEventBase, object> _bindings;
 
-        private static readonly Pool<UnityEventBinding> _bindingsPool = new();
+        private static readonly Pool<IUnityEventBinding> _bindingsPool = new();
 
         protected UnityViewDispatcher()
         {
@@ -52,96 +52,99 @@ namespace Build1.PostMVC.Unity.App.Mediation
         public void Dispatch<T1, T2>(Event<T1, T2> @event, T1 param01, T2 param02)                     { _dispatcher.Dispatch(@event, param01, param02); }
         public void Dispatch<T1, T2, T3>(Event<T1, T2, T3> @event, T1 param01, T2 param02, T3 param03) { _dispatcher.Dispatch(@event, param01, param02, param03); }
 
-        // TODO: implement parameter getters for BindUnityEvent methods.
-        
         /*
          * UnityEventBinding00 Events.
          */
 
-        protected void BindUnityEvent(UnityEvent unityEvent, Event @event)
+        protected IUnityEventBinding BindUnityEvent(UnityEvent unityEvent, Event @event)
         {
-            AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event);
+            return AddBinding<UnityEventBinding00>(unityEvent).Setup(unityEvent, _dispatcher, @event);
         }
 
-        protected void BindUnityEvent<T1>(UnityEvent unityEvent, Event<T1> @event, T1 param01)
+        protected IUnityEventBinding BindUnityEvent<T1>(UnityEvent unityEvent, Event<T1> @event, T1 param01)
         {
-            AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event, param01);
+            return AddBinding<UnityEventBinding00>(unityEvent).Setup(unityEvent, _dispatcher, @event, param01);
+        }
+        
+        protected IUnityEventBinding BindUnityEvent<T1>(UnityEvent unityEvent, Event<T1> @event, Func<T1> param01)
+        {
+            return AddBinding<UnityEventBinding00>(unityEvent).Setup(unityEvent, _dispatcher, @event, param01);
         }
 
-        protected void BindUnityEvent<T1, T2>(UnityEvent unityEvent, Event<T1, T2> @event, T1 param01, T2 param02)
+        protected IUnityEventBinding BindUnityEvent<T1, T2>(UnityEvent unityEvent, Event<T1, T2> @event, T1 param01, T2 param02)
         {
-            AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event, param01, param02);
+            return AddBinding<UnityEventBinding00>(unityEvent).Setup(unityEvent, _dispatcher, @event, param01, param02);
         }
 
-        protected void BindUnityEvent<T1, T2, T3>(UnityEvent unityEvent, Event<T1, T2, T3> @event, T1 param01, T2 param02, T3 param03)
+        protected IUnityEventBinding BindUnityEvent<T1, T2, T3>(UnityEvent unityEvent, Event<T1, T2, T3> @event, T1 param01, T2 param02, T3 param03)
         {
-            AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event, param01, param02, param03);
+            return AddBinding<UnityEventBinding00>(unityEvent).Setup(unityEvent, _dispatcher, @event, param01, param02, param03);
         }
 
         /*
          * UnityEventBinding00 Actions.
          */
         
-        protected void BindUnityEvent(UnityEvent unityEvent, Action action)
+        protected IUnityEventBinding BindUnityEvent(UnityEvent unityEvent, Action action)
         {
-            AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action);
+            return AddBinding<UnityEventBinding00>(unityEvent).Setup(unityEvent, action);
         }
 
-        protected void BindUnityEvent<T1>(UnityEvent unityEvent, Action<T1> action, T1 param01)
+        protected IUnityEventBinding BindUnityEvent<T1>(UnityEvent unityEvent, Action<T1> action, T1 param01)
         {
-            AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action, param01);
+            return AddBinding<UnityEventBinding00>(unityEvent).Setup(unityEvent, action, param01);
         }
 
-        protected void BindUnityEvent<T1, T2>(UnityEvent unityEvent, Action<T1, T2> action, T1 param01, T2 param02)
+        protected IUnityEventBinding BindUnityEvent<T1, T2>(UnityEvent unityEvent, Action<T1, T2> action, T1 param01, T2 param02)
         {
-            AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action, param01, param02);
+            return AddBinding<UnityEventBinding00>(unityEvent).Setup(unityEvent, action, param01, param02);
         }
 
-        protected void BindUnityEvent<T1, T2, T3>(UnityEvent unityEvent, Action<T1, T2, T3> action, T1 param01, T2 param02, T3 param03)
+        protected IUnityEventBinding BindUnityEvent<T1, T2, T3>(UnityEvent unityEvent, Action<T1, T2, T3> action, T1 param01, T2 param02, T3 param03)
         {
-            AddBinding<UnityEventBinding00>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action, param01, param02, param03);
+            return AddBinding<UnityEventBinding00>(unityEvent).Setup(unityEvent, action, param01, param02, param03);
         }
 
         /*
          * UnityEventBinding01.
          */
 
-        protected void BindUnityEvent<T1>(UnityEvent<T1> unityEvent, Event<T1> @event)
+        protected IUnityEventBinding BindUnityEvent<T1>(UnityEvent<T1> unityEvent, Event<T1> @event)
         {
-            AddBinding<UnityEventBinding01<T1>>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event);
+            return AddBinding<UnityEventBinding01<T1>>(unityEvent).Setup(unityEvent, _dispatcher, @event);
         }
         
-        protected void BindUnityEvent<T1>(UnityEvent<T1> unityEvent, Action<T1> action)
+        protected IUnityEventBinding BindUnityEvent<T1>(UnityEvent<T1> unityEvent, Action<T1> action)
         {
-            AddBinding<UnityEventBinding01<T1>>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action);
+            return AddBinding<UnityEventBinding01<T1>>(unityEvent).Setup(unityEvent, action);
         }
 
         /*
          * Binding to UnityEvent with 2 params.
          */
 
-        protected void BindUnityEvent<T1, T2>(UnityEvent<T1, T2> unityEvent, Event<T1, T2> @event)
+        protected IUnityEventBinding BindUnityEvent<T1, T2>(UnityEvent<T1, T2> unityEvent, Event<T1, T2> @event)
         {
-            AddBinding<UnityEventBinding02<T1, T2>>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event);
+            return AddBinding<UnityEventBinding02<T1, T2>>(unityEvent).Setup(unityEvent, _dispatcher, @event);
         }
         
-        protected void BindUnityEvent<T1, T2>(UnityEvent<T1, T2> unityEvent, Action<T1, T2> action)
+        protected IUnityEventBinding BindUnityEvent<T1, T2>(UnityEvent<T1, T2> unityEvent, Action<T1, T2> action)
         {
-            AddBinding<UnityEventBinding02<T1, T2>>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action);
+            return AddBinding<UnityEventBinding02<T1, T2>>(unityEvent).Setup(unityEvent, action);
         }
 
         /*
          * Binding to UnityEvent with 3 params.
          */
 
-        protected void BindUnityEvent<T1, T2, T3>(UnityEvent<T1, T2, T3> unityEvent, Event<T1, T2, T3> @event)
+        protected IUnityEventBinding BindUnityEvent<T1, T2, T3>(UnityEvent<T1, T2, T3> unityEvent, Event<T1, T2, T3> @event)
         {
-            AddBinding<UnityEventBinding03<T1, T2, T3>>(unityEvent).Configure(unityEvent, _dispatcher).ToEvent(@event);
+            return AddBinding<UnityEventBinding03<T1, T2, T3>>(unityEvent).Setup(unityEvent, _dispatcher, @event);
         }
         
-        protected void BindUnityEvent<T1, T2, T3>(UnityEvent<T1, T2, T3> unityEvent, Action<T1, T2, T3> action)
+        protected IUnityEventBinding BindUnityEvent<T1, T2, T3>(UnityEvent<T1, T2, T3> unityEvent, Action<T1, T2, T3> action)
         {
-            AddBinding<UnityEventBinding03<T1, T2, T3>>(unityEvent).Configure(unityEvent, _dispatcher).ToAction(action);
+            return AddBinding<UnityEventBinding03<T1, T2, T3>>(unityEvent).Setup(unityEvent, action);
         }
 
         /*
@@ -158,25 +161,25 @@ namespace Build1.PostMVC.Unity.App.Mediation
             _bindings.Remove(unityEvent);
         }
 
-        protected void UnbindUnityEvent(UnityEventBinding binding)
+        protected void UnbindUnityEvent(IUnityEventBinding binding)
         {
-            if (!_bindings.TryGetValue(binding.unityEvent, out var bindingOrBindings))
+            if (!_bindings.TryGetValue(binding.UnityEvent, out var bindingOrBindings))
                 return;
 
             if (bindingOrBindings == binding)
             {
                 binding.Unbind();
 
-                _bindings.Remove(binding.unityEvent);
+                _bindings.Remove(binding.UnityEvent);
                 _bindingsPool.Return(binding);
             }
             else
             {
-                var bindings = (List<UnityEventBinding>)bindingOrBindings;
+                var bindings = (List<IUnityEventBinding>)bindingOrBindings;
                 if (bindings.Remove(binding))
                 {
                     if (bindings.Count == 0)
-                        _bindings.Remove(binding.unityEvent);
+                        _bindings.Remove(binding.UnityEvent);
 
                     binding.Unbind();
                     _bindingsPool.Return(binding);
@@ -195,19 +198,19 @@ namespace Build1.PostMVC.Unity.App.Mediation
          * Private.
          */
 
-        private T AddBinding<T>(UnityEventBase unityEvent) where T : UnityEventBinding, new()
+        private T AddBinding<T>(UnityEventBase unityEvent) where T : IUnityEventBinding, new()
         {
             var binding = _bindingsPool.Take<T>();
 
             if (_bindings.TryGetValue(unityEvent, out var bindings))
             {
-                if (bindings is UnityEventBinding existingBinding)
+                if (bindings is IUnityEventBinding existingBinding)
                 {
-                    _bindings[unityEvent] = new List<UnityEventBinding> { existingBinding, binding };
+                    _bindings[unityEvent] = new List<IUnityEventBinding> { existingBinding, binding };
                 }
                 else
                 {
-                    ((List<UnityEventBinding>)bindings).Add(binding);
+                    ((List<IUnityEventBinding>)bindings).Add(binding);
                 }
             }
             else
@@ -220,14 +223,14 @@ namespace Build1.PostMVC.Unity.App.Mediation
 
         private void UnbindBindingOrBindings(object bindingOrBindings)
         {
-            if (bindingOrBindings is UnityEventBinding binding)
+            if (bindingOrBindings is IUnityEventBinding binding)
             {
                 binding.Unbind();
                 _bindingsPool.Return(binding);
             }
             else
             {
-                var bindings = (List<UnityEventBinding>)bindingOrBindings;
+                var bindings = (List<IUnityEventBinding>)bindingOrBindings;
                 foreach (var item in bindings)
                 {
                     item.Unbind();
