@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Build1.PostMVC.Unity.App.Modules.UI.Layers
 {
     [DisallowMultipleComponent]
-    public sealed class UILayersComponent : UnityView
+    public sealed class UILayers : UnityView
     {
         [SerializeField] private List<UILayerInfo> layers;
 
