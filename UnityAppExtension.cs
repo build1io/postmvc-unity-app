@@ -46,7 +46,8 @@ namespace Build1.PostMVC.Unity.App
 
         public override void Initialize()
         {
-            var injectionBinder = GetDependentExtension<MVCSExtension>().InjectionBinder;
+            var mvcs = GetDependentExtension<MVCSExtension>();
+            var injectionBinder = mvcs.InjectionBinder;
 
             // Rebinding EventBus to a Unity specific one.
             injectionBinder.Rebind<IEventBus, EventBusUnity>();
@@ -56,7 +57,7 @@ namespace Build1.PostMVC.Unity.App
             injectionBinder.Bind<IEventMap, EventMapProviderUnity, Inject>();
             
             // Adding reflection info preparation listener to make Unity App extension contribute to entities reflection info.
-            injectionBinder.Get<IInjectionReflector>().OnReflectionInfoPreparing += OnReflectionInfoPreparing;
+            mvcs.InjectionReflector.OnReflectionInfoPreparing += OnReflectionInfoPreparing;
 
             // General tools.
             injectionBinder.Bind<UnityViewEventProcessor>();
@@ -114,10 +115,10 @@ namespace Build1.PostMVC.Unity.App
 
         public override void Dispose()
         {
-            var injectionBinder = GetDependentExtension<MVCSExtension>().InjectionBinder;
+            var mvcs = GetDependentExtension<MVCSExtension>();
             
-            // Unsubscribing from reflection info preparation methods.
-            injectionBinder.Get<IInjectionReflector>().OnReflectionInfoPreparing -= OnReflectionInfoPreparing;
+            // Unsubscribing from Reflection Info contribution method.
+            mvcs.InjectionReflector.OnReflectionInfoPreparing -= OnReflectionInfoPreparing;
             
             // We don't need to unbind anything. MVCSExtension does it.
             // But we need to remove Context View Game Object.
