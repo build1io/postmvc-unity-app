@@ -1,17 +1,12 @@
 using System;
-using Build1.PostMVC.Core.Utils.Reflection;
+using Build1.PostMVC.Core.MVCS.Injection;
 
 namespace Build1.PostMVC.Unity.App.Mediation.Impl
 {
     internal sealed class UnityViewEventProcessor
     {
-        private readonly IReflector<UnityMediationReflectionInfo> _reflector;
+        [Inject] public IInjectionReflector InjectionReflector { get; set; }
         
-        public UnityViewEventProcessor()
-        {
-            _reflector = new Reflector<UnityMediationReflectionInfo>();
-        }
-
         public void ProcessStart(IUnityView view)
         {
             ProcessInstanceMethods<Start>(view);
@@ -39,9 +34,9 @@ namespace Build1.PostMVC.Unity.App.Mediation.Impl
             if (instance == null)
                 return;
             
-            var info = _reflector.Get(instance.GetType());
-            var methods = info.GetMethodsInfos<T>();
-            if (methods.Count == 0)
+            var info = InjectionReflector.Get(instance.GetType());
+            var methods = info.GetMethodInfos<T>();
+            if (methods == null)
                 return;
             
             foreach (var method in methods)

@@ -3,11 +3,14 @@ using Build1.PostMVC.Core.Extensions;
 using Build1.PostMVC.Core.MVCS;
 using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Core.MVCS.Injection.Impl;
+using Build1.PostMVC.Core.MVCS.Mediation;
 using Build1.PostMVC.Unity.App.Contexts;
 using Build1.PostMVC.Unity.App.Contexts.Impl;
 using Build1.PostMVC.Unity.App.Events;
 using Build1.PostMVC.Unity.App.Events.Impl.Bus;
 using Build1.PostMVC.Unity.App.Events.Impl.Map;
+using Build1.PostMVC.Unity.App.Mediation;
 using Build1.PostMVC.Unity.App.Mediation.Impl;
 using Build1.PostMVC.Unity.App.Modules.Agents;
 using Build1.PostMVC.Unity.App.Modules.Agents.Impl;
@@ -36,26 +39,26 @@ namespace Build1.PostMVC.Unity.App
         public const string RootGameObjectName = "[PostMVC]";
 
         private GameObject _contextViewGameObject;
-        
+
         /*
          * Public.
          */
 
         public override void Initialize()
         {
-            // TODO: manage multiple contexts and core modules sharing
-            if (!Context.IsRootContext)
-                return;
-            
-            var injectionBinder = GetDependentExtension<MVCSExtension>().InjectionBinder;
-            
+            var mvcs = GetDependentExtension<MVCSExtension>();
+            var injectionBinder = mvcs.InjectionBinder;
+
             // Rebinding EventBus to a Unity specific one.
             injectionBinder.Rebind<IEventBus, EventBusUnity>();
-            
+
             // Unbinding default EventMap and binding the Unity specific one.
             injectionBinder.Unbind<IEventMapCore>();
             injectionBinder.Bind<IEventMap, EventMapProviderUnity, Inject>();
             
+            // Adding reflection info preparation listener to make Unity App extension contribute to entities reflection info.
+            mvcs.InjectionReflector.OnReflectionInfoPreparing += OnReflectionInfoPreparing;
+
             // General tools.
             injectionBinder.Bind<UnityViewEventProcessor>();
             injectionBinder.Bind<IAgentsController, AgentsController>();
@@ -66,9 +69,9 @@ namespace Build1.PostMVC.Unity.App
             injectionBinder.Bind<IUpdateController, UpdateController>();
 
             #if UNITY_ANDROID || UNITY_EDITOR
-                AddModule<Modules.Android.AndroidModule>();
+            AddModule<Modules.Android.AndroidModule>();
             #endif
-            
+
             AddModule<DeviceModule>();
             AddModule<FullScreenModule>();
             AddModule<InternetReachabilityModule>();
@@ -112,9 +115,15 @@ namespace Build1.PostMVC.Unity.App
 
         public override void Dispose()
         {
+            var mvcs = GetDependentExtension<MVCSExtension>();
+            
+            // Unsubscribing from Reflection Info contribution method.
+            mvcs.InjectionReflector.OnReflectionInfoPreparing -= OnReflectionInfoPreparing;
+            
             // We don't need to unbind anything. MVCSExtension does it.
             // But we need to remove Context View Game Object.
             Object.Destroy(_contextViewGameObject);
+            
             _contextViewGameObject = null;
         }
 
@@ -132,6 +141,32 @@ namespace Build1.PostMVC.Unity.App
                 default:
                     throw new Exception($"Specified view is not a GameObject or MonoBehavior. [{view.GetType()}]");
             }
+        }
+
+        private MVCSItemReflectionInfo OnReflectionInfoPreparing(Type type, MVCSItemReflectionInfo info)
+        {
+            if (!typeof(Mediator).IsAssignableFrom(type) && !typeof(IView).IsAssignableFrom(type)) 
+                return info;
+
+            var starts = MVCSItemReflectionInfo.GetMethodList<Start>(type);
+            var enables = MVCSItemReflectionInfo.GetMethodList<OnEnable>(type);
+            var disables = MVCSItemReflectionInfo.GetMethodList<OnDisable>(type);
+
+            if (starts == null && enables == null && disables == null) 
+                return info;
+
+            info ??= new MVCSItemReflectionInfo();
+
+            if (starts != null)
+                info.AddMethodInfos<Start>(starts);
+
+            if (enables != null)
+                info.AddMethodInfos<OnEnable>(enables);
+
+            if (disables != null) 
+                info.AddMethodInfos<OnDisable>(disables);
+
+            return info;
         }
     }
 }
