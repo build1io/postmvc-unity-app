@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 
 using UnityEditor;
+using UnityEngine;
 
 namespace Build1.PostMVC.Unity.App.Modules.UI.Layers
 {
@@ -11,15 +12,14 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Layers
         {
             serializedObject.Update();
 
-            var list = serializedObject.FindProperty("layers");
-
-            EditorGUILayout.PropertyField(list, false);
-
-            for (var i = 0; i < list.arraySize; i++)
-            {
-                EditorGUILayout.PropertyField(list.GetArrayElementAtIndex(i));
-            }
-
+            GUILayout.Space(5);
+            
+            EditorGUILayout.HelpBox("The first layer on the list will be the top one.", MessageType.Info);
+            
+            GUILayout.Space(5);
+            
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("layers"));
+            
             serializedObject.ApplyModifiedProperties();
         }
     }
