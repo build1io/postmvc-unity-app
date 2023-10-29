@@ -79,7 +79,11 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
                     // If URL or version is different, we unload cache and info.
                     if (cacheInfo.BundleUrl != info.BundleUrl || cacheInfo.BundleVersion != info.BundleVersion)
                     {
+                        #if !UNITY_WEBGL
+                        
                         Caching.ClearAllCachedVersions(cacheInfo.BundleName);
+
+                        #endif
                         
                         onCacheInfoClean.Invoke(info);
                     }

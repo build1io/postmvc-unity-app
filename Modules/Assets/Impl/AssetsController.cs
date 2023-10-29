@@ -411,11 +411,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
 
         public ulong GetCachedFilesSizeBytes()
         {
+            #if UNITY_WEBGL
+
+            return 0;
+            
+            #else
+            
             ulong size = 0;
+            
             var paths = new List<string>();
-
+            
             Caching.GetAllCachePaths(paths);
-
+            
             foreach (var path in paths)
             {
                 var cache = Caching.GetCacheByPath(path);
@@ -423,11 +430,17 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             }
 
             return size;
+            
+            #endif
         }
 
         public void CleanCache()
         {
+            #if !UNITY_WEBGL
+            
             Caching.ClearCache();
+            
+            #endif
         }
 
         private void TryInitializeCache()
