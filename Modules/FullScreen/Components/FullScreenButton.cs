@@ -31,8 +31,6 @@ namespace Build1.PostMVC.Unity.App.Modules.FullScreen.Components
 
             if (_controller.IsInFullScreen && !_togglingFullScreen)
                 _controller.ToggleFullScreen();
-            
-            _togglingFullScreen = false;
 
             #else
 
@@ -57,8 +55,12 @@ namespace Build1.PostMVC.Unity.App.Modules.FullScreen.Components
                 _togglingFullScreen = true;
                 _controller.ToggleFullScreen();
             }
+            else
+            {
+                _togglingFullScreen = false;
+            }
         }
-
+        
         #endif
     }
 }
