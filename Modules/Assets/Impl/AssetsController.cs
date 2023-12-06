@@ -106,6 +106,21 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
         {
             return _bundles.TryGetValue(info.BundleId, out var infoInner) && infoInner.IsLoaded;
         }
+        
+        public bool CheckBundleLoadedOrLoading(Enum identifier)
+        {
+            return CheckBundleLoadedOrLoading(GetBundleStringId(identifier));
+        }
+
+        public bool CheckBundleLoadedOrLoading(string identifier)
+        {
+            return _bundles.TryGetValue(identifier, out var info) && (info.IsLoaded || info.IsLoading);
+        }
+
+        public bool CheckBundleLoadedOrLoading(AssetBundleInfo info)
+        {
+            return _bundles.TryGetValue(info.BundleId, out var infoInner) && (infoInner.IsLoaded || infoInner.IsLoading);
+        }
 
         /*
          * Embed.
