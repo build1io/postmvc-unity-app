@@ -21,7 +21,7 @@ namespace Build1.PostMVC.Unity.App.Utils.Performance
             }
             else
             {
-                time = -1;
+                time = Time.realtimeSinceStartup;
             }
             
             return time;
