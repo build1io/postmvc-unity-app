@@ -207,6 +207,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             if (info.IsLoaded)
                 throw new AssetsException(AssetsExceptionType.BundleAlreadyLoaded, info.BundleId);
 
+            Dispatcher.Dispatch(AssetsEvent.BundleLoadingStart, info);
+            
             _agent.LoadAsync(info,
                              (bundleInfo) =>
                              {
