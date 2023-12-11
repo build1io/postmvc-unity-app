@@ -9,7 +9,7 @@ namespace Build1.PostMVC.Unity.App.Utils.Performance
         
         public static void Start(object key)
         {
-            _timings.Add(key, Time.realtimeSinceStartup);
+            _timings[key] = Time.realtimeSinceStartup;
         }
         
         public static float Stop(object key)
