@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Injection;
+using Build1.PostMVC.Unity.App.Modules.Async;
 using Build1.PostMVC.Unity.App.Modules.Logging;
 
 namespace Build1.PostMVC.Unity.App.Modules.UI.Popups.Impl
@@ -12,6 +13,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups.Impl
         [Log(LogLevel.Warning)] public ILog             Log             { get; set; }
         [Inject]                public IEventDispatcher Dispatcher      { get; set; }
         [Inject]                public IInjectionBinder InjectionBinder { get; set; }
+        [Inject]                public IAsyncResolver   AsyncResolver   { get; set; }
 
         public bool HasOpenPopups => _openPopups.Count > 0;
 
@@ -95,11 +97,11 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups.Impl
                 Log.Error(p => $"Failed to deactivate popup: {p}", popup);
                 return;
             }
-            
-            var instance = GetInstance(popup, UIControlOptions.None);
+
+            var instance = FindInstance(popup);
             if (!instance)
                 throw new Exception("Popup instance not found.");
-            
+
             var view = instance.GetComponent<PopupView>() ?? (IPopupView)instance.GetComponent<PopupViewDispatcher>();
             if (view == null)
                 throw new Exception("Popup view doesn't inherit from PopupView or PopupViewDispatcher.");
@@ -112,7 +114,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups.Impl
             for (var i = _openPopups.Count - 1; i >= 0; i--)
                 Close(_openPopups[i], immediate);
         }
-        
+
         /*
          * Check.
          */
@@ -128,7 +130,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups.Impl
                 return false;
 
             var lastOpenedPopup = _openPopups[_openPopups.Count - 1];
-            
+
             return lastOpenedPopup == popupView.Popup;
         }
 
@@ -183,7 +185,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups.Impl
 
         private void OnPopupClosed(PopupBase popup)
         {
-            ProcessQueue();
+            AsyncResolver.Resolve(ProcessQueue);
         }
     }
 }

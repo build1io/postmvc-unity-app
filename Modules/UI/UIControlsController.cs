@@ -88,6 +88,24 @@ namespace Build1.PostMVC.Unity.App.Modules.UI
             return Instantiate(control, configuration, layer, activate);
         }
 
+        protected GameObject FindInstance(T control)
+        {
+            if (control == null)
+                return null;
+            
+            var configuration = DeviceController.GetConfiguration(control);
+            if (!CheckConfigInstalled(configuration))
+                InstallConfiguration(configuration);
+
+            var layer = UILayerController.GetLayerView<Transform>(configuration.appLayerId);
+            
+            var instanceTransform = layer.Find(control.name);
+            if (instanceTransform)
+                return instanceTransform.gameObject;
+
+            return null;
+        }
+
         protected bool Deactivate(T control)
         {
             return Deactivate(control, out var destroyed);
