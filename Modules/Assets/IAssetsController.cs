@@ -14,6 +14,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
         bool CheckBundleLoaded(Enum identifier);
         bool CheckBundleLoaded(string identifier);
         bool CheckBundleLoaded(AssetBundleInfo info);
+        
+        bool CheckBundleLoadedOrLoading(Enum identifier);
+        bool CheckBundleLoadedOrLoading(string identifier);
+        bool CheckBundleLoadedOrLoading(AssetBundleInfo info);
 
         /*
          * Embed.
