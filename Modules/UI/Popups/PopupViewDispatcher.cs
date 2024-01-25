@@ -21,8 +21,9 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
         public PopupBase  Popup      { get; private set; }
         public GameObject GameObject => gameObject;
 
-        public GameObject    Overlay => overlay;
-        public RectTransform Content => content;
+        public GameObject    Overlay        => overlay;
+        public RectTransform Content        => content;
+        public GameObject    RaycastBlocker => raycastBlocker;
 
         public bool InputBlocked => raycastBlocker && raycastBlocker.activeSelf;
         public bool IsAnimating  { get; private set; }
