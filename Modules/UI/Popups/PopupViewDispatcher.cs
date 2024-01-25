@@ -24,6 +24,8 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
         public GameObject    Overlay        => overlay;
         public RectTransform Content        => content;
         public GameObject    RaycastBlocker => raycastBlocker;
+        public Event         OnShow         => OnShown;
+        public Event         OnHide         => OnHidden;
 
         public bool InputBlocked => raycastBlocker && raycastBlocker.activeSelf;
         public bool IsAnimating  { get; private set; }
