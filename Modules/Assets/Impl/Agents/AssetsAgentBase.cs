@@ -80,16 +80,16 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
                     if (cacheInfo.BundleUrl != info.BundleUrl || cacheInfo.BundleVersion != info.BundleVersion)
                     {
                         #if !UNITY_WEBGL
-                        
+
                         Caching.ClearAllCachedVersions(cacheInfo.BundleName);
 
                         #endif
-                        
+
                         onCacheInfoClean.Invoke(info);
                     }
                 }
             }
-            
+
             var request = info.IsCacheEnabled
                               ? UnityWebRequestAssetBundle.GetAssetBundle(info.BundleUrl, info.BundleVersion, 0)
                               : UnityWebRequestAssetBundle.GetAssetBundle(info.BundleUrl);
@@ -111,10 +111,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
                 onProgress.Invoke(info, request.downloadProgress, request.downloadedBytes);
 
                 var assetBundle = DownloadHandlerAssetBundle.GetContent(request);
-                
+
                 if (info.IsCacheEnabled && !string.IsNullOrWhiteSpace(info.CacheId) && onCacheInfoRecord != null)
-                    onCacheInfoRecord.Invoke(assetBundle.name, info);    
-                
+                    onCacheInfoRecord.Invoke(assetBundle.name, info);
+
                 onComplete.Invoke(info, assetBundle);
                 yield break;
             }
@@ -132,7 +132,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
             switch (request.result)
             {
                 case UnityWebRequest.Result.ConnectionError:
-                    onError.Invoke(info, new AssetsException(AssetsExceptionType.BundleLoadingNetworkError, request.error));
+                    var exception = request.error == "Request aborted"
+                                        ? new AssetsException(AssetsExceptionType.BundleLoadingAborted)
+                                        : new AssetsException(AssetsExceptionType.BundleLoadingNetworkError, request.error);
+                    onError.Invoke(info, exception);
                     break;
                 case UnityWebRequest.Result.ProtocolError:
                     onError.Invoke(info, new AssetsException(AssetsExceptionType.BundleLoadingHttpError, request.error));
