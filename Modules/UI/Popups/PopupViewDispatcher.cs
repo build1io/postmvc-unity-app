@@ -1,6 +1,7 @@
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Unity.App.Mediation;
 using Build1.PostMVC.Unity.App.Modules.UI.Popups.Animation;
+using UnityEditor.TerrainTools;
 using UnityEngine;
 using Event = Build1.PostMVC.Core.MVCS.Events.Event;
 
@@ -29,6 +30,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
 
         public bool InputBlocked => raycastBlocker && raycastBlocker.activeSelf;
         public bool IsAnimating  { get; private set; }
+        public bool IsShown      { get; private set; }
 
         protected override void OnEnable()
         {
@@ -105,6 +107,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
                 raycastBlocker.SetActive(false);
 
             IsAnimating = false;
+            IsShown = true;
 
             OnShownHandler();
 
@@ -114,6 +117,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
         private void OnHiddenImpl()
         {
             IsAnimating = false;
+            IsShown = false;
 
             OnHiddenHandler();
 
