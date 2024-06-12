@@ -1,3 +1,6 @@
+using System;
+using UnityEngine;
+
 namespace Build1.PostMVC.Unity.App.Modules.Logging
 {
     public static class LogProvider
@@ -25,15 +28,15 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
 
         public static ILog GetLog<T>(LogLevel level)
         {
-            var log = Provider.CreateLogInstance(typeof(T).Name, level, Controller);
-
-            if (typeof(UnityEngine.MonoBehaviour).IsAssignableFrom(typeof(T)))
+            // TODO: remove Unity reference by checking type name literally
+            if (typeof(MonoBehaviour).IsAssignableFrom(typeof(T)))
             {
-                log.Warn("You're getting a logger during MonoBehavior instantiation. " +
-                         "This may end up in script instantiation exception on a device. " +
-                         "Consider inheriting of component from UnityView and injecting a logger.");
+                throw new Exception("You're getting a logger during MonoBehavior instantiation. " +
+                                    "This may end up in script instantiation exception on a device. " +
+                                    "Consider inheriting of component from UnityView and injecting a logger.");
             }
 
+            var log = Provider.CreateLogInstance(typeof(T).Name, level, Controller);
             return log;
         }
 
