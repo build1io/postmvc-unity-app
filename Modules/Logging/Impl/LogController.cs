@@ -184,6 +184,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             if (!Logging.Record || Logging.RecordLevel == LogLevel.None)
                 return;
 
+            if (Logging.RecordValidationFunction != null && !Logging.RecordValidationFunction.Invoke(logString))
+                return;
+            
             var level = type switch
             {
                 LogType.Error     => LogLevel.Error,
