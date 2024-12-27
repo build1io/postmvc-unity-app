@@ -11,8 +11,11 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
     {
         [Inject] public IContextView ContextView { get; set; }
 
+        public bool LastResult     { get; private set; }
+        public long LastResultCode { get; private set; }
+
         private MonoBehaviour _coroutineProvider;
-        
+
         [PostConstruct]
         public void PostConstruct()
         {
@@ -24,35 +27,49 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
         {
             _coroutineProvider = null;
         }
-        
+
         /*
          * Public.
          */
-        
-        public void Check(Action<bool> onComplete, int timeout)
-        {
-            _coroutineProvider.StartCoroutine(CheckImpl(onComplete, timeout));
-        }
-        
+
         public void Check(Action<bool> onComplete)
         {
-            _coroutineProvider.StartCoroutine(CheckImpl(onComplete, 3));
+            _coroutineProvider.StartCoroutine(CheckImpl("https://google.com", onComplete, 3));
         }
-        
+
+
+        public void Check(Action<bool> onComplete, int timeout)
+        {
+            _coroutineProvider.StartCoroutine(CheckImpl("https://google.com", onComplete, timeout));
+        }
+
+        public void Check(string url, Action<bool> onComplete)
+        {
+            _coroutineProvider.StartCoroutine(CheckImpl(url, onComplete, 3));
+        }
+
+        public void Check(string url, Action<bool> onComplete, int timeout)
+        {
+            _coroutineProvider.StartCoroutine(CheckImpl(url, onComplete, timeout));
+        }
+
         /*
          * Private.
          */
-        
-        private IEnumerator CheckImpl(Action<bool> onComplete, int timeout)
+
+        private IEnumerator CheckImpl(string url, Action<bool> onComplete, int timeout)
         {
             bool result;
-            using (var request = UnityWebRequest.Head("https://google.com"))
+            using (var request = UnityWebRequest.Head(url))
             {
                 request.timeout = timeout;
                 yield return request.SendWebRequest();
                 result = request.responseCode == 200;
+
+                LastResult = result;
+                LastResultCode = request.responseCode;
             }
-            
+
             if (_coroutineProvider != null)
                 onComplete.Invoke(result);
         }
