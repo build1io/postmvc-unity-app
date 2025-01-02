@@ -103,9 +103,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             var directory = new DirectoryInfo(folderPath);
             var file = directory.GetFiles()
                                 .OrderByDescending(f => f.LastWriteTime)
-                                .First();
+                                .FirstOrDefault();
 
-            return new LogFile(Path.Combine(folderPath, file.FullName));
+            return file == null ? null : new LogFile(Path.Combine(folderPath, file.FullName));
         }
 
         public void DeleteLogFiles()
