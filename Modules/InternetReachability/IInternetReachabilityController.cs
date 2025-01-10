@@ -6,10 +6,11 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability
     {
         bool LastResult     { get; }
         long LastResultCode { get; }
+        long EmptyResultCode { get; }
         
-        void Check(Action<bool> onComplete);
-        void Check(Action<bool> onComplete, int timeout);
-        void Check(string url, Action<bool> onComplete);
-        void Check(string url, Action<bool> onComplete, int timeout);
+        void Check(Action<bool> onComplete = null);
+        void Check(int timeout, Action<bool> onComplete = null);
+        void Check(string url, Action<bool> onComplete = null);
+        void Check(string url, int timeout, Action<bool> onComplete = null);
     }
 }

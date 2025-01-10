@@ -11,8 +11,9 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
     {
         [Inject] public IContextView ContextView { get; set; }
 
-        public bool LastResult     { get; private set; }
-        public long LastResultCode { get; private set; }
+        public bool LastResult      { get; private set; }
+        public long LastResultCode  { get; private set; } = -1;
+        public long EmptyResultCode { get; }              = -1;
 
         private MonoBehaviour _coroutineProvider;
 
@@ -32,23 +33,23 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
          * Public.
          */
 
-        public void Check(Action<bool> onComplete)
+        public void Check(Action<bool> onComplete = null)
         {
             _coroutineProvider.StartCoroutine(CheckImpl("https://google.com", onComplete, 3));
         }
 
 
-        public void Check(Action<bool> onComplete, int timeout)
+        public void Check(int timeout, Action<bool> onComplete = null)
         {
             _coroutineProvider.StartCoroutine(CheckImpl("https://google.com", onComplete, timeout));
         }
 
-        public void Check(string url, Action<bool> onComplete)
+        public void Check(string url, Action<bool> onComplete = null)
         {
             _coroutineProvider.StartCoroutine(CheckImpl(url, onComplete, 3));
         }
 
-        public void Check(string url, Action<bool> onComplete, int timeout)
+        public void Check(string url, int timeout, Action<bool> onComplete = null)
         {
             _coroutineProvider.StartCoroutine(CheckImpl(url, onComplete, timeout));
         }
@@ -71,7 +72,7 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
             }
 
             if (_coroutineProvider != null)
-                onComplete.Invoke(result);
+                onComplete?.Invoke(result);
         }
     }
 }
