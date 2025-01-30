@@ -14,6 +14,7 @@ namespace Build1.PostMVC.Unity.App.Mediation
 
         public bool Initialized { get; private set; }
         public bool Enabled     => gameObject.activeInHierarchy;
+        public bool Destroyed   { get; private set; }
 
         private IContext                _context;
         private IMediationBinder        _mediationBinder;
@@ -52,6 +53,8 @@ namespace Build1.PostMVC.Unity.App.Mediation
         protected virtual void OnDestroy()
         {
             DisposeContextIntegration();
+
+            Destroyed = true;
         }
 
         /*

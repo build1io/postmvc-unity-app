@@ -6,5 +6,6 @@ namespace Build1.PostMVC.Unity.App.Mediation
     {
         bool Initialized { get; }
         bool Enabled     { get; }
+        bool Destroyed   { get; }
     }
 }
