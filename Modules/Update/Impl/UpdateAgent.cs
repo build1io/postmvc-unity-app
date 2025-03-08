@@ -8,15 +8,15 @@ namespace Build1.PostMVC.Unity.App.Modules.Update.Impl
     public sealed class UpdateAgent : MonoBehaviour
     {
         private const int FixedUpdatesCapacity = 4;
-        private const int UpdatesCapacity      = 4;
+        private const int UpdatesCapacity      = 8;
         private const int LateUpdatesCapacity  = 4;
 
         [Log(LogLevel.Warning)] public ILog Log { get; set; }
 
-        private readonly List<Action<float>> _updates          = new List<Action<float>>(UpdatesCapacity);
-        private readonly List<Action<float>> _updatesFixed     = new List<Action<float>>(FixedUpdatesCapacity);
-        private readonly List<Action<float>> _updatesLate      = new List<Action<float>>(LateUpdatesCapacity);
-        private readonly List<Action<float>> _updatesExecuting = new List<Action<float>>(UpdatesCapacity);
+        private readonly List<Action<float>> _updates          = new (UpdatesCapacity);
+        private readonly List<Action<float>> _updatesFixed     = new (FixedUpdatesCapacity);
+        private readonly List<Action<float>> _updatesLate      = new (LateUpdatesCapacity);
+        private readonly List<Action<float>> _updatesExecuting = new (UpdatesCapacity);
 
         /*
          * Public.
