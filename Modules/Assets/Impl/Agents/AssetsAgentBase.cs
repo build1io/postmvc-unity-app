@@ -174,6 +174,11 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
             SpriteAtlasManager.atlasRequested -= RequestAtlas;
         }
 
+        public void OnDestroy()
+        {
+            AssetBundle.UnloadAllAssetBundles(true);
+        }
+
         #if UNITY_EDITOR
 
         IEnumerator HandleSafeModeForEditor()
