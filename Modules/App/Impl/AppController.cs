@@ -55,14 +55,10 @@ namespace Build1.PostMVC.Unity.App.Modules.App.Impl
 
         public void Restart()
         {
-            // Signalling that app is about to restart.
             Dispatcher.Dispatch(AppEvent.Restarting);
 
-            // Stopping the root context.
-            // It must stop all nested all contexts and dispose all dependencies.
-            Context.Stop();
-
-            // Reloading the main scene.
+            Core.PostMVC.Stop();
+            
             SceneManager.LoadScene(_mainSceneName);
         }
 
