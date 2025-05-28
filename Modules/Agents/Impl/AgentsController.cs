@@ -40,7 +40,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Agents.Impl
         public void Destroy<T>(ref T agent) where T : MonoBehaviour
         {
             Destroy(agent);
-            agent = default;
+            agent = null;
         }
 
         /*
