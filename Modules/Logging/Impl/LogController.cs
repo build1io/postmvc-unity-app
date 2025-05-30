@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Unity.App.Utils.Path;
 using UnityEngine;
@@ -12,8 +11,6 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
 {
     internal sealed class LogController : ILogController
     {
-        [Inject] public IEventDispatcher Dispatcher { get; set; }
-
         private readonly StringBuilder _records = new();
         private          int           _recordsCount;
         private readonly DateTime      _recordsDate = DateTime.UtcNow;
@@ -75,8 +72,6 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging.Impl
             {
                 DeleteOldFiles();
             }
-
-            Dispatcher.Dispatch(LogEvent.Flush, log);
         }
 
         public List<LogFile> GetLogFiles()
