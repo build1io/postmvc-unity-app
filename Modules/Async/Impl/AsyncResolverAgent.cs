@@ -30,6 +30,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
             // Still it's not the proper disposing as coroutines will be running.
             // Not sure if it'll be an issue as current game object will be removed from the scene and all coroutines will be stopped.
             _delayedCallIds.Clear();
+            _intervalCallIds.Clear();
         }
 
         /*

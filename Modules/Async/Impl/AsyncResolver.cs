@@ -25,6 +25,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Async.Impl
         public void PreDestroy()
         {
             AgentsController.Destroy(ref _agent);
+            
+            AsyncResolverStaticAdapter.AsyncResolver = null;
         }
 
         /*
