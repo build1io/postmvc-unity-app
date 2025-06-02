@@ -30,35 +30,32 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
         private bool BundleInfoRequestingEnabled => (BundleInfoSettings & AssetBundleInfoSetting.RequestMissingInfo) == AssetBundleInfoSetting.RequestMissingInfo;
         private bool BundleInfoCachingEnabled    => (BundleInfoSettings & AssetBundleInfoSetting.CacheInfo) == AssetBundleInfoSetting.CacheInfo;
 
-        private readonly Dictionary<Enum, string>            _ids;
-        private readonly Dictionary<string, AssetBundleInfo> _bundles;
-        private readonly Dictionary<string, AssetBundleInfo> _bundlesInfoCache;
-        private readonly List<AssetBundleInfo>               _bundlesLoaded;
-        private readonly Dictionary<string, AssetBundleInfo> _bundleByAtlasId;
+        private readonly Dictionary<Enum, string>            _ids              = new();
+        private readonly Dictionary<string, AssetBundleInfo> _bundles          = new();
+        private readonly Dictionary<string, AssetBundleInfo> _bundlesInfoCache = new();
+        private readonly List<AssetBundleInfo>               _bundlesLoaded    = new();
+        private readonly Dictionary<string, AssetBundleInfo> _bundleByAtlasId  = new();
 
         private AssetsAgentBase             _agent;
         private AssetBundlesCacheController _cacheController;
-
-        public AssetsController()
-        {
-            _ids = new Dictionary<Enum, string>();
-            _bundles = new Dictionary<string, AssetBundleInfo>();
-            _bundlesInfoCache = new Dictionary<string, AssetBundleInfo>();
-            _bundlesLoaded = new List<AssetBundleInfo>();
-            _bundleByAtlasId = new Dictionary<string, AssetBundleInfo>();
-        }
+        private bool                        _destroyed;
 
         [PostConstruct]
         public void PostConstruct()
         {
             InitializeAgent();
+            InitializeCache();
         }
 
         [PreDestroy]
         public void PreDestroy()
         {
+            AbortLoadingBundles();
+            
             DisposeAgent();
             DisposeCache();
+
+            _destroyed = true;
         }
 
         /*
@@ -210,15 +207,22 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             Dispatcher.Dispatch(AssetsEvent.BundleLoadingStart, info);
             
             _agent.LoadAsync(info,
-                             (bundleInfo) =>
+                             bundleInfo => _destroyed ? null : _cacheController.GetBundleCacheInfo(bundleInfo.CacheId),
+                             bundleInfo =>
                              {
-                                 TryInitializeCache();
-                                 return _cacheController.GetBundleCacheInfo(bundleInfo.CacheId);
+                                 if (!_destroyed)
+                                    _cacheController.CleanBundleCacheInfo(bundleInfo.CacheId);
                              },
-                             (bundleInfo) => { _cacheController.CleanBundleCacheInfo(bundleInfo.CacheId); },
-                             (bundleName, bundleInfo) => { _cacheController.RecordCacheInfo(bundleInfo.CacheId, bundleName, bundleInfo.BundleUrl, bundleInfo.BundleVersion, bundleInfo.DownloadedBytes); },
+                             (bundleName, bundleInfo) =>
+                             {
+                                 if (!_destroyed)
+                                    _cacheController.RecordCacheInfo(bundleInfo.CacheId, bundleName, bundleInfo.BundleUrl, bundleInfo.BundleVersion, bundleInfo.DownloadedBytes);
+                             },
                              (bundleInfo, progress, downloadedBytes) =>
                              {
+                                 if (_destroyed)
+                                     return;
+                                 
                                  Log.Debug((p, n) => $"Bundle progress: {p} {n}", progress, bundleInfo.ToString());
 
                                  bundleInfo.SetLoadingProgress(progress, downloadedBytes);
@@ -227,6 +231,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
                              },
                              (bundleInfo, unityBundle) =>
                              {
+                                 if (_destroyed)
+                                     return;
+                                 
                                  Log.Debug(n => $"Bundle loaded: {n}", bundleInfo.BundleId);
 
                                  SetBundleLoaded(bundleInfo, unityBundle);
@@ -236,6 +243,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
                              },
                              (bundleInfo, exception) =>
                              {
+                                 if (_destroyed)
+                                     return;
+                                 
                                  Log.Error(exception);
 
                                  SetBundleUnloaded(bundleInfo);
@@ -276,6 +286,15 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             }
 
             info.SetAborted();
+        }
+
+        private void AbortLoadingBundles()
+        {
+            foreach (var bundle in _bundles.Values)
+            {
+                if (bundle.IsLoading)
+                    bundle.SetAborted();
+            }
         }
 
         /*
@@ -422,7 +441,6 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
 
         public ulong GetBundleCacheSizeByCacheId(string cacheId)
         {
-            TryInitializeCache();
             return _cacheController.GetBundleCacheInfo(cacheId)?.BundleSizeBytes ?? 0;
         }
 
@@ -460,9 +478,12 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             #endif
         }
 
-        private void TryInitializeCache()
+        private void InitializeCache()
         {
-            _cacheController ??= InjectionBinder.Construct<AssetBundlesCacheController>(true);
+            if (_cacheController != null)
+                throw new AssetsException(AssetsExceptionType.CacheControllerAlreadyInitialised);
+            
+            _cacheController = InjectionBinder.Construct<AssetBundlesCacheController>(true);
         }
 
         private void DisposeCache()

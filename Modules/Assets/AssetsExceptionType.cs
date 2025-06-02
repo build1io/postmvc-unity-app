@@ -2,7 +2,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
 {
     public enum AssetsExceptionType
     {
-        AgentAlreadyInitialised = 1,
+        AgentAlreadyInitialised           = 1,
+        CacheControllerAlreadyInitialised = 2,
 
         UnknownBundleType = 10,
         UnknownBundle     = 11,
