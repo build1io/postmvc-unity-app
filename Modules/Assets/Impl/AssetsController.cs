@@ -38,6 +38,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
 
         private AssetsAgentBase             _agent;
         private AssetBundlesCacheController _cacheController;
+        private bool                        _destroying;
         private bool                        _destroyed;
 
         [PostConstruct]
@@ -50,12 +51,15 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
         [PreDestroy]
         public void PreDestroy()
         {
+            _destroying = true;
+
             AbortLoadingBundles();
-            
+
             DisposeAgent();
             DisposeCache();
 
             _destroyed = true;
+            _destroying = false;
         }
 
         /*
@@ -104,8 +108,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             return _bundles.TryGetValue(info.BundleId, out var infoInner) && infoInner.IsLoaded;
         }
 
-        public bool CheckBundleLoadedOrLoading(Enum identifier) 
-        { 
+        public bool CheckBundleLoadedOrLoading(Enum identifier)
+        {
             return CheckBundleLoadedOrLoading(GetBundleStringId(identifier));
         }
 
@@ -116,7 +120,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
 
         public bool CheckBundleLoadedOrLoading(AssetBundleInfo info)
         {
-            return _bundles.TryGetValue(info.BundleId, out var infoInner) && (infoInner.IsLoaded || infoInner.IsLoading); 
+            return _bundles.TryGetValue(info.BundleId, out var infoInner) && (infoInner.IsLoaded || infoInner.IsLoading);
         }
 
         /*
@@ -205,53 +209,57 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
                 throw new AssetsException(AssetsExceptionType.BundleAlreadyLoaded, info.BundleId);
 
             Dispatcher.Dispatch(AssetsEvent.BundleLoadingStart, info);
-            
+
             _agent.LoadAsync(info,
-                             bundleInfo => _destroyed ? null : _cacheController.GetBundleCacheInfo(bundleInfo.CacheId),
+                             bundleInfo => _destroying || _destroyed ? null : _cacheController?.GetBundleCacheInfo(bundleInfo.CacheId),
                              bundleInfo =>
                              {
-                                 if (!_destroyed)
-                                    _cacheController.CleanBundleCacheInfo(bundleInfo.CacheId);
+                                 if (_destroying || _destroyed)
+                                     return;
+
+                                 _cacheController?.CleanBundleCacheInfo(bundleInfo.CacheId);
                              },
                              (bundleName, bundleInfo) =>
                              {
-                                 if (!_destroyed)
-                                    _cacheController.RecordCacheInfo(bundleInfo.CacheId, bundleName, bundleInfo.BundleUrl, bundleInfo.BundleVersion, bundleInfo.DownloadedBytes);
+                                 if (_destroying || _destroyed)
+                                     return;
+
+                                 _cacheController?.RecordCacheInfo(bundleInfo.CacheId, bundleName, bundleInfo.BundleUrl, bundleInfo.BundleVersion, bundleInfo.DownloadedBytes);
                              },
                              (bundleInfo, progress, downloadedBytes) =>
                              {
-                                 if (_destroyed)
+                                 if (_destroying || _destroyed)
                                      return;
-                                 
-                                 Log.Debug((p, n) => $"Bundle progress: {p} {n}", progress, bundleInfo.ToString());
+
+                                 Log?.Debug((p, n) => $"Bundle progress: {p} {n}", progress, bundleInfo.ToString());
 
                                  bundleInfo.SetLoadingProgress(progress, downloadedBytes);
 
-                                 Dispatcher.Dispatch(AssetsEvent.BundleLoadingProgress, bundleInfo);
+                                 Dispatcher?.Dispatch(AssetsEvent.BundleLoadingProgress, bundleInfo);
                              },
                              (bundleInfo, unityBundle) =>
                              {
-                                 if (_destroyed)
+                                 if (_destroying || _destroyed)
                                      return;
-                                 
-                                 Log.Debug(n => $"Bundle loaded: {n}", bundleInfo.BundleId);
+
+                                 Log?.Debug(n => $"Bundle loaded: {n}", bundleInfo.BundleId);
 
                                  SetBundleLoaded(bundleInfo, unityBundle);
 
                                  onComplete?.Invoke(bundleInfo);
-                                 Dispatcher.Dispatch(AssetsEvent.BundleLoadingSuccess, bundleInfo);
+                                 Dispatcher?.Dispatch(AssetsEvent.BundleLoadingSuccess, bundleInfo);
                              },
                              (bundleInfo, exception) =>
                              {
-                                 if (_destroyed)
+                                 if (_destroying || _destroyed)
                                      return;
-                                 
-                                 Log.Error(exception);
+
+                                 Log?.Error(exception);
 
                                  SetBundleUnloaded(bundleInfo);
 
                                  onError?.Invoke(exception);
-                                 Dispatcher.Dispatch(AssetsEvent.BundleLoadingFail, bundleInfo, exception);
+                                 Dispatcher?.Dispatch(AssetsEvent.BundleLoadingFail, bundleInfo, exception);
                              });
 
             info.SetLoading();
@@ -428,10 +436,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             catch (Exception exception)
             {
                 Log.Error($"Asset loading error: {exception}");
-                
+
                 asset = null;
             }
-            
+
             return asset != null;
         }
 
@@ -447,17 +455,16 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
         public ulong GetCachedFilesSizeBytes()
         {
             #if UNITY_WEBGL
-
             return 0;
-            
+
             #else
-            
+
             ulong size = 0;
-            
+
             var paths = new List<string>();
-            
+
             Caching.GetAllCachePaths(paths);
-            
+
             foreach (var path in paths)
             {
                 var cache = Caching.GetCacheByPath(path);
@@ -465,16 +472,16 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             }
 
             return size;
-            
+
             #endif
         }
 
         public void CleanCache()
         {
             #if !UNITY_WEBGL
-            
+
             Caching.ClearCache();
-            
+
             #endif
         }
 
@@ -482,7 +489,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
         {
             if (_cacheController != null)
                 throw new AssetsException(AssetsExceptionType.CacheControllerAlreadyInitialised);
-            
+
             _cacheController = InjectionBinder.Construct<AssetBundlesCacheController>(true);
         }
 
@@ -576,7 +583,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
                 id = OnBundleStringIdentifier.Invoke(identifier);
 
             id ??= AssetBundleInfo.EnumToStringIdentifier(identifier);
-            
+
             _ids.Add(identifier, id);
 
             return id;
