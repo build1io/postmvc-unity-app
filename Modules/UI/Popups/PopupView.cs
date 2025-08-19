@@ -1,18 +1,16 @@
-using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Unity.App.Mediation;
 using Build1.PostMVC.Unity.App.Modules.UI.Popups.Animation;
+using Build1.PostMVC.Unity.App.Modules.UI.Popups.Impl;
 using UnityEngine;
 
 namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
 {
     public abstract class PopupView : UnityView, IPopupView
     {
-        [Header("Parts Base"), SerializeField] private GameObject     overlay;
+        [SerializeField, Header("Parts Base")] private GameObject     overlay;
         [SerializeField]                       private RectTransform  content;
         [SerializeField]                       private GameObject     raycastBlocker;
         [SerializeField]                       private PopupAnimation animationObject;
-
-        [Inject] public IPopupController PopupController { get; set; }
 
         public PopupBase  Popup      { get; private set; }
         public GameObject GameObject => gameObject;
@@ -22,6 +20,9 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
         
         public bool InputBlocked => raycastBlocker && raycastBlocker.activeSelf;
         public bool IsAnimating  { get; private set; }
+        public bool IsShown      { get; private set; }
+
+        private PopupController _controller;
 
         protected override void OnEnable()
         {
@@ -44,28 +45,27 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
         {
             base.OnDisable();
 
-            if (animationObject)
-            {
-                if (raycastBlocker)
-                    raycastBlocker.SetActive(false);
-             
-                animationObject.KillAnimations(this);
-                IsAnimating = false;
-            }
+            TryKillAnimations();
         }
 
         /*
          * Public.
          */
 
-        public void SetUp(PopupBase popup)
+        internal void SetUp(IPopupController controller, PopupBase popup)
         {
+            _controller = (PopupController)controller;
+            
             Popup = popup;
         }
 
-        public virtual void Close()
+        public void Close()                 { _controller.Close(Popup, false); }
+        public void Close(bool immediately) { _controller.Close(Popup, immediately); }
+        public void CloseImmediately()      { _controller.Close(Popup, true); }
+
+        internal void CloseImpl(bool immediately)
         {
-            if (animationObject)
+            if (!immediately && animationObject)
             {
                 if (IsAnimating)
                     return;
@@ -98,6 +98,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
                 raycastBlocker.SetActive(false);
             
             IsAnimating = false;
+            IsShown = true;
 
             OnShownHandler();
         }
@@ -105,10 +106,24 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups
         private void OnHiddenImpl()
         {
             IsAnimating = false;
+            IsShown = false;
             
+            TryKillAnimations();
             OnHiddenHandler();
             
-            PopupController.Close(Popup, true);
+            _controller.FinalizeClosing(Popup);
+        }
+
+        private void TryKillAnimations()
+        {
+            if (animationObject)
+            {
+                if (raycastBlocker)
+                    raycastBlocker.SetActive(false);
+             
+                animationObject.KillAnimations(this);
+                IsAnimating = false;
+            }
         }
     }
 }

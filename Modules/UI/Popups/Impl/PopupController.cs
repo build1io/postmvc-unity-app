@@ -86,33 +86,48 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups.Impl
                 return;
             }
 
-            if (immediate)
-            {
-                if (Deactivate(popup) && _openPopups.Remove(popup))
-                {
-                    Dispatcher.Dispatch(PopupEvent.Closed, popup);
-                    return;
-                }
-
-                Log.Error(p => $"Failed to deactivate popup: {p}", popup);
-                return;
-            }
-
             var instance = FindInstance(popup);
             if (!instance)
                 throw new Exception("Popup instance not found.");
 
-            var view = instance.GetComponent<PopupView>() ?? (IPopupView)instance.GetComponent<PopupViewDispatcher>();
-            if (view == null)
-                throw new Exception("Popup view doesn't inherit from PopupView or PopupViewDispatcher.");
-
-            view.Close();
+            var popupViewDispatcherInstance = instance.GetComponent<PopupViewDispatcher>();
+            if (popupViewDispatcherInstance)
+            {
+                popupViewDispatcherInstance.CloseImpl(immediate);
+                return;
+            }
+            
+            var popupViewInstance = instance.GetComponent<PopupView>();
+            if (popupViewInstance)
+            {
+                popupViewInstance.CloseImpl(immediate);
+                return;
+            }
+            
+            throw new Exception("Popup view doesn't inherit from PopupView nor PopupViewDispatcher");
         }
 
         public void CloseAll(bool immediate = false)
         {
             for (var i = _openPopups.Count - 1; i >= 0; i--)
                 Close(_openPopups[i], immediate);
+        }
+
+        internal void FinalizeClosing(PopupBase popup)
+        {
+            if (!_openPopups.Contains(popup))
+            {
+                Log.Error(p => $"Specified popup is not open: {p}", popup);
+                return;
+            }
+            
+            if (Deactivate(popup) && _openPopups.Remove(popup))
+            {
+                Dispatcher.Dispatch(PopupEvent.Closed, popup);
+                return;
+            }
+
+            Log.Error(p => $"Failed to deactivate popup: {p}", popup);
         }
 
         /*
@@ -130,7 +145,6 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups.Impl
                 return false;
 
             var lastOpenedPopup = _openPopups[_openPopups.Count - 1];
-
             return lastOpenedPopup == popupView.Popup;
         }
 
@@ -160,13 +174,27 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Popups.Impl
             if (popup.dataType != null)
                 dataBinding = InjectionBinder.Bind(popup.dataType).ToValue(data).ToBinding();
 
+            IPopupView view = null;
+            
             var instance = GetInstance(popup, UIControlOptions.Instantiate);
-
-            var view = instance.GetComponent<PopupView>() ?? (IPopupView)instance.GetComponent<PopupViewDispatcher>();
+            var popupViewDispatcherInstance = instance.GetComponent<PopupViewDispatcher>();
+            if (popupViewDispatcherInstance)
+            {
+                popupViewDispatcherInstance.SetUp(this, popup);
+                view = popupViewDispatcherInstance;
+            }
+            else
+            {
+                var popupViewInstance = instance.GetComponent<PopupView>();
+                if (popupViewInstance)
+                {
+                    popupViewInstance.SetUp(this, popup);
+                    view = popupViewInstance;
+                }
+            }
+            
             if (view == null)
-                throw new Exception("Popup view doesn't inherit from PopupView or PopupViewDispatcher.");
-
-            view.SetUp(popup);
+                throw new Exception("Popup view doesn't implement IPopupView interface");
 
             if (view.Initialized)
                 MediationBinder.UpdateViewInjections(view);
