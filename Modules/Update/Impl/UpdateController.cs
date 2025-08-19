@@ -28,22 +28,22 @@ namespace Build1.PostMVC.Unity.App.Modules.Update.Impl
 
         public void SubscribeForFixedUpdate(Action<float> callback)
         {
-            _agent.SubscribeForFixedUpdate(callback);
+            _agent?.SubscribeForFixedUpdate(callback);
         }
 
         public void SubscribeForUpdate(Action<float> callback)
         {
-            _agent.SubscribeForUpdate(callback);
+            _agent?.SubscribeForUpdate(callback);
         }
 
         public void SubscribeForLateUpdate(Action<float> callback)
         {
-            _agent.SubscribeForLateUpdate(callback);
+            _agent?.SubscribeForLateUpdate(callback);
         }
 
         public void Unsubscribe(Action<float> callback)
         {
-            _agent.Unsubscribe(callback);
+            _agent?.Unsubscribe(callback);
         }
     }
 }
