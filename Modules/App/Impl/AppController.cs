@@ -1,4 +1,3 @@
-using Build1.PostMVC.Core.Contexts;
 using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Unity.App.Modules.Agents;
@@ -13,7 +12,6 @@ namespace Build1.PostMVC.Unity.App.Modules.App.Impl
     {
         [Log(LogLevel.Warning)] public  ILog              Log              { get; set; }
         [Inject]                public  IEventDispatcher  Dispatcher       { get; set; }
-        [Inject]                public  IContext          Context          { get; set; }
         [Inject]                private IAgentsController AgentsController { get; set; }
 
         public string PersistentDataPath { get; private set; }
@@ -55,10 +53,12 @@ namespace Build1.PostMVC.Unity.App.Modules.App.Impl
 
         public void Restart()
         {
+            Log.Debug("Restart");
+
             Dispatcher.Dispatch(AppEvent.Restarting);
 
             Core.PostMVC.Stop();
-            
+
             SceneManager.LoadScene(_mainSceneName);
         }
 
@@ -99,6 +99,8 @@ namespace Build1.PostMVC.Unity.App.Modules.App.Impl
 
         private void OnQuitting()
         {
+            Log.Debug("OnQuitting");
+
             Dispatcher.Dispatch(AppEvent.Quitting);
         }
 
