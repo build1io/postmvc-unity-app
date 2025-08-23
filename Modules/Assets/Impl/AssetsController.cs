@@ -622,6 +622,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
 
         private SpriteAtlas OnAtlasRequested(string atlasId)
         {
+            if (_destroying || _destroyed)
+                return null;
+            
             _bundleByAtlasId.TryGetValue(atlasId, out var bundle);
 
             if (bundle == null || !bundle.IsLoaded)
