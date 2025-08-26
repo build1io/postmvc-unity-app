@@ -212,10 +212,19 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
 
             _agent.LoadAsync(info,
                              bundleInfo => _destroying || _destroyed ? null : _cacheController?.GetBundleCacheInfo(bundleInfo.CacheId),
+                             (loadingFromCache, bundleInfo) =>
+                             {
+                                 if (_destroying || _destroyed)
+                                     return;
+                                 
+                                 bundleInfo.SetLoadingFromCache(loadingFromCache);
+                             },
                              bundleInfo =>
                              {
                                  if (_destroying || _destroyed)
                                      return;
+                                 
+                                 bundleInfo.SetCacheReset();
 
                                  _cacheController?.CleanBundleCacheInfo(bundleInfo.CacheId);
                              },
@@ -224,6 +233,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
                                  if (_destroying || _destroyed)
                                      return;
 
+                                 bundleInfo.SetCacheRecorded();
+                                 
                                  _cacheController?.RecordCacheInfo(bundleInfo.CacheId, bundleName, bundleInfo.BundleUrl, bundleInfo.BundleVersion, bundleInfo.DownloadedBytes);
                              },
                              (bundleInfo, progress, downloadedBytes) =>
@@ -483,6 +494,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
             Caching.ClearCache();
 
             #endif
+
+            _cacheController.CleanAllBundlesCacheInfo();
         }
 
         private void InitializeCache()

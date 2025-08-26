@@ -15,11 +15,13 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
         internal List<string>            AtlasesNames { get; private set; }
         internal UnityEngine.AssetBundle Bundle       { get; private set; }
 
-        public bool IsEmbedBundle  { get; private set; }
-        public bool IsRemoteBundle => !IsEmbedBundle;
-        public bool IsLoading      { get; private set; }
-        public bool IsLoaded       => Bundle != null;
-        public bool IsAborted      { get; private set; }
+        public bool IsEmbedBundle      { get; private set; }
+        public bool IsRemoteBundle     => !IsEmbedBundle;
+        public bool IsLoading          { get; private set; }
+        public bool IsLoaded           => Bundle != null;
+        public bool IsAborted          { get; private set; }
+        public bool IsCacheReset       { get; private set; }
+        public bool IsLoadingFromCache { get; private set; }
 
         internal bool HasAtlases     => AtlasesNames != null && AtlasesNames.Count > 0;
         internal bool IsCacheEnabled { get; private set; }
@@ -77,11 +79,26 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
             Bundle = null;
         }
 
+        internal void SetCacheReset()
+        {
+            IsCacheReset = true;
+        }
+
+        internal void SetCacheRecorded()
+        {
+            IsCacheReset = false;
+        }
+
+        internal void SetLoadingFromCache(bool value)
+        {
+            IsLoadingFromCache = value;
+        }
+
         internal void Update(AssetBundleInfo info)
         {
             if (BundleId != info.BundleId)
                 throw new AssetsException(AssetsExceptionType.BundleInfoUpdateError);
-            
+
             BundleUrl = info.BundleUrl;
             BundleVersion = info.BundleVersion;
             CacheId = info.CacheId;
@@ -96,6 +113,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
             IsAborted = info.IsAborted;
 
             IsCacheEnabled = info.IsCacheEnabled;
+            IsCacheReset = info.IsCacheReset;
+            IsLoadingFromCache = info.IsLoadingFromCache;
         }
 
         public string[] GetAllScenePaths() { return Bundle.GetAllScenePaths(); }
@@ -142,7 +161,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
                 IsEmbedBundle = false
             };
         }
-        
+
         public static AssetBundleInfo FromUrlCached(string bundleUrl, uint version, string cacheId)
         {
             return new AssetBundleInfo

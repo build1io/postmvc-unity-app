@@ -24,6 +24,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
 
         public abstract void LoadAsync(AssetBundleInfo info,
                                        Func<AssetBundleInfo, AssetBundleCacheInfo> onCacheInfoGet,
+                                       Action<bool, AssetBundleInfo> onCacheStateDetermined,
                                        Action<AssetBundleInfo> onCacheInfoClean,
                                        Action<string, AssetBundleInfo> onCacheInfoRecord,
                                        Action<AssetBundleInfo, float, ulong> onProgress,
@@ -65,6 +66,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
 
         protected IEnumerator LoadRemoteAssetBundleCoroutine(AssetBundleInfo info,
                                                              Func<AssetBundleInfo, AssetBundleCacheInfo> onCacheInfoGet,
+                                                             Action<bool, AssetBundleInfo> onCacheStateDetermined,
                                                              Action<AssetBundleInfo> onCacheInfoClean,
                                                              Action<string, AssetBundleInfo> onCacheInfoRecord,
                                                              Action<AssetBundleInfo, float, ulong> onProgress,
@@ -86,8 +88,21 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
                         #endif
 
                         onCacheInfoClean.Invoke(info);
+                        onCacheStateDetermined.Invoke(false, info);
+                    }
+                    else
+                    {
+                        onCacheStateDetermined.Invoke(true, info);
                     }
                 }
+                else
+                {
+                    onCacheStateDetermined.Invoke(false, info);
+                }
+            }
+            else
+            {
+                onCacheStateDetermined.Invoke(false, info);
             }
 
             var request = info.IsCacheEnabled

@@ -51,11 +51,22 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
             return null;
         }
 
+        public void CleanAllBundlesCacheInfo()
+        {
+            Log.Debug("CleanAllBundlesCacheInfo");
+            
+            _infos.Clear();
+            
+            DeleteCacheInfo();
+        }
+
         public void CleanBundleCacheInfo(string cacheId)
         {
             Log.Debug(i => $"CleanBundleCacheInfo: {i}", cacheId);
 
             _infos.Remove(cacheId);
+            
+            SaveCacheInfo();
         }
 
         public void RecordCacheInfo(string cacheId, string bundleName, string url, uint version, ulong sizeBytes)
@@ -130,6 +141,24 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
                 return;
             }
 
+            Log.Debug("Done");
+        }
+
+        private void DeleteCacheInfo()
+        {
+            Log.Debug("Deleting cache info...");
+            
+            try
+            {
+                if (File.Exists(_infosFilesPath))
+                    File.Delete(_infosFilesPath);    
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception);
+                return;
+            }
+            
             Log.Debug("Done");
         }
     }

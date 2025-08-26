@@ -8,6 +8,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
     {
         public override void LoadAsync(AssetBundleInfo info,
                                        Func<AssetBundleInfo, AssetBundleCacheInfo> onCacheInfoGet,
+                                       Action<bool, AssetBundleInfo> onCacheStateDetermined,
                                        Action<AssetBundleInfo> onCacheInfoClean,
                                        Action<string, AssetBundleInfo> onCacheInfoRecord,
                                        Action<AssetBundleInfo, float, ulong> onProgress,
@@ -17,7 +18,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Agents
             if (info.IsEmbedBundle)
                 StartCoroutine(LoadEmbedAssetBundleCoroutine(info, onProgress, onComplete, onError));
             else if (info.IsRemoteBundle)
-                StartCoroutine(LoadRemoteAssetBundleCoroutine(info, onCacheInfoGet, onCacheInfoClean, onCacheInfoRecord, onProgress, onComplete, onError));
+                StartCoroutine(LoadRemoteAssetBundleCoroutine(info, onCacheInfoGet, onCacheStateDetermined, onCacheInfoClean, onCacheInfoRecord, onProgress, onComplete, onError));
             else
                 throw new AssetsException(AssetsExceptionType.UnknownBundleType);
         }
