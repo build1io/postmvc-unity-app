@@ -233,6 +233,8 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
                                      return;
                                  
                                  bundleInfo.SetLoadingFromCache(loadingFromCache);
+                                 
+                                 Dispatcher?.Dispatch(AssetsEvent.BundleLoadingProgress, bundleInfo);
                              },
                              bundleInfo =>
                              {
