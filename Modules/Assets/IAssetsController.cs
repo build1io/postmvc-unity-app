@@ -11,6 +11,10 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
          * Check.
          */
 
+        bool CheckBundleLoading(Enum identifier);
+        bool CheckBundleLoading(string identifier);
+        bool CheckBundleLoading(AssetBundleInfo info);
+        
         bool CheckBundleLoaded(Enum identifier);
         bool CheckBundleLoaded(string identifier);
         bool CheckBundleLoaded(AssetBundleInfo info);
@@ -81,6 +85,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets
          * Cache.
          */
 
+        bool CheckBundleCached(AssetBundleInfo info);
         ulong GetBundleCacheSizeByCacheId(string cacheId);
         ulong GetCachedFilesSizeBytes();
         void  CleanCache();

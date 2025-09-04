@@ -13,11 +13,11 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
         public const string AssetBundlesCacheInfoFileName = "asset_bundles_cache_info.json";
 
         [Log(LogLevel.Warning)] public ILog           Log           { get; set; }
-        [Inject]            public IAppController AppController { get; set; }
+        [Inject]                public IAppController AppController { get; set; }
 
         private Dictionary<string, AssetBundleCacheInfo> _infos;
         private string                                   _infosFilesPath;
-        
+
         [PostConstruct]
         public void PostConstruct()
         {
@@ -46,7 +46,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
                 Log.Debug(i => $"GetBundleCacheInfo: {i} FOUND!", cacheId);
                 return info;
             }
-                
+
             Log.Debug(i => $"GetBundleCacheInfo: {i} NOT FOUND!", cacheId);
             return null;
         }
@@ -54,9 +54,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
         public void CleanAllBundlesCacheInfo()
         {
             Log.Debug("CleanAllBundlesCacheInfo");
-            
+
             _infos.Clear();
-            
+
             DeleteCacheInfo();
         }
 
@@ -65,7 +65,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
             Log.Debug(i => $"CleanBundleCacheInfo: {i}", cacheId);
 
             _infos.Remove(cacheId);
-            
+
             SaveCacheInfo();
         }
 
@@ -78,7 +78,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
                 if (info.BundleName != bundleName || info.BundleUrl != url || info.BundleVersion != version)
                 {
                     Log.Debug("RecordCacheInfo: Updating cache info.");
-                    
+
                     info.Update(bundleName, url, version, sizeBytes);
                     SaveCacheInfo();
                 }
@@ -90,7 +90,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
             else
             {
                 Log.Debug("RecordCacheInfo: Adding cache info.");
-                
+
                 _infos.Add(cacheId, new AssetBundleCacheInfo(cacheId, bundleName, url, version, sizeBytes));
                 SaveCacheInfo();
             }
@@ -147,18 +147,18 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl.Cache
         private void DeleteCacheInfo()
         {
             Log.Debug("Deleting cache info...");
-            
+
             try
             {
                 if (File.Exists(_infosFilesPath))
-                    File.Delete(_infosFilesPath);    
+                    File.Delete(_infosFilesPath);
             }
             catch (Exception exception)
             {
                 Log.Error(exception);
                 return;
             }
-            
+
             Log.Debug("Done");
         }
     }

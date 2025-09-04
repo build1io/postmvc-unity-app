@@ -93,6 +93,21 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
          * Check.
          */
 
+        public bool CheckBundleLoading(Enum identifier)
+        {
+            return CheckBundleLoading(GetBundleStringId(identifier));
+        }
+
+        public bool CheckBundleLoading(string identifier)
+        {
+            return _bundles.TryGetValue(identifier, out var info) && info.IsLoading;
+        }
+
+        public bool CheckBundleLoading(AssetBundleInfo info)
+        {
+            return _bundles.TryGetValue(info.BundleId, out var infoInner) && infoInner.IsLoading;
+        }
+
         public bool CheckBundleLoaded(Enum identifier)
         {
             return CheckBundleLoaded(GetBundleStringId(identifier));
@@ -458,9 +473,14 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
          * Cache.
          */
 
+        public bool CheckBundleCached(AssetBundleInfo info)
+        {
+            return _cacheController?.GetBundleCacheInfo(info.CacheId) != null;
+        }
+
         public ulong GetBundleCacheSizeByCacheId(string cacheId)
         {
-            return _cacheController.GetBundleCacheInfo(cacheId)?.BundleSizeBytes ?? 0;
+            return _cacheController?.GetBundleCacheInfo(cacheId)?.BundleSizeBytes ?? 0;
         }
 
         public ulong GetCachedFilesSizeBytes()
