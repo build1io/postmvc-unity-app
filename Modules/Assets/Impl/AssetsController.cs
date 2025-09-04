@@ -475,7 +475,7 @@ namespace Build1.PostMVC.Unity.App.Modules.Assets.Impl
 
         public bool CheckBundleCached(AssetBundleInfo info)
         {
-            return _cacheController?.GetBundleCacheInfo(info.CacheId) != null;
+            return info.CacheId != null && _cacheController?.GetBundleCacheInfo(info.CacheId) != null;
         }
 
         public ulong GetBundleCacheSizeByCacheId(string cacheId)
