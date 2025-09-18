@@ -1,6 +1,7 @@
 using System;
 using Build1.PostMVC.Core.Extensions;
 using Build1.PostMVC.Core.MVCS;
+using Build1.PostMVC.Core.MVCS.Contexts;
 using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Core.MVCS.Injection.Impl;
@@ -27,6 +28,7 @@ using Build1.PostMVC.Unity.App.Modules.FullScreen;
 using Build1.PostMVC.Unity.App.Modules.InternetReachability;
 using Build1.PostMVC.Unity.App.Modules.Logging;
 using Build1.PostMVC.Unity.App.Modules.UI;
+using Build1.PostMVC.Unity.App.Modules.UI.Commands;
 using Build1.PostMVC.Unity.App.Modules.Update;
 using Build1.PostMVC.Unity.App.Modules.Update.Impl;
 using UnityEngine;
@@ -49,10 +51,10 @@ namespace Build1.PostMVC.Unity.App
             var mvcs = GetDependentExtension<MVCSExtension>();
             var injectionBinder = mvcs.InjectionBinder;
 
-            // Rebinding EventBus to a Unity specific one.
+            // Rebinding EventBus to a Unity-specific one.
             injectionBinder.Rebind<IEventBus, EventBusUnity>();
 
-            // Unbinding default EventMap and binding the Unity specific one.
+            // Unbinding the default EventMap and binding the Unity-specific one.
             injectionBinder.Unbind<IEventMapCore>();
             injectionBinder.Bind<IEventMap, EventMapProviderUnity, Inject>();
             
@@ -77,6 +79,14 @@ namespace Build1.PostMVC.Unity.App
             AddModule<InternetReachabilityModule>();
             AddModule<LogModule>();
             AddModule<UIModule>();
+
+            var commandBinder = mvcs.CommandBinder; 
+            commandBinder.Bind(ContextEvent.Started)
+                         .TriggerCondition(context => context.IsRootContext)
+                         .To0<WaitUILayersCommand>()
+                         .InSequence()
+                         .OnComplete(UnityAppEvent.Start)
+                         .Once();
         }
 
         public override void Setup()
@@ -117,7 +127,7 @@ namespace Build1.PostMVC.Unity.App
         {
             var mvcs = GetDependentExtension<MVCSExtension>();
             
-            // Unsubscribing from Reflection Info contribution method.
+            // Unsubscribing from the Reflection Info contribution method.
             mvcs.InjectionReflector.OnReflectionInfoPreparing -= OnReflectionInfoPreparing;
             
             // We don't need to unbind anything. MVCSExtension does it.
