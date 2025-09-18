@@ -6,27 +6,28 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Layers.Impl
 {
     public sealed class UILayersController : IUILayersController
     {
-        private readonly Dictionary<int, GameObject> _layers;
+        public bool LayersRegistered => _layers != null;
         
-        public UILayersController()
-        {
-            _layers = new Dictionary<int, GameObject>();
-        }
+        private Dictionary<int, GameObject> _layers;
 
         /*
          * Public.
          */
 
-        public void RegisterLayer(int layerId, GameObject view)
+        public void RegisterLayers(IEnumerable<UILayerInfo> layers)
         {
-            if (_layers.ContainsKey(layerId))
-                throw new Exception($"Layer view already registered. Id: {layerId}");
-            _layers.Add(layerId, view);
-        }
-
-        public void ResetLayers()
-        {
-            _layers.Clear();
+            if (_layers != null)
+                throw new Exception($"Layers already registered");
+            
+            _layers = new Dictionary<int, GameObject>();
+            
+            foreach (var layer in layers)
+            {
+                if (_layers.ContainsKey(layer.Id))
+                    throw new Exception($"Layer view already registered. Id: {layer.Id}");
+                
+                _layers.Add(layer.Id, layer.GameObject);    
+            }
         }
 
         public GameObject GetLayerView(int layerId)

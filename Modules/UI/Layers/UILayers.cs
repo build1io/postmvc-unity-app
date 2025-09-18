@@ -15,8 +15,7 @@ namespace Build1.PostMVC.Unity.App.Modules.UI.Layers
         [PostConstruct]
         public void PostConstruct()
         {
-            foreach (var layer in layers)
-                UILayersController.RegisterLayer(layer.Id, layer.GameObject);
+            UILayersController.RegisterLayers(layers);
         }
     }
 }
