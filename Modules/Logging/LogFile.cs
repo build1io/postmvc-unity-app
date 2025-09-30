@@ -42,6 +42,9 @@ namespace Build1.PostMVC.Unity.App.Modules.Logging
         {
             exceedsLimit = false;
             
+            if (lineLimit <= 0)
+                return string.Empty;
+            
             var queue = new Queue<string>(lineLimit);
             using (var reader = new StreamReader(path))
             {
