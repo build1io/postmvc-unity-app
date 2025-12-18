@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Unity.App.Modules.Coroutines;
 using Build1.PostMVC.Unity.App.Modules.Logging;
@@ -12,10 +13,11 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
     {
         [Log(LogLevel.Warning)] public ILog               Log               { get; set; }
         [Inject]                public ICoroutineProvider CoroutineProvider { get; set; }
+        [Inject]                public IEventDispatcher   Dispatcher        { get; set; }
 
-        public bool LastResult      { get; private set; }
-        public long LastResultCode  { get; private set; } = -1;
-        public long EmptyResultCode { get; }              = -1;
+        public bool  IsChecking     => _coroutine != null;
+        public bool? LastResult     { get; private set; }
+        public long  LastResultCode { get; private set; } = -1;
 
         private string    _url     = "https://google.com";
         private int       _timeout = 3;
@@ -31,8 +33,11 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
          * Public.
          */
 
-        public void SetCheckParams(string url = "https://google.com", int timeout = 3)
+        public void Configure(string url, int timeout)
         {
+            if (string.IsNullOrWhiteSpace(_url))
+                throw new ArgumentException($"Url can't be null or empty. URL: {url}");
+
             if (!IsValidUrl(url))
                 throw new ArgumentException($"Url is invalid. URL: {url}");
 
@@ -47,53 +52,46 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
 
         public void Check()
         {
-            if (string.IsNullOrWhiteSpace(_url))
-                throw new ArgumentException("Internet reachability url is not set");
+            if (IsChecking)
+            {
+                Log.Debug("Internet reachability check is in progress");
+                return;
+            }
 
-            _coroutine = CoroutineProvider.StartCoroutine(CheckImpl(_url, _timeout, null));
-        }
-
-        public void Check(Action<bool> onComplete)
-        {
-            if (string.IsNullOrWhiteSpace(_url))
-                throw new ArgumentException("Internet reachability url is not set");
-
-            _coroutine = CoroutineProvider.StartCoroutine(CheckImpl(_url, _timeout, onComplete));
-        }
-
-        public void Check(int timeout, Action<bool> onComplete)
-        {
-            if (string.IsNullOrWhiteSpace(_url))
-                throw new ArgumentException("Internet reachability url is not set");
-
-            _coroutine = CoroutineProvider.StartCoroutine(CheckImpl(_url, timeout, onComplete));
+            _coroutine = CoroutineProvider.StartCoroutine(CheckImpl(_url, _timeout));
         }
 
         /*
          * Private.
          */
 
-        private IEnumerator CheckImpl(string url, int timeout, Action<bool> onComplete)
+        private IEnumerator CheckImpl(string url, int timeout)
         {
             Log.Debug((u, t) => $"Checking internet... URL: {u} Timeout: {t}", url, timeout);
 
             bool result;
+            long code;
+
             using (var request = UnityWebRequest.Head(url))
             {
                 request.timeout = timeout;
-                yield return request.SendWebRequest();
-                result = request.responseCode == 200;
 
-                LastResult = result;
-                LastResultCode = request.responseCode;
+                yield return request.SendWebRequest();
+
+                // Internet is reachable if result is Success, ProtocolError, or event DataProcessingError is returned.
+                // The mean internet is reachable even if server return an error.
+                result = request.result != UnityWebRequest.Result.ConnectionError;
+                code = request.responseCode;
             }
 
-            if (CoroutineProvider == null)
-                yield break;
+            Log?.Debug((r, c) => $"Internet check complete. Result: {r} Code: {c}", result, code);
 
-            Log.Debug(r => $"Internet availability: {r}", result);
+            LastResult = result;
+            LastResultCode = code;
+            
+            _coroutine = null;
 
-            onComplete?.Invoke(result);
+            Dispatcher?.Dispatch(InternetReachabilityEvent.CheckComplete, result, code);
         }
 
         private static bool IsValidUrl(string url)
