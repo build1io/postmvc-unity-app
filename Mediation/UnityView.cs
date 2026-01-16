@@ -78,7 +78,7 @@ namespace Build1.PostMVC.Unity.App.Mediation
             _context.OnStopping += OnContextStopping;
 
             var mvcs = _context.GetExtension<MVCSExtension>();
-            _viewEventProcessor = mvcs.InjectionBinder.GetInstance<UnityViewEventProcessor>();
+            _viewEventProcessor = mvcs.InjectionBinder.Get<UnityViewEventProcessor>();
 
             _mediationBinder = mvcs.MediationBinder;
             _mediationBinder.OnViewAdd(this);

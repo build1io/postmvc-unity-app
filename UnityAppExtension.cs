@@ -113,7 +113,7 @@ namespace Build1.PostMVC.Unity.App
                     var rootInjectionBinder = RootContext.GetExtension<MVCSExtension>().InjectionBinder;
                     if (rootInjectionBinder.GetBinding<IContextView>() != null)
                     {
-                        var rootView = rootInjectionBinder.GetInstance<IContextView>();
+                        var rootView = rootInjectionBinder.Get<IContextView>();
                         var rootGameObject = rootView.As<GameObject>();
                         viewGameObject.transform.SetParent(rootGameObject.transform);
                     }
