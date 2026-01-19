@@ -17,10 +17,10 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
 
         public bool  IsChecking     => _coroutine != null;
         public bool? LastResult     { get; private set; }
-        public long  LastResultCode { get; private set; } = -1;
 
-        private string    _url     = "https://google.com";
-        private int       _timeout = 3;
+        private const string URL     = "https://clients3.google.com/generate_204";
+        private const int    Timeout = 3;
+
         private Coroutine _coroutine;
 
         [PreDestroy]
@@ -33,23 +33,6 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
          * Public.
          */
 
-        public void Configure(string url, int timeout)
-        {
-            if (string.IsNullOrWhiteSpace(_url))
-                throw new ArgumentException($"Url can't be null or empty. URL: {url}");
-
-            if (!IsValidUrl(url))
-                throw new ArgumentException($"Url is invalid. URL: {url}");
-
-            if (timeout <= 0)
-                throw new ArgumentException($"Invalid timeout. Timeout: {timeout}");
-
-            _url = url;
-            _timeout = timeout;
-
-            Log.Debug((u, t) => $"Internet check params set. URL: {u} Timeout: {t}", _url, _timeout);
-        }
-
         public void Check()
         {
             if (IsChecking)
@@ -58,46 +41,58 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
                 return;
             }
 
-            _coroutine = CoroutineProvider.StartCoroutine(CheckImpl(_url, _timeout));
+            _coroutine = CoroutineProvider.StartCoroutine(CheckImpl(result =>
+            {
+                Log?.Debug(r => $"Internet check complete. Result: {r}", result);
+
+                LastResult = result;
+
+                _coroutine = null;
+
+                Dispatcher?.Dispatch(InternetReachabilityEvent.CheckComplete, result);
+            }));
         }
 
         /*
          * Private.
          */
 
-        private IEnumerator CheckImpl(string url, int timeout)
+        private IEnumerator CheckImpl(Action<bool> onComplete)
         {
+            var url = $"{URL}?t={DateTime.Now.Ticks}";
+            var timeout = Timeout;
+            
             Log.Debug((u, t) => $"Checking internet... URL: {u} Timeout: {t}", url, timeout);
 
-            bool result;
-            long code;
-
-            using (var request = UnityWebRequest.Head(url))
-            {
-                request.timeout = timeout;
-
-                yield return request.SendWebRequest();
-
-                // Internet is reachable if result is Success, ProtocolError, or event DataProcessingError is returned.
-                // The mean internet is reachable even if server return an error.
-                result = request.result != UnityWebRequest.Result.ConnectionError;
-                code = request.responseCode;
-            }
-
-            Log?.Debug((r, c) => $"Internet check complete. Result: {r} Code: {c}", result, code);
-
-            LastResult = result;
-            LastResultCode = code;
+            using var request = UnityWebRequest.Head(url);
             
-            _coroutine = null;
+            request.timeout = timeout;
 
-            Dispatcher?.Dispatch(InternetReachabilityEvent.CheckComplete, result, code);
-        }
+            yield return request.SendWebRequest();
 
-        private static bool IsValidUrl(string url)
-        {
-            return Uri.TryCreate(url, UriKind.Absolute, out var uriResult)
-                   && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            if (request.result is UnityWebRequest.Result.ConnectionError or UnityWebRequest.Result.ProtocolError)
+            {
+                // Note: ProtocolError can happen on Captive Portals (redirects), 
+                // but we check the ResponseCode specifically below to be sure.
+                
+                // If the error is purely network-related (DNS fail, timeout):
+                if (request.responseCode == 0) 
+                {
+                    onComplete(false);
+                    yield break;
+                }
+            }
+                
+            var responseCode = request.responseCode;
+            switch (responseCode)
+            {
+                case 204:
+                    onComplete(true);
+                    break;
+                default:
+                    onComplete(false);
+                    break;
+            }
         }
     }
 }

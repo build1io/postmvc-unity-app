@@ -15,7 +15,7 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Commands
 
             if (InternetReachabilityController.LastResult.HasValue && InternetReachabilityController.LastResult.Value)
             {
-                OnInternetCheckComplete(InternetReachabilityController.LastResult.Value, InternetReachabilityController.LastResultCode);
+                OnInternetCheckComplete(InternetReachabilityController.LastResult.Value);
                 return;
             }
 
@@ -25,7 +25,7 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Commands
                 InternetReachabilityController.Check();
         }
 
-        private void OnInternetCheckComplete(bool reachable, long requestCode)
+        private void OnInternetCheckComplete(bool reachable)
         {
             if (reachable)
                 Release();

@@ -4,6 +4,6 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability
 {
     public static class InternetReachabilityEvent
     {
-        public static readonly Event<bool, long> CheckComplete = new(typeof(InternetReachabilityEvent), nameof(CheckComplete));
+        public static readonly Event<bool> CheckComplete = new(typeof(InternetReachabilityEvent), nameof(CheckComplete));
     }
 }
