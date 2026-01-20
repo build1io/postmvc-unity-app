@@ -70,6 +70,8 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
 
             yield return request.SendWebRequest();
 
+            Log.Debug(r => $"Result: {r.result} Code: {r.responseCode}", request);
+
             if (request.result is UnityWebRequest.Result.ConnectionError or UnityWebRequest.Result.ProtocolError)
             {
                 // Note: ProtocolError can happen on Captive Portals (redirects), 
