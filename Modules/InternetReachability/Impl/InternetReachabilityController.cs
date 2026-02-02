@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Build1.PostMVC.Core.MVCS.Events;
 using Build1.PostMVC.Core.MVCS.Injection;
 using Build1.PostMVC.Unity.App.Modules.Coroutines;
@@ -15,13 +16,13 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
         [Inject]                public ICoroutineProvider CoroutineProvider { get; set; }
         [Inject]                public IEventDispatcher   Dispatcher        { get; set; }
 
-        public bool  IsChecking     => _coroutine != null;
-        public bool? LastResult     { get; private set; }
+        public bool  IsChecking => _coroutine != null;
+        public bool? LastResult { get; private set; }
 
-        private const string URL     = "https://clients3.google.com/generate_204";
-        private const int    Timeout = 3;
+        private const int Timeout = 3;
 
-        private Coroutine _coroutine;
+        private          Coroutine    _coroutine;
+        private readonly List<string> _logs = new();
 
         [PreDestroy]
         public void PreDestroy()
@@ -53,48 +54,74 @@ namespace Build1.PostMVC.Unity.App.Modules.InternetReachability.Impl
             }));
         }
 
+        public void FlushLogs(Action<string> handler)
+        {
+            foreach (var log in _logs)
+            {
+                Log.Debug(log);
+
+                handler.Invoke(log);
+            }
+        }
+
         /*
          * Private.
          */
 
         private IEnumerator CheckImpl(Action<bool> onComplete)
         {
-            var url = $"{URL}?t={DateTime.Now.Ticks}";
-            var timeout = Timeout;
-            
-            Log.Debug((u, t) => $"Checking internet... URL: {u} Timeout: {t}", url, timeout);
+            // Cloudflare - available in the West and Asia.
+            var url = $"https://cp.cloudflare.com/generate_204?t={DateTime.UtcNow.Ticks}";
+            var expectedContent = string.Empty;
 
-            using var request = UnityWebRequest.Head(url);
-            
-            request.timeout = timeout;
-
-            yield return request.SendWebRequest();
-
-            Log.Debug(r => $"Result: {r.result} Code: {r.responseCode}", request);
-
-            if (request.result is UnityWebRequest.Result.ConnectionError or UnityWebRequest.Result.ProtocolError)
+            using (var request = UnityWebRequest.Get(url))
             {
-                // Note: ProtocolError can happen on Captive Portals (redirects), 
-                // but we check the ResponseCode specifically below to be sure.
-                
-                // If the error is purely network-related (DNS fail, timeout):
-                if (request.responseCode == 0) 
+                LogAndRecord($"Checking internet... URL: {url}");
+
+                request.timeout = Timeout;
+
+                yield return request.SendWebRequest();
+
+                LogAndRecord($"Code: {request.responseCode} Result: '{request.result}' Content: '{request.downloadHandler.text}'");
+
+                if (request.responseCode == 204)
                 {
-                    onComplete(false);
+                    onComplete(true);
                     yield break;
                 }
             }
-                
-            var responseCode = request.responseCode;
-            switch (responseCode)
+
+            // Apple - including content check.
+            url = "https://captive.apple.com/hotspot-detect.html";
+            expectedContent = "Success";
+
+            using (var request = UnityWebRequest.Get(url))
             {
-                case 204:
+                LogAndRecord($"Checking internet... URL: {url}");
+
+                request.timeout = Timeout;
+
+                yield return request.SendWebRequest();
+
+                LogAndRecord($"Code: {request.responseCode} Result: '{request.result}' Content: '{request.downloadHandler.text}'");
+
+                if (request.result == UnityWebRequest.Result.Success &&
+                    request.responseCode == 200 &&
+                    request.downloadHandler.text.Contains(expectedContent))
+                {
                     onComplete(true);
-                    break;
-                default:
-                    onComplete(false);
-                    break;
+                    yield break;
+                }
             }
+
+            onComplete(false);
+        }
+
+        private void LogAndRecord(string message)
+        {
+            Log.Debug(message);
+
+            _logs.Add(message);
         }
     }
 }
